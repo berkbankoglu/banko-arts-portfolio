@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Read(//c/Users/brkbn/Desktop/**)",
+      "Bash(timeout /t 3)",
+      "Bash(taskkill:*)",
+      "Bash(pkill:*)",
+      "Bash(dir:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(cmd //c \"taskkill //PID 30084 //F\")",
+      "Bash(cmd /c \"taskkill /PID 25992 /F\")",
+      "Bash(cmd //c \"taskkill //PID 25992 //F\")",
+      "Bash(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "Bash(Stop-Process -Force)",
+      "Bash(copy \"C:\\Users\\brkbn\\Desktop\\ekra.png\" \"c:\\Users\\brkbn\\Desktop\\banko-arts-portfolio\\public\\images\\profile.png\")",
+      "Bash(cmd /c \"copy C:\\Users\\brkbn\\Desktop\\ekra.png c:\\Users\\brkbn\\Desktop\\banko-arts-portfolio\\public\\images\\profile.png\")",
+      "Bash(curl:*)",
+      "Bash(tasklist:*)",
+      "Bash(timeout /t 10)",
+      "Bash(Where-Object {$_ainWindowTitle -eq '' })",
+      "Bash(npm install:*)",
+      "Bash(git add .)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

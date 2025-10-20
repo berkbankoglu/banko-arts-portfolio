@@ -22,7 +22,19 @@
       "Bash(timeout /t 10)",
       "Bash(Where-Object {$_ainWindowTitle -eq '' })",
       "Bash(npm install:*)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate Banko Arts portfolio with improved UI and features\n\n- Enhanced Services & Expertise section layout\n- Added new filter categories for Recent Works section\n- Improved hero section text readability with shadows\n- Enlarged Recent Works image cards (grid-cols-3)\n- Removed Interior filter and unnecessary tools (Revit, Lumion, Blender, Twinmotion)\n- Fixed image repetition issue in Recent Works\n- Aligned all service boxes to same height\n- Updated architecture projects with detailed categories\n- Added EmailJS contact form integration\n- Implemented responsive design improvements\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(wrangler login)",
+      "Bash(npx wrangler pages deploy .next --project-name=bankoarts)",
+      "Bash(npx wrangler pages project create bankoarts --production-branch=main)",
+      "Bash(npx wrangler pages deploy .next --project-name=bankoarts --commit-dirty=true)",
+      "Bash(npx wrangler pages deploy out --project-name=bankoarts)",
+      "Bash(npx wrangler pages domains add bankoarts.com --project-name=bankoarts)",
+      "Bash(nslookup bankoarts.com)",
+      "Bash(nslookup bankoarts.com 1.1.1.1)",
+      "Bash(ipconfig /flushdns)",
+      "Bash(nslookup bankoarts.pages.dev)",
+      "Bash(npx wrangler pages deploy out --project-name=bankoarts --branch=production)"
     ],
     "deny": [],
     "ask": []

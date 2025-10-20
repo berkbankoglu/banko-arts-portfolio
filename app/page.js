@@ -1103,24 +1103,24 @@ export default function BankoArtsPortfolio() {
 
                 {/* Instagram Feed Section */}
                 <FadeInSection>
-                    <div className="py-20 mb-8 bg-neutral-900/20">
-                        <div className="max-w-[1800px] mx-auto px-8">
-                            <div className="text-center mb-16">
+                    <div className="py-8 md:py-20 mb-8 bg-neutral-900/20">
+                        <div className="max-w-[1800px] mx-auto px-4 sm:px-8">
+                            <div className="text-center mb-6 md:mb-16">
                                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                     RECENT WORKS
                                 </h2>
-                                <p className="text-white/60 text-lg mb-8">
+                                <p className="text-white/60 text-sm md:text-lg mb-4 md:mb-8 px-4">
                                     Explore our latest architectural visualizations and animations
                                 </p>
 
                                 {/* Filter Buttons */}
-                                <div className="flex justify-center gap-3 flex-wrap">
+                                <div className="flex justify-center gap-2 md:gap-3 flex-wrap px-2">
                                     <button
                                         onClick={() => {
                                             setInstagramFilter('renders');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'renders'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1133,7 +1133,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('animations');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'animations'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1146,7 +1146,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('exterior');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'exterior'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1159,7 +1159,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('kitchen');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'kitchen'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1172,7 +1172,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('bathroom');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'bathroom'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1185,7 +1185,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('bedroom');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'bedroom'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1198,7 +1198,7 @@ export default function BankoArtsPortfolio() {
                                             setInstagramFilter('livingroom');
                                             setCurrentInstagramIndex(0);
                                         }}
-                                        className={`px-6 py-3 font-bold tracking-wider transition-all rounded-lg text-sm ${
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
                                             instagramFilter === 'livingroom'
                                                 ? 'bg-[#5B8BA0] text-white'
                                                 : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
@@ -1210,18 +1210,18 @@ export default function BankoArtsPortfolio() {
                             </div>
 
                             {/* Instagram Carousel Container */}
-                            <div className="flex items-center gap-8">
-                                {/* Left Arrow - Outside the grid */}
+                            <div className="flex items-center gap-4 md:gap-8">
+                                {/* Left Arrow - Outside the grid - HIDDEN ON MOBILE */}
                                 <button
                                     onClick={prevInstagramSlide}
-                                    className="flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
                                     aria-label="Previous posts"
                                 >
                                     <ChevronLeft className="w-8 h-8 text-white" />
                                 </button>
 
-                                {/* Instagram Grid - 2 rows x 3 columns = 6 posts - LARGER */}
-                                <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {/* Instagram Grid - 2 columns on mobile, 3 on desktop */}
+                                <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
                                     {getCurrentInstagramPosts().map((project, idx) => (
                                         <TiltCard key={idx}>
                                             <div
@@ -1254,10 +1254,10 @@ export default function BankoArtsPortfolio() {
                                     ))}
                                 </div>
 
-                                {/* Right Arrow - Outside the grid */}
+                                {/* Right Arrow - Outside the grid - HIDDEN ON MOBILE */}
                                 <button
                                     onClick={nextInstagramSlide}
-                                    className="flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
                                     aria-label="Next posts"
                                 >
                                     <ChevronRight className="w-8 h-8 text-white" />

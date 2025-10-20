@@ -906,6 +906,172 @@ export default function BankoArtsPortfolio() {
                     </div>
                 </div>
 
+                {/* Instagram Feed Section - MOVED HERE FROM BELOW */}
+                <FadeInSection>
+                    <div className="py-8 md:py-20 mb-8 bg-neutral-900/20">
+                        <div className="max-w-[1800px] mx-auto px-4 sm:px-8">
+                            <div className="text-center mb-6 md:mb-16">
+                                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                    RECENT WORKS
+                                </h2>
+                                <p className="text-white/60 text-sm md:text-lg mb-4 md:mb-8 px-4">
+                                    Explore our latest architectural visualizations and animations
+                                </p>
+
+                                {/* Filter Buttons */}
+                                <div className="flex justify-center gap-2 md:gap-3 flex-wrap px-2">
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('renders');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'renders'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        RENDERS
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('animations');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'animations'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        ANIMATIONS
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('exterior');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'exterior'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        EXTERIOR
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('kitchen');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'kitchen'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        KITCHEN
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('bathroom');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'bathroom'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        BATHROOM
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('bedroom');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'bedroom'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        BEDROOM
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setInstagramFilter('livingroom');
+                                            setCurrentInstagramIndex(0);
+                                        }}
+                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
+                                            instagramFilter === 'livingroom'
+                                                ? 'bg-[#5B8BA0] text-white'
+                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
+                                        }`}
+                                    >
+                                        LIVING ROOM
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Instagram Carousel Container */}
+                            <div className="flex items-center gap-4 md:gap-8">
+                                {/* Left Arrow - Outside the grid - HIDDEN ON MOBILE */}
+                                <button
+                                    onClick={prevInstagramSlide}
+                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
+                                    aria-label="Previous posts"
+                                >
+                                    <ChevronLeft className="w-8 h-8 text-white" />
+                                </button>
+
+                                {/* Instagram Grid - 2 columns on mobile, 3 on desktop */}
+                                <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
+                                    {getCurrentInstagramPosts().map((project, idx) => (
+                                        <TiltCard key={idx}>
+                                            <div
+                                                className="group relative aspect-square bg-neutral-900 overflow-hidden border border-white/10 hover:border-[#5B8BA0] transition-all cursor-pointer rounded-lg"
+                                                onClick={() => {
+                                                    setLightboxProject(project);
+                                                    setLightboxIndex(0);
+                                                }}
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col items-center justify-end p-4 pointer-events-none">
+                                                    <p className="text-white font-bold text-lg mb-1">{project.title}</p>
+                                                    <p className="text-white/60 text-sm">{project.category}</p>
+                                                </div>
+                                                {project.type === 'animation' ? (
+                                                    <VideoThumbnail
+                                                        thumbnail={project.thumbnail}
+                                                        video={project.video}
+                                                        alt={project.title}
+                                                        className="w-full h-full"
+                                                    />
+                                                ) : (
+                                                    <LazyImage
+                                                        src={project.image}
+                                                        alt={project.title}
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    />
+                                                )}
+                                            </div>
+                                        </TiltCard>
+                                    ))}
+                                </div>
+
+                                {/* Right Arrow - Outside the grid - HIDDEN ON MOBILE */}
+                                <button
+                                    onClick={nextInstagramSlide}
+                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
+                                    aria-label="Next posts"
+                                >
+                                    <ChevronRight className="w-8 h-8 text-white" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </FadeInSection>
+
                 {/* About Section */}
                 <FadeInSection>
                     <div id="about" className="py-16 mb-8">
@@ -1101,172 +1267,6 @@ export default function BankoArtsPortfolio() {
                     </div>
                 </FadeInSection>
 
-                {/* Instagram Feed Section */}
-                <FadeInSection>
-                    <div className="py-8 md:py-20 mb-8 bg-neutral-900/20">
-                        <div className="max-w-[1800px] mx-auto px-4 sm:px-8">
-                            <div className="text-center mb-6 md:mb-16">
-                                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    RECENT WORKS
-                                </h2>
-                                <p className="text-white/60 text-sm md:text-lg mb-4 md:mb-8 px-4">
-                                    Explore our latest architectural visualizations and animations
-                                </p>
-
-                                {/* Filter Buttons */}
-                                <div className="flex justify-center gap-2 md:gap-3 flex-wrap px-2">
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('renders');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'renders'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        RENDERS
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('animations');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'animations'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        ANIMATIONS
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('exterior');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'exterior'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        EXTERIOR
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('kitchen');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'kitchen'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        KITCHEN
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('bathroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'bathroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        BATHROOM
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('bedroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'bedroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        BEDROOM
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('livingroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'livingroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        LIVING ROOM
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Instagram Carousel Container */}
-                            <div className="flex items-center gap-4 md:gap-8">
-                                {/* Left Arrow - Outside the grid - HIDDEN ON MOBILE */}
-                                <button
-                                    onClick={prevInstagramSlide}
-                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
-                                    aria-label="Previous posts"
-                                >
-                                    <ChevronLeft className="w-8 h-8 text-white" />
-                                </button>
-
-                                {/* Instagram Grid - 2 columns on mobile, 3 on desktop */}
-                                <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
-                                    {getCurrentInstagramPosts().map((project, idx) => (
-                                        <TiltCard key={idx}>
-                                            <div
-                                                className="group relative aspect-square bg-neutral-900 overflow-hidden border border-white/10 hover:border-[#5B8BA0] transition-all cursor-pointer rounded-lg"
-                                                onClick={() => {
-                                                    setLightboxProject(project);
-                                                    setLightboxIndex(0);
-                                                }}
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col items-center justify-end p-4 pointer-events-none">
-                                                    <p className="text-white font-bold text-lg mb-1">{project.title}</p>
-                                                    <p className="text-white/60 text-sm">{project.category}</p>
-                                                </div>
-                                                {project.type === 'animation' ? (
-                                                    <VideoThumbnail
-                                                        thumbnail={project.thumbnail}
-                                                        video={project.video}
-                                                        alt={project.title}
-                                                        className="w-full h-full"
-                                                    />
-                                                ) : (
-                                                    <LazyImage
-                                                        src={project.image}
-                                                        alt={project.title}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                )}
-                                            </div>
-                                        </TiltCard>
-                                    ))}
-                                </div>
-
-                                {/* Right Arrow - Outside the grid - HIDDEN ON MOBILE */}
-                                <button
-                                    onClick={nextInstagramSlide}
-                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
-                                    aria-label="Next posts"
-                                >
-                                    <ChevronRight className="w-8 h-8 text-white" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
                 {/* Services & Skills Section */}
                 <FadeInSection>
                     <div id="services" className="py-16 mb-8">
@@ -1284,7 +1284,7 @@ export default function BankoArtsPortfolio() {
                                     <h3 className="text-3xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                         OUR SERVICES
                                     </h3>
-                                    <div className="grid grid-cols-3 gap-4 items-stretch">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                                 <TiltCard>
                                     <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
                                         <div className="text-[#5B8BA0] mb-4">

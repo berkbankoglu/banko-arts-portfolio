@@ -343,7 +343,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 1.png",
-            video: "/videos/exterior1_animation.mp4"
+            video: "/videos/exterior2_animation.mp4"
         },
         {
             title: "Exterior 2",
@@ -356,7 +356,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 2.png",
-            video: "/videos/exterior2_animation.mp4"
+            video: "/videos/exterior1_animation.mp4"
         },
         {
             title: "Exterior 3",

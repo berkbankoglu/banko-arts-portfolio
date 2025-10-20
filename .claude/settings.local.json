@@ -16,7 +16,8 @@
       "Bash(powershell -Command \"Copy-Item ''C:\\Users\\brkbn\\Desktop\\1-PS FOR PORTFOLIO\\LOW Q Pictures\\Exterior-4.jpg'' ''c:\\Users\\brkbn\\Desktop\\banko-arts-portfolio\\public\\images\\architecture\\Exterior 3.1.png''\")",
       "Bash(git commit -m \"Fix Exterior 3.1 Animation thumbnail\n\n- Updated Exterior 3.1 thumbnail to correct image (Exterior-4.jpg)\n- Replaced wrong thumbnail with the villa/house with Mercedes view\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
       "Bash(git commit -m \"Swap Exterior 3 and Exterior 3.1 videos to match thumbnails\n\n- Exterior 3 now shows apartment building video (4.3M)\n- Exterior 3.1 now shows Mercedes villa video (2.1M)\n- Fixed video-thumbnail mismatch issue\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
-      "Bash(git commit -m \"Remove Exterior 3.1 Animation from project\n\n- Deleted Exterior 3.1 Animation entry from projects list\n- Kept Exterior 3.1 static render image\n- Cleaned up duplicate animation entry\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")"
+      "Bash(git commit -m \"Remove Exterior 3.1 Animation from project\n\n- Deleted Exterior 3.1 Animation entry from projects list\n- Kept Exterior 3.1 static render image\n- Cleaned up duplicate animation entry\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")",
+      "Bash(git commit -m \"Remove Exterior 3 Animation (Mercedes villa video)\n\n- Deleted Exterior 3 Animation from animations list\n- Kept Exterior 3 static render\n- Removed Mercedes villa animation from exterior section\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")"
     ],
     "deny": [],
     "ask": []

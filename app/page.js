@@ -365,13 +365,6 @@ export default function BankoArtsPortfolio() {
             image: "/images/architecture/Exterior 3.png"
         },
         {
-            title: "Exterior 3 Animation",
-            category: "Exterior",
-            type: "animation",
-            thumbnail: "/images/architecture/Exterior 3.png",
-            video: "/videos/exterior3_animation.mp4"
-        },
-        {
             title: "Exterior 3.1",
             category: "Exterior",
             type: "render",

@@ -1524,7 +1524,7 @@ export default function BankoArtsPortfolio() {
                                 {/* Left Arrow */}
                                 <button
                                     onClick={prevTestimonial}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
                                 >
                                     <ChevronLeft className="w-6 h-6 text-white" />
                                 </button>
@@ -1532,7 +1532,7 @@ export default function BankoArtsPortfolio() {
                                 {/* Right Arrow */}
                                 <button
                                     onClick={nextTestimonial}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
                                 >
                                     <ChevronRight className="w-6 h-6 text-white" />
                                 </button>

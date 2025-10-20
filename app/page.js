@@ -286,7 +286,7 @@ export default function BankoArtsPortfolio() {
             category: "Interior",
             type: "animation",
             thumbnail: "/images/architecture/Bedroom.png",
-            video: "/videos/AnimateDiff_00005.mp4"
+            video: "/videos/bedroom_animation.mp4"
         },
         {
             title: "Living Room",
@@ -299,7 +299,7 @@ export default function BankoArtsPortfolio() {
             category: "Interior",
             type: "animation",
             thumbnail: "/images/architecture/Living Room.png",
-            video: "/videos/AnimateDiff_00006.mp4"
+            video: "/videos/livingroom_animation.mp4"
         },
         {
             title: "Kitchen",
@@ -330,7 +330,7 @@ export default function BankoArtsPortfolio() {
             category: "Interior",
             type: "animation",
             thumbnail: "/images/architecture/Kitchen.png",
-            video: "/videos/AnimateDiff_00007.mp4"
+            video: "/videos/kitchen_animation.mp4"
         },
         {
             title: "Exterior 1",
@@ -343,7 +343,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 1.png",
-            video: "/videos/AnimateDiff_00008.mp4"
+            video: "/videos/exterior1_animation.mp4"
         },
         {
             title: "Exterior 2",
@@ -356,7 +356,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 2.png",
-            video: "/videos/AnimateDiff_00009.mp4"
+            video: "/videos/exterior2_animation.mp4"
         },
         {
             title: "Exterior 3",
@@ -369,7 +369,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 3.png",
-            video: "/videos/AnimateDiff_00010.mp4"
+            video: "/videos/exterior3_animation.mp4"
         },
         {
             title: "Exterior 3.1",
@@ -382,7 +382,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/Exterior 3.1.png",
-            video: "/videos/AnimateDiff_00011.mp4"
+            video: "/videos/exterior3_1_animation.mp4"
         },
         {
             title: "Exterior 3.2",
@@ -401,7 +401,7 @@ export default function BankoArtsPortfolio() {
             category: "Exterior",
             type: "animation",
             thumbnail: "/images/architecture/RoofTop.png",
-            video: "/videos/AnimateDiff_00012.mp4"
+            video: "/videos/rooftop_animation.mp4"
         },
         {
             title: "Both Views",
@@ -414,7 +414,7 @@ export default function BankoArtsPortfolio() {
             category: "Mixed",
             type: "animation",
             thumbnail: "/images/architecture/Both.png",
-            video: "/videos/AnimateDiff_00013.mp4"
+            video: "/videos/both_views_animation.mp4"
         }
     ];
 

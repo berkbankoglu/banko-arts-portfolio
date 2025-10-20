@@ -28,15 +28,15 @@ export default function BankoArtsPortfolio() {
 
     // Video list for hero background
     const heroVideos = [
-        '/videos/AnimateDiff_00005.mp4',
-        '/videos/AnimateDiff_00006.mp4',
-        '/videos/AnimateDiff_00007.mp4',
-        '/videos/AnimateDiff_00008.mp4',
-        '/videos/AnimateDiff_00009.mp4',
-        '/videos/AnimateDiff_00010.mp4',
-        '/videos/AnimateDiff_00011.mp4',
-        '/videos/AnimateDiff_00012.mp4',
-        '/videos/AnimateDiff_00013.mp4'
+        '/videos/bedroom_animation.mp4',
+        '/videos/livingroom_animation.mp4',
+        '/videos/kitchen_animation.mp4',
+        '/videos/exterior1_animation.mp4',
+        '/videos/exterior2_animation.mp4',
+        '/videos/exterior3_animation.mp4',
+        '/videos/exterior3_1_animation.mp4',
+        '/videos/rooftop_animation.mp4',
+        '/videos/both_views_animation.mp4'
     ];
 
     // ESC tuşu ile modal'ı kapat ve scroll kontrolü

@@ -460,7 +460,7 @@ export default function BankoArtsPortfolio() {
 
                 <div className="max-w-[1600px] mx-auto px-8 py-16">
                     <div className="mb-16 text-center">
-                        <h2 className="text-6xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>3D VISUALIZATION & RENDERS</h2>
+                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>3D VISUALIZATION & RENDERS</h2>
 
                         <div className="flex justify-center gap-4 flex-wrap">
                             {filters.map((filter) => (
@@ -478,7 +478,7 @@ export default function BankoArtsPortfolio() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredProjects.map((project, idx) => {
                             // Her projenin orijinal indeksini bul
                             const originalIndex = architectureProjects.findIndex(p => p.title === project.title);
@@ -853,14 +853,14 @@ export default function BankoArtsPortfolio() {
                 </div>
 
                 {/* Hero Content */}
-                <div className="relative z-10 max-w-[1600px] mx-auto px-8 py-24 text-center">
-                    <h1 className="text-7xl md:text-8xl lg:text-9xl font-bold tracking-widest mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-8 py-12 sm:py-24 text-center">
+                    <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-widest mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                         BANKO ARTS
                     </h1>
-                    <p className="text-2xl font-light mb-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.8)', color: '#ffffff' }}>
+                    <p className="text-lg sm:text-2xl font-light mb-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.8)', color: '#ffffff' }}>
                         3D Artist & Visualization Specialist
                     </p>
-                    <p className="text-white max-w-3xl mx-auto leading-relaxed mb-8 text-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.6)' }}>
+                    <p className="text-white max-w-3xl mx-auto leading-relaxed mb-8 text-sm sm:text-base md:text-lg px-4" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.6)' }}>
                         Transforming imagination into reality through photorealistic architectural visualization and creative 3D artistry
                     </p>
                     <div className="flex gap-4 justify-center flex-wrap mt-8">
@@ -880,25 +880,25 @@ export default function BankoArtsPortfolio() {
                 </div>
             </div>
 
-            <div className="max-w-[1600px] mx-auto px-8">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
 
                 {/* Stats Section */}
                 <div className="py-12 mb-8 border-y border-white/20 mt-24">
-                    <div className="grid grid-cols-3 gap-8 max-w-5xl mx-auto text-center">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-center">
                         <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
+                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
                                 <AnimatedCounter end={824} suffix="+" />
                             </h3>
                             <p className="text-white/60 text-lg">Projects</p>
                         </div>
                         <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
+                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
                                 <AnimatedCounter end={10} />
                             </h3>
                             <p className="text-white/60 text-lg">Years</p>
                         </div>
                         <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
+                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
                                 <AnimatedCounter end={1500} suffix="+" />
                             </h3>
                             <p className="text-white/60 text-lg">Renders</p>
@@ -910,7 +910,7 @@ export default function BankoArtsPortfolio() {
                 <FadeInSection>
                     <div id="about" className="py-16 mb-8">
                         <div className="max-w-4xl mx-auto text-center">
-                            <h2 className="text-6xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                 ABOUT US
                             </h2>
                             <p className="text-xl text-white/70 mb-6 leading-relaxed max-w-5xl mx-auto">
@@ -1106,7 +1106,7 @@ export default function BankoArtsPortfolio() {
                     <div className="py-20 mb-8 bg-neutral-900/20">
                         <div className="max-w-[1800px] mx-auto px-8">
                             <div className="text-center mb-16">
-                                <h2 className="text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                     RECENT WORKS
                                 </h2>
                                 <p className="text-white/60 text-lg mb-8">
@@ -1270,8 +1270,8 @@ export default function BankoArtsPortfolio() {
                 {/* Services & Skills Section */}
                 <FadeInSection>
                     <div id="services" className="py-16 mb-8">
-                        <div className="max-w-[1600px] mx-auto px-8">
-                            <h2 className="text-6xl font-bold mb-8 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                        <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
+                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                 SERVICES & EXPERTISE
                             </h2>
                             <p className="text-xl text-white/70 mb-12 leading-relaxed max-w-3xl mx-auto text-center">
@@ -1529,7 +1529,7 @@ export default function BankoArtsPortfolio() {
                 <FadeInSection>
                     <div id="testimonials" className="py-16 mb-8 bg-neutral-900/30">
                         <div className="max-w-[1400px] mx-auto px-8">
-                            <h2 className="text-6xl font-bold mb-16 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-16 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                 CLIENT TESTIMONIALS
                             </h2>
 
@@ -1584,7 +1584,7 @@ export default function BankoArtsPortfolio() {
                 <FadeInSection>
                     <div id="contact" className="py-12 mb-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-6xl font-bold tracking-wider mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-wider mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                 GET IN TOUCH
                             </h2>
                             <div className="flex justify-center gap-6 text-white/40 mt-8">

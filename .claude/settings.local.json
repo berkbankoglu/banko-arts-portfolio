@@ -34,7 +34,16 @@
       "Bash(nslookup bankoarts.com 1.1.1.1)",
       "Bash(ipconfig /flushdns)",
       "Bash(nslookup bankoarts.pages.dev)",
-      "Bash(npx wrangler pages deploy out --project-name=bankoarts --branch=production)"
+      "Bash(npx wrangler pages deploy out --project-name=bankoarts --branch=production)",
+      "Bash(git commit -m \"Configure Cloudflare Pages production deployment\")",
+      "Bash(gh --version)",
+      "Bash(git remote add origin https://github.com/berkbankoglu/banko-arts-portfolio.git)",
+      "Bash(git branch -M master)",
+      "Bash(git push -u origin master)",
+      "Bash(git add package.json package-lock.json)",
+      "Bash(git commit -m \"Add lucide-react dependency for icons\")",
+      "Bash(git push origin master)",
+      "Bash(git commit -m \"Add mobile responsive design improvements\n\n- Made all section titles responsive (text-3xl sm:text-4xl md:text-6xl)\n- Adjusted hero section text sizes for mobile\n- Changed grid layouts to responsive (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3)\n- Added mobile padding (px-4 sm:px-8) to all containers\n- Reduced padding/margins on mobile devices\n- Improved stats counter display on mobile\n- Enhanced overall mobile user experience\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\")"
     ],
     "deny": [],
     "ask": []

@@ -67,56 +67,20 @@ export default function LazyImage({ src, alt, className = '', blurDataURL }) {
     );
 }
 
-// Video thumbnail with hover preview
+// Video thumbnail without hover preview - just shows thumbnail with play icon
 export function VideoThumbnail({ thumbnail, video, alt, className = '' }) {
-    const [isHovering, setIsHovering] = useState(false);
-    const videoRef = useRef(null);
-
-    useEffect(() => {
-        if (videoRef.current) {
-            if (isHovering) {
-                videoRef.current.play().catch(() => {
-                    // Autoplay might be blocked
-                });
-            } else {
-                videoRef.current.pause();
-                videoRef.current.currentTime = 0;
-            }
-        }
-    }, [isHovering]);
-
     return (
-        <div
-            className={`relative overflow-hidden ${className}`}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-        >
-            {/* Thumbnail image */}
+        <div className={`relative overflow-hidden ${className}`}>
+            {/* Thumbnail image - always visible */}
             <LazyImage
                 src={thumbnail}
                 alt={alt}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                    isHovering ? 'opacity-0' : 'opacity-100'
-                }`}
-            />
-
-            {/* Hover video preview */}
-            <video
-                ref={videoRef}
-                src={video}
-                muted
-                loop
-                playsInline
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                    isHovering ? 'opacity-100' : 'opacity-0'
-                }`}
+                className="w-full h-full object-cover"
             />
 
             {/* Play icon overlay */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className={`w-16 h-16 border-2 border-white/80 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/40 transition-all duration-300 ${
-                    isHovering ? 'scale-110' : 'scale-100'
-                }`}>
+                <div className="w-16 h-16 border-2 border-white/80 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/40">
                     <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
                 </div>
             </div>

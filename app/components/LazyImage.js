@@ -120,8 +120,8 @@ export function VideoThumbnail({ thumbnail, video, alt, className = '' }) {
             )}
 
             {/* Play icon overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-16 h-16 border-2 border-white/80 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/40">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                <div className="w-16 h-16 border-2 border-white/80 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/40 shadow-lg">
                     <div className="w-0 h-0 border-l-[12px] border-l-white border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
                 </div>
             </div>

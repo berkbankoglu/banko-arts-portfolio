@@ -96,9 +96,9 @@ export default function ContactForm() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto px-8">
-            <div className="bg-neutral-900/50 border border-white/10 p-8 md:p-12">
-                <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="h-full flex flex-col">
+            <div className="bg-neutral-900/50 border border-white/10 p-8 md:p-12 flex-1 flex flex-col">
+                <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
                             <label htmlFor="name" className="block text-sm text-white/60 mb-2 tracking-wider">
@@ -139,7 +139,7 @@ export default function ContactForm() {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="flex-1 flex flex-col">
                         <label htmlFor="message" className="block text-sm text-white/60 mb-2 tracking-wider">
                             MESSAGE *
                         </label>
@@ -149,8 +149,7 @@ export default function ContactForm() {
                             value={formData.message}
                             onChange={handleChange}
                             disabled={status === 'sending'}
-                            rows="6"
-                            className={`w-full px-4 py-3 bg-neutral-900 border ${errors.message ? 'border-red-500' : 'border-white/10'} text-white focus:border-white/30 focus:outline-none transition-colors resize-none disabled:opacity-50`}
+                            className={`w-full flex-1 px-4 py-3 bg-neutral-900 border ${errors.message ? 'border-red-500' : 'border-white/10'} text-white focus:border-white/30 focus:outline-none transition-colors resize-none disabled:opacity-50`}
                             placeholder="Tell me about your project..."
                         />
                         {errors.message && (

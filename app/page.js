@@ -25,6 +25,7 @@ export default function BankoArtsPortfolio() {
     const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
     const [currentInstagramIndex, setCurrentInstagramIndex] = useState(0);
     const [instagramFilter, setInstagramFilter] = useState('renders');
+    const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
     // Video list for hero background
     const heroVideos = [
@@ -736,7 +737,7 @@ export default function BankoArtsPortfolio() {
                     <div className="flex items-center justify-center">
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="text-2xl font-bold tracking-widest hover:text-[#5B8BA0] transition-colors"
+                            className="text-2xl font-bold tracking-widest hover:text-[#E2725B] transition-colors"
                             style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}
                         >
                             BANKO ARTS
@@ -799,7 +800,7 @@ export default function BankoArtsPortfolio() {
                         className="group flex items-center justify-end gap-4 text-white/40 hover:text-white transition-all py-4 px-6 -mr-6 cursor-pointer"
                     >
                         <span className="text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-medium">SERVICES</span>
-                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#5B8BA0] group-hover:scale-125 transition-all"></div>
+                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#E2725B] group-hover:scale-125 transition-all"></div>
                     </button>
 
                     <button
@@ -807,7 +808,7 @@ export default function BankoArtsPortfolio() {
                         className="group flex items-center justify-end gap-4 text-white/40 hover:text-white transition-all py-4 px-6 -mr-6 cursor-pointer"
                     >
                         <span className="text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-medium">CONTACT</span>
-                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#5B8BA0] group-hover:scale-125 transition-all"></div>
+                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#E2725B] group-hover:scale-125 transition-all"></div>
                     </button>
 
                     <div className="w-px h-16 bg-white/20"></div>
@@ -852,7 +853,7 @@ export default function BankoArtsPortfolio() {
                     <div className="flex gap-4 justify-center flex-wrap mt-8">
                         <button
                             onClick={() => scrollToSection('services')}
-                            className="px-8 py-4 bg-[#5B8BA0] hover:bg-[#4A7386] text-white font-bold tracking-wider transition-all"
+                            className="px-8 py-4 bg-gradient-to-r from-[#E2725B] to-[#C95E48] hover:from-[#C95E48] hover:to-[#B04A36] text-white font-bold tracking-wider transition-all"
                         >
                             VIEW SERVICES
                         </button>
@@ -868,164 +869,304 @@ export default function BankoArtsPortfolio() {
 
             <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
 
-                {/* Stats Section */}
-                <div className="py-12 mb-8 border-y border-white/20 mt-24">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-center">
-                        <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
-                                <AnimatedCounter end={824} suffix="+" />
-                            </h3>
-                            <p className="text-white/60 text-lg">Projects</p>
-                        </div>
-                        <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
-                                <AnimatedCounter end={10} />
-                            </h3>
-                            <p className="text-white/60 text-lg">Years</p>
-                        </div>
-                        <div className="border-r border-white/20 last:border-r-0">
-                            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em', color: '#5B8BA0' }}>
-                                <AnimatedCounter end={1500} suffix="+" />
-                            </h3>
-                            <p className="text-white/60 text-lg">Renders</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Instagram Feed Section - MOVED HERE FROM BELOW */}
+                {/* Awards & Achievements Section */}
                 <FadeInSection>
-                    <div className="py-8 md:py-20 mb-8 bg-neutral-900/20">
+                    <div className="py-12 md:py-16 mb-8 mt-12">
                         <div className="max-w-[1800px] mx-auto px-4 sm:px-8">
-                            <div className="text-center mb-6 md:mb-16">
-                                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    RECENT WORKS
+                            <div className="text-center mb-8 md:mb-10">
+                                <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                    AWARDS & ACHIEVEMENTS
                                 </h2>
-                                <p className="text-white/60 text-sm md:text-lg mb-4 md:mb-8 px-4">
-                                    Explore our latest architectural visualizations and animations
+                                <p className="text-white/60 text-base md:text-xl px-4 max-w-3xl mx-auto">
+                                    Recognized excellence in architectural visualization across global platforms
                                 </p>
+                            </div>
 
-                                {/* Filter Buttons */}
-                                <div className="flex justify-center gap-2 md:gap-3 flex-wrap px-2">
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('renders');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'renders'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        RENDERS
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('animations');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'animations'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        ANIMATIONS
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('exterior');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'exterior'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        EXTERIOR
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('kitchen');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'kitchen'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        KITCHEN
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('bathroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'bathroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        BATHROOM
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('bedroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'bedroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        BEDROOM
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setInstagramFilter('livingroom');
-                                            setCurrentInstagramIndex(0);
-                                        }}
-                                        className={`px-3 md:px-6 py-2 md:py-3 font-bold tracking-wider transition-all rounded-lg text-xs md:text-sm ${
-                                            instagramFilter === 'livingroom'
-                                                ? 'bg-[#5B8BA0] text-white'
-                                                : 'bg-neutral-800 text-white/60 hover:bg-neutral-700'
-                                        }`}
-                                    >
-                                        LIVING ROOM
-                                    </button>
+                            {/* Horizontal Badge Layout */}
+                            <div className="relative mb-8 md:mb-10">
+                                <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
+                                {/* Upwork Top Rated Plus Badge */}
+                                <div className="group relative flex-1 bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border-2 border-white/20 rounded-3xl p-8 lg:p-10 hover:border-[#14A800]/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#14A800]/30">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#14A800]/0 via-[#14A800]/5 to-[#14A800]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+                                    <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+                                        {/* Badge Icon - Left Side */}
+                                        <div className="flex-shrink-0">
+                                            <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-gradient-to-br from-[#14A800] to-[#0D7A00] p-1.5 shadow-xl shadow-[#14A800]/40">
+                                                <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center">
+                                                    <svg className="w-14 h-14 lg:w-18 lg:h-18 text-[#14A800]" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Content - Right Side */}
+                                        <div className="flex-1 text-center lg:text-left">
+                                            <h3 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-[#14A800] to-[#0D7A00] bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>
+                                                Top Rated Plus
+                                            </h3>
+                                            <p className="text-white/40 text-sm mb-4 uppercase tracking-widest">Upwork</p>
+                                            <p className="text-white/80 text-base lg:text-lg mb-4">
+                                                <span className="text-[#14A800] font-bold">Top 3%</span> of freelancers worldwide
+                                            </p>
+
+                                            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-4">
+                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
+                                                    <p className="text-2xl font-bold text-[#14A800]">100%</p>
+                                                    <p className="text-white/60 text-xs">Job Success</p>
+                                                </div>
+                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
+                                                    <p className="text-2xl font-bold text-[#14A800]">5.0</p>
+                                                    <p className="text-white/60 text-xs">Rating</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    Exceptional Success
+                                                </span>
+                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    High Satisfaction
+                                                </span>
+                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    Proven Reliability
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Freelancer Preferred Badge */}
+                                <div className="group relative flex-1 bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border-2 border-white/20 rounded-3xl p-8 lg:p-10 hover:border-[#0E61D5]/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#0E61D5]/30">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#0E61D5]/0 via-[#0E61D5]/5 to-[#0E61D5]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+                                    <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+                                        {/* Badge Icon - Left Side */}
+                                        <div className="flex-shrink-0">
+                                            <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-gradient-to-br from-[#0E61D5] to-[#0A4AA3] p-1.5 shadow-xl shadow-[#0E61D5]/40">
+                                                <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center">
+                                                    <svg className="w-14 h-14 lg:w-18 lg:h-18 text-[#0E61D5]" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Content - Right Side */}
+                                        <div className="flex-1 text-center lg:text-left">
+                                            <h3 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-[#0E61D5] to-[#0A4AA3] bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>
+                                                Preferred Freelancer
+                                            </h3>
+                                            <p className="text-white/40 text-sm mb-4 uppercase tracking-widest">Freelancer.com</p>
+                                            <p className="text-white/80 text-base lg:text-lg mb-4">
+                                                <span className="text-[#0E61D5] font-bold">Elite status</span> among millions of freelancers
+                                            </p>
+
+                                            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-4">
+                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
+                                                    <p className="text-2xl font-bold text-[#0E61D5]">98%</p>
+                                                    <p className="text-white/60 text-xs">On Time</p>
+                                                </div>
+                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
+                                                    <p className="text-2xl font-bold text-[#0E61D5]">5.0</p>
+                                                    <p className="text-white/60 text-xs">Rating</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    Quality Work
+                                                </span>
+                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    Great Communication
+                                                </span>
+                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                    </svg>
+                                                    Highly Recommended
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
 
-                            {/* Instagram Carousel Container */}
-                            <div className="flex items-center gap-4 md:gap-8">
-                                {/* Left Arrow - Outside the grid - HIDDEN ON MOBILE */}
-                                <button
-                                    onClick={prevInstagramSlide}
-                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
-                                    aria-label="Previous posts"
-                                >
-                                    <ChevronLeft className="w-8 h-8 text-white" />
-                                </button>
+                            {/* Additional Stats Bar */}
+                            <div className="mt-8 md:mt-10">
+                                <div className="bg-gradient-to-r from-[#E2725B]/10 via-neutral-900/50 to-[#E2725B]/10 border-2 border-[#E2725B]/20 rounded-3xl p-6 md:p-8 lg:p-10">
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                                        <div className="text-center group">
+                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>824+</p>
+                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Completed Projects</p>
+                                        </div>
+                                        <div className="text-center group">
+                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>100%</p>
+                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Client Satisfaction</p>
+                                        </div>
+                                        <div className="text-center group">
+                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>10+</p>
+                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Years Experience</p>
+                                        </div>
+                                        <div className="text-center group">
+                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>5.0</p>
+                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Average Rating</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </FadeInSection>
 
-                                {/* Instagram Grid - 2 columns on mobile, 3 on desktop */}
-                                <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8">
-                                    {getCurrentInstagramPosts().map((project, idx) => (
-                                        <TiltCard key={idx}>
-                                            <div
-                                                className="group relative aspect-square bg-neutral-900 overflow-hidden border border-white/10 hover:border-[#5B8BA0] transition-all cursor-pointer rounded-lg"
-                                                onClick={() => {
-                                                    setLightboxProject(project);
-                                                    setLightboxIndex(0);
-                                                }}
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex flex-col items-center justify-end p-4 pointer-events-none">
-                                                    <p className="text-white font-bold text-lg mb-1">{project.title}</p>
-                                                    <p className="text-white/60 text-sm">{project.category}</p>
-                                                </div>
+                {/* Instagram Feed Section - MOVED HERE FROM BELOW */}
+                <FadeInSection>
+                    <div className="py-12 md:py-16 mb-8">
+                        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                            {/* Section Header */}
+                            <div className="text-center mb-10 md:mb-12">
+                                <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-6 tracking-wider bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                    RECENT WORKS
+                                </h2>
+                                <div className="w-32 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-8"></div>
+                                <p className="text-white/70 text-xl md:text-2xl px-4 max-w-3xl mx-auto leading-relaxed">
+                                    Browse our stunning collection of architectural visualizations
+                                </p>
+                            </div>
+
+                            {/* Filter Buttons - Larger and More Prominent */}
+                            <div className="flex justify-center gap-3 md:gap-4 flex-wrap mb-12 px-2">
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('renders');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'renders'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    ALL RENDERS
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('animations');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'animations'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    ANIMATIONS
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('exterior');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'exterior'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    EXTERIOR
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('kitchen');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'kitchen'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    KITCHEN
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('bathroom');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'bathroom'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    BATHROOM
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('bedroom');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'bedroom'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    BEDROOM
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setInstagramFilter('livingroom');
+                                        setCurrentInstagramIndex(0);
+                                    }}
+                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
+                                        instagramFilter === 'livingroom'
+                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
+                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
+                                    }`}
+                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
+                                >
+                                    LIVING ROOM
+                                </button>
+                            </div>
+
+                            {/* Large Cards Grid - 3 Column Layout */}
+                            <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+                                {getCurrentInstagramPosts().slice(0, 6).map((project, idx) => (
+                                    <TiltCard key={idx}>
+                                        <div
+                                            className="group relative bg-neutral-900 overflow-hidden border-2 border-white/20 hover:border-[#E2725B] transition-all duration-500 cursor-pointer rounded-2xl shadow-2xl hover:shadow-[#E2725B]/30"
+                                            onClick={() => {
+                                                setLightboxProject(project);
+                                                setLightboxIndex(0);
+                                            }}
+                                            style={{ minHeight: '350px' }}
+                                        >
+                                            {/* Image/Video */}
+                                            <div className="relative w-full h-[350px] md:h-[400px]">
                                                 {project.type === 'animation' ? (
                                                     <VideoThumbnail
                                                         thumbnail={project.thumbnail}
@@ -1037,21 +1178,71 @@ export default function BankoArtsPortfolio() {
                                                     <LazyImage
                                                         src={project.image}
                                                         alt={project.title}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                        className="w-full h-full object-cover"
                                                     />
                                                 )}
+
+                                                {/* Gradient Overlay */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
                                             </div>
-                                        </TiltCard>
-                                    ))}
+
+                                            {/* Content Overlay */}
+                                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <div className="flex-1">
+                                                        <p className="text-white/60 text-sm md:text-base uppercase tracking-widest mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                            {project.category}
+                                                        </p>
+                                                        <h3 className="text-white font-bold text-2xl md:text-4xl mb-3 tracking-wide leading-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                            {project.title}
+                                                        </h3>
+                                                        <div className="flex items-center gap-3 text-[#E2725B] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                                            <span className="text-base md:text-lg font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>VIEW FULL PROJECT</span>
+                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Play Icon for Videos */}
+                                                    {project.type === 'animation' && (
+                                                        <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-[#E2725B]/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-[#E2725B] transition-all">
+                                                            <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                                <path d="M8 5v14l11-7z"/>
+                                                            </svg>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </TiltCard>
+                                ))}
+                            </div>
+
+                            {/* Navigation - Large and Centered */}
+                            <div className="flex items-center justify-center gap-6 mt-10 md:mt-12">
+                                <button
+                                    onClick={prevInstagramSlide}
+                                    disabled={currentInstagramIndex === 0}
+                                    className="group flex w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full items-center justify-center transition-all shadow-2xl shadow-[#E2725B]/40 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                    aria-label="Previous projects"
+                                >
+                                    <ChevronLeft className="w-9 h-9 md:w-11 md:h-11 text-white" />
+                                </button>
+
+                                <div className="flex items-center gap-3 px-8 py-4 bg-neutral-800/60 backdrop-blur-sm rounded-2xl border-2 border-white/20">
+                                    <span className="text-white font-bold text-lg md:text-xl" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                        {Math.floor(currentInstagramIndex / 6) + 1} / {Math.ceil(getCurrentInstagramPosts().length / 6)}
+                                    </span>
                                 </div>
 
-                                {/* Right Arrow - Outside the grid - HIDDEN ON MOBILE */}
                                 <button
                                     onClick={nextInstagramSlide}
-                                    className="hidden md:flex flex-shrink-0 w-16 h-16 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full items-center justify-center transition-all shadow-lg"
-                                    aria-label="Next posts"
+                                    disabled={currentInstagramIndex + 6 >= getCurrentInstagramPosts().length}
+                                    className="group flex w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full items-center justify-center transition-all shadow-2xl shadow-[#E2725B]/40 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                    aria-label="Next projects"
                                 >
-                                    <ChevronRight className="w-8 h-8 text-white" />
+                                    <ChevronRight className="w-9 h-9 md:w-11 md:h-11 text-white" />
                                 </button>
                             </div>
                         </div>
@@ -1061,7 +1252,7 @@ export default function BankoArtsPortfolio() {
                 {/* About Section */}
                 <FadeInSection>
                     <div id="about" className="py-16 mb-8">
-                        <div className="max-w-4xl mx-auto text-center">
+                        <div className="max-w-6xl mx-auto text-center">
                             <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                 ABOUT US
                             </h2>
@@ -1073,8 +1264,8 @@ export default function BankoArtsPortfolio() {
                             </p>
                             <div className="grid md:grid-cols-3 gap-8 mt-12">
                                 <TiltCard>
-                                    <div className="p-6 bg-neutral-900/50 border border-white/10 rounded-lg">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <Building2 size={48} className="mx-auto" />
                                         </div>
                                         <h3 className="text-xl font-bold mb-3" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Expert Team</h3>
@@ -1082,8 +1273,8 @@ export default function BankoArtsPortfolio() {
                                     </div>
                                 </TiltCard>
                                 <TiltCard>
-                                    <div className="p-6 bg-neutral-900/50 border border-white/10 rounded-lg">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                             </svg>
@@ -1093,8 +1284,8 @@ export default function BankoArtsPortfolio() {
                                     </div>
                                 </TiltCard>
                                 <TiltCard>
-                                    <div className="p-6 bg-neutral-900/50 border border-white/10 rounded-lg">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
@@ -1114,7 +1305,7 @@ export default function BankoArtsPortfolio() {
                         <div className="max-w-6xl mx-auto">
                             <div className="grid md:grid-cols-2 gap-8">
                                 {/* Freelancer.com Card */}
-                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#5B8BA0]/50 transition-all duration-300 hover:translate-y-[-2px]">
+                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#E2725B]/50 transition-all duration-300 hover:translate-y-[-2px]">
                                     {/* Freelancer.com Logo */}
                                     <div className="flex justify-center mb-4">
                                         <div className="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
@@ -1127,7 +1318,7 @@ export default function BankoArtsPortfolio() {
                                     {/* Profile Header */}
                                     <div className="flex flex-col items-center text-center mb-6">
                                         <div className="relative mb-4">
-                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#5B8BA0] to-[#4A7386] p-1">
+                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#C95E48] p-1">
                                                 <img
                                                     src="/images/profile.png"
                                                     alt="Berk B."
@@ -1175,14 +1366,14 @@ export default function BankoArtsPortfolio() {
                                         href="https://www.freelancer.com/u/brkbnkgll"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#5B8BA0] text-white font-bold tracking-wider transition-all rounded-lg text-center"
+                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#E2725B] text-white font-bold tracking-wider transition-all rounded-lg text-center"
                                     >
                                         View Freelancer Profile
                                     </a>
                                 </div>
 
                                 {/* Upwork Card */}
-                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#5B8BA0]/50 transition-all duration-300 hover:translate-y-[-2px]">
+                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#E2725B]/50 transition-all duration-300 hover:translate-y-[-2px]">
                                     {/* Upwork Logo */}
                                     <div className="flex justify-center mb-4">
                                         <div className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
@@ -1195,7 +1386,7 @@ export default function BankoArtsPortfolio() {
                                     {/* Profile Header */}
                                     <div className="flex flex-col items-center text-center mb-6">
                                         <div className="relative mb-4">
-                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#5B8BA0] to-[#4A7386] p-1">
+                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#C95E48] p-1">
                                                 <img
                                                     src="/images/profile.png"
                                                     alt="Berk B."
@@ -1243,7 +1434,7 @@ export default function BankoArtsPortfolio() {
                                         href="https://www.upwork.com/freelancers/berkbanko"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#5B8BA0] text-white font-bold tracking-wider transition-all rounded-lg text-center"
+                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#E2725B] text-white font-bold tracking-wider transition-all rounded-lg text-center"
                                     >
                                         View Upwork Profile
                                     </a>
@@ -1272,8 +1463,8 @@ export default function BankoArtsPortfolio() {
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <Building2 size={56} className="mx-auto" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Exterior Visualization</h3>
@@ -1282,8 +1473,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <Sofa size={56} className="mx-auto" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Interior Visualization</h3>
@@ -1292,8 +1483,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <UtensilsCrossed size={56} className="mx-auto" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Kitchen Design</h3>
@@ -1302,8 +1493,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <ShowerHead size={56} className="mx-auto" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Bathroom Visualization</h3>
@@ -1312,8 +1503,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <Bed size={56} className="mx-auto" />
                                         </div>
                                         <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Bedroom Visualization</h3>
@@ -1322,8 +1513,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                             </svg>
@@ -1334,8 +1525,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                             </svg>
@@ -1346,8 +1537,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                                             </svg>
@@ -1358,8 +1549,8 @@ export default function BankoArtsPortfolio() {
                                 </TiltCard>
 
                                 <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#5B8BA0] transition-all h-full flex flex-col">
-                                        <div className="text-[#5B8BA0] mb-4">
+                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
+                                        <div className="text-[#E2725B] mb-4">
                                             <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
@@ -1372,15 +1563,15 @@ export default function BankoArtsPortfolio() {
                                 </div>
 
                                 {/* Traditional Tools Column */}
-                                <div>
+                                <div className="flex flex-col">
                                     <h3 className="text-3xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
                                         TOOLS
                                     </h3>
-                                    <div className="space-y-6">
+                                    <div className="space-y-6 flex-1 flex flex-col justify-between">
                                         {/* 3ds Max */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-[#5B8BA0] to-[#4A7386] rounded-lg flex items-center justify-center">
+                                                <div className="w-12 h-12 bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#B04A36] rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/>
                                                     </svg>
@@ -1391,7 +1582,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* V-Ray */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1404,7 +1595,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* Corona Renderer */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1417,7 +1608,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* Adobe Photoshop */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1430,7 +1621,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* AutoCAD */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1443,7 +1634,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* SketchUp */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1466,7 +1657,7 @@ export default function BankoArtsPortfolio() {
                                     <div className="space-y-6">
 
                                         {/* Midjourney */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1479,7 +1670,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* Stable Diffusion */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1492,7 +1683,7 @@ export default function BankoArtsPortfolio() {
                                         </div>
 
                                         {/* ComfyUI */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#5B8BA0] transition-all">
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
                                             <div className="flex items-center gap-4 mb-3">
                                                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                                                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1524,7 +1715,7 @@ export default function BankoArtsPortfolio() {
                                 {/* Left Arrow */}
                                 <button
                                     onClick={prevTestimonial}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 w-12 h-12 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full flex items-center justify-center transition-all shadow-lg"
                                 >
                                     <ChevronLeft className="w-6 h-6 text-white" />
                                 </button>
@@ -1532,7 +1723,7 @@ export default function BankoArtsPortfolio() {
                                 {/* Right Arrow */}
                                 <button
                                     onClick={nextTestimonial}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 w-12 h-12 bg-[#5B8BA0] hover:bg-[#4A7386] rounded-full flex items-center justify-center transition-all shadow-lg"
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 w-12 h-12 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full flex items-center justify-center transition-all shadow-lg"
                                 >
                                     <ChevronRight className="w-6 h-6 text-white" />
                                 </button>
@@ -1566,29 +1757,205 @@ export default function BankoArtsPortfolio() {
                     </div>
                 </FadeInSection>
 
-                {/* Get In Touch Section with Contact Form */}
+                {/* FAQs & Contact Section - Side by Side Layout */}
                 <FadeInSection>
-                    <div id="contact" className="py-12 mb-8">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-wider mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                GET IN TOUCH
-                            </h2>
-                            <div className="flex justify-center gap-6 text-white/40 mt-8">
-                                <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                                </a>
-                                <a href="https://www.instagram.com/bankoarts" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                    <Instagram size={24} />
-                                </a>
-                                <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                                </a>
-                                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
-                                </a>
+                    <div id="faqs" className="py-12 md:py-16 mb-8">
+                        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+
+                                {/* FAQs Column */}
+                                <div>
+                                    {/* Section Header */}
+                                    <div className="text-center mb-12 md:mb-16">
+                                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                            FAQs
+                                        </h2>
+                                        <div className="w-24 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-6"></div>
+                                        <p className="text-white/70 text-lg md:text-xl leading-relaxed">
+                                            Frequently Asked Questions
+                                        </p>
+                                    </div>
+
+                                    {/* FAQ Accordion */}
+                                    <div className="space-y-4">
+                                        {/* FAQ 1 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 0 ? null : 0)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    What is the typical turnaround time for a project?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 0 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 0 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        Standard projects typically take about 1 week to complete. However, this timeline may extend depending on the number of renders, complexity of animations, and additional services required. The final delivery time is determined by project scope and specific requirements.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* FAQ 2 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 1 ? null : 1)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    How much do your services cost?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 1 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 1 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        Pricing varies based on project complexity, number of views, resolution, and deadline requirements. We don't have fixed rates as each project is unique. Please contact us with your project details, and we'll provide a customized quote tailored to your specific needs.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* FAQ 3 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 2 ? null : 2)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    What file formats do you need to start a project?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 2 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 2 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        We accept various file formats including AutoCAD (DWG, DXF), SketchUp (SKP), Revit (RVT), 3ds Max, and PDF plans. If you only have 2D drawings or sketches, we can work from those as well. The more detailed information you provide, the more accurate the final result will be.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* FAQ 4 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 3 ? null : 3)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    How many revisions are included?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 3 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 3 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        We include up to 2 rounds of minor revisions in our standard packages. This covers adjustments like camera angles, lighting tweaks, and material changes. Major design changes or additional views may incur extra charges. We aim for 100% client satisfaction on every project.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* FAQ 5 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 4 ? null : 4)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    Do you offer animation and walkthrough services?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 4 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 4 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        Yes! We specialize in creating dynamic walkthroughs and cinematic animations that showcase your architectural designs. These are perfect for presentations, marketing materials, and social media. Animations are priced based on duration, complexity, and resolution.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* FAQ 6 */}
+                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
+                                            <button
+                                                onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
+                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
+                                            >
+                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                                                    Can you work with international clients?
+                                                </h3>
+                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 5 ? 'rotate-180' : ''}`}>
+                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 5 ? 'max-h-96' : 'max-h-0'}`}>
+                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                                                    <p className="text-white/60 leading-relaxed">
+                                                        Absolutely! We work with clients worldwide and have experience delivering projects across different time zones. We communicate via email, WhatsApp, and video calls, and accept international payments through bank transfer and other secure methods.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Contact Column */}
+                                <div id="contact" className="flex flex-col h-full">
+                                    <div className="text-center mb-12 md:mb-16">
+                                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
+                                            GET IN TOUCH
+                                        </h2>
+                                        <div className="w-24 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-6"></div>
+                                        <div className="flex justify-center gap-6 text-white/40">
+                                            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                            </a>
+                                            <a href="https://www.instagram.com/bankoarts" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                                                <Instagram size={24} />
+                                            </a>
+                                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                                            </a>
+                                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                                            </a>
+                                            <a href="https://wa.me/905392688915?text=Hello%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <ContactForm />
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <ContactForm />
                     </div>
                 </FadeInSection>
 

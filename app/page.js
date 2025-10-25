@@ -7,6 +7,7 @@ import TiltCard from './components/TiltCard';
 import { ScrollProgressBar, BackToTopButton, AnimatedCounter, FadeInSection } from './components/ScrollAnimations';
 import Lightbox from './components/Lightbox';
 import LazyImage, { VideoThumbnail } from './components/LazyImage';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 export default function BankoArtsPortfolio() {
     const [activeSection, setActiveSection] = useState(null);
@@ -2080,6 +2081,9 @@ export default function BankoArtsPortfolio() {
                     onNavigate={handleLightboxNavigate}
                 />
             )}
+
+            {/* Floating WhatsApp Button */}
+            <FloatingWhatsApp />
         </div>
     );
 }

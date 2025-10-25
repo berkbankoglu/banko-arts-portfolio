@@ -6,7 +6,7 @@ export default function FloatingWhatsApp() {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <div className="fixed bottom-8 right-8 z-50 flex items-center gap-3">
+        <div className="fixed bottom-24 right-8 z-50 flex items-center gap-3">
             {/* Text tooltip that appears on hover */}
             <div
                 className={`

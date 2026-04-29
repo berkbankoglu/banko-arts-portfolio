@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ContactForm from './components/ContactForm';
-import Lenis from '@studio-freight/lenis';
+import Lenis from 'lenis';
 
 /* ─── data ─────────────────────────────────────────────── */
 const projects = [
@@ -396,7 +396,7 @@ function DotGrid() {
 }
 
 /* ─── Work Card ─────────────────────────────────────────── */
-function WorkCard({ item, visible, index }) {
+function WorkCard({ item, visible, index, imgRef }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div style={{
@@ -409,11 +409,11 @@ function WorkCard({ item, visible, index }) {
       onMouseLeave={() => setHovered(false)}
     >
       <div style={{ overflow:'hidden', borderRadius:4 }}>
-        <img src={item.image} alt={item.title} draggable={false}
+        <img ref={imgRef} src={item.image} alt={item.title} draggable={false}
           style={{
             display:'block', width:'100%',
             aspectRatio:'3/4', objectFit:'cover',
-            filter: hovered ? 'grayscale(0%)' : 'grayscale(100%)',
+            filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
             transform: hovered ? 'scale(1.04)' : 'scale(1)',
             transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
             pointerEvents:'none',
@@ -432,14 +432,56 @@ function WorkCard({ item, visible, index }) {
 function HeroTitle() {
   return (
     <div style={{ position:'relative', zIndex:1, width:'100%' }}>
-      {/* Logo — sol üst küçük */}
-      <img src="/images/logo.svg" alt="Banko Arts" style={{ display:'block', width:'clamp(80px, 10vw, 140px)', height:'auto', marginBottom:24 }} />
       {/* BANKO ARTS büyük başlık */}
       <div style={{ display:'inline-block', background:'#f5e200', padding:'0.02em 0.08em 0.04em 0', marginBottom:'0.04em' }}>
-        <span style={{ display:'block', fontSize:'clamp(88px, 14vw, 260px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', userSelect:'none' }}>BANKO</span>
+        <span style={{ display:'block', fontSize:'clamp(88px, 11vw, 180px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', userSelect:'none' }}>BANKO</span>
       </div>
       <br/>
-      <span style={{ display:'inline-block', fontSize:'clamp(88px, 14vw, 260px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', filter:'drop-shadow(5px 8px 0px rgba(0,0,0,0.13)) drop-shadow(10px 18px 28px rgba(0,0,0,0.09))', position:'relative', zIndex:2, userSelect:'none' }}>ARTS</span>
+      <span style={{ display:'inline-block', fontSize:'clamp(88px, 11vw, 180px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', filter:'drop-shadow(5px 8px 0px rgba(0,0,0,0.13)) drop-shadow(10px 18px 28px rgba(0,0,0,0.09))', position:'relative', zIndex:2, userSelect:'none' }}>ARTS</span>
+    </div>
+  );
+}
+
+/* ─── Our Works Label ───────────────────────────────────── */
+function OurWorksLabel({ imgHeight, visible }) {
+  const textRef = useRef(null);
+  const [fontSize, setFontSize] = useState(80);
+
+  useEffect(() => {
+    if (!imgHeight || !textRef.current) return;
+    let lo = 10, hi = 400, fs = 80;
+    for (let i = 0; i < 20; i++) {
+      fs = (lo + hi) / 2;
+      textRef.current.style.fontSize = fs + 'px';
+      const h = textRef.current.offsetHeight;
+      if (h < imgHeight) lo = fs;
+      else hi = fs;
+    }
+    setFontSize(Math.floor(lo));
+  }, [imgHeight]);
+
+  return (
+    <div style={{
+      width:'clamp(80px, 8vw, 140px)', flexShrink:0,
+      height: imgHeight ? `${imgHeight}px` : '520px',
+      display:'flex', alignItems:'flex-end', justifyContent:'center',
+      opacity: visible ? 1 : 0,
+      transition:'opacity 0.8s cubic-bezier(0.22,1,0.36,1)',
+      position:'relative', zIndex:1,
+    }}>
+      <p ref={textRef} style={{
+        writingMode:'vertical-rl',
+        transform:'rotate(180deg)',
+        fontSize: fontSize + 'px',
+        fontFamily:'var(--font-anton), Impact, sans-serif',
+        fontWeight:400,
+        letterSpacing:'0.04em',
+        textTransform:'uppercase',
+        color:'var(--black)', userSelect:'none',
+        lineHeight:1,
+        whiteSpace:'nowrap',
+        display:'block',
+      }}>OUR WORKS</p>
     </div>
   );
 }
@@ -455,9 +497,11 @@ const HSCROLL_ITEMS = [
 ];
 
 function HScrollSection() {
-  const scrollRef  = useRef(null);
-  const sectionRef = useRef(null);
+  const scrollRef   = useRef(null);
+  const sectionRef  = useRef(null);
+  const firstImgRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [imgHeight, setImgHeight] = useState(0);
   const drag = useRef({ active:false, startX:0, scrollLeft:0 });
 
   useEffect(() => {
@@ -470,6 +514,22 @@ function HScrollSection() {
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
+
+  useEffect(() => {
+    const measure = () => {
+      if (firstImgRef.current) setImgHeight(firstImgRef.current.offsetHeight);
+    };
+    const ro = new ResizeObserver(measure);
+    if (firstImgRef.current) ro.observe(firstImgRef.current);
+    if (firstImgRef.current?.complete) measure();
+    firstImgRef.current?.addEventListener('load', measure);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      firstImgRef.current?.removeEventListener('load', measure);
+      window.removeEventListener('resize', measure);
+    };
+  }, [visible]);
 
   const onMouseDown = (e) => {
     const el = scrollRef.current;
@@ -485,24 +545,35 @@ function HScrollSection() {
     if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
   };
 
-  return (
-    <div ref={sectionRef} style={{ display:'flex', paddingBottom:96, minHeight:560 }}>
+  const bgImgs = [
+    { src:'/images/architecture/Exterior 1.png',   top:'5%',  left:'-4%',  w:'22vw', rot:'-6deg',  op:0.07 },
+    { src:'/images/architecture/Living Room.png',   top:'10%', right:'-3%', w:'18vw', rot:'5deg',   op:0.06 },
+    { src:'/images/architecture/Exterior 3.2.png',  top:'45%', left:'8%',   w:'16vw', rot:'8deg',   op:0.07 },
+    { src:'/images/architecture/Bedroom.png',       top:'55%', right:'2%',  w:'20vw', rot:'-4deg',  op:0.06 },
+    { src:'/images/architecture/Kitchen.png',       top:'20%', left:'35%',  w:'14vw', rot:'3deg',   op:0.05 },
+  ];
 
-      {/* Left sticky label */}
-      <div style={{
-        width:'clamp(120px, 10vw, 180px)', flexShrink:0,
-        display:'flex', alignItems:'center', justifyContent:'center',
-        opacity: visible ? 1 : 0,
-        transition:'opacity 0.8s cubic-bezier(0.22,1,0.36,1)',
-      }}>
-        <p style={{
-          writingMode:'vertical-rl',
-          transform:'rotate(180deg)',
-          fontSize:'clamp(48px, 6vw, 96px)',
-          fontWeight:800, letterSpacing:'-0.03em',
-          color:'var(--black)', userSelect:'none',
-        }}>Our Works</p>
-      </div>
+  return (
+    <div ref={sectionRef} style={{ display:'flex', paddingBottom:96, minHeight:560, alignItems:'flex-start', position:'relative', overflow:'hidden' }}>
+
+      {/* Background ghost images */}
+      {bgImgs.map((bg, i) => (
+        <img key={i} src={bg.src} alt="" aria-hidden="true" style={{
+          position:'absolute',
+          top: bg.top, left: bg.left, right: bg.right,
+          width: bg.w, height:'auto',
+          objectFit:'cover',
+          transform: `rotate(${bg.rot})`,
+          opacity: bg.op,
+          filter:'grayscale(100%)',
+          pointerEvents:'none',
+          userSelect:'none',
+          zIndex:0,
+        }} />
+      ))}
+
+      {/* Left sticky label — fotoğrafla tam boydan boya */}
+      <OurWorksLabel imgHeight={imgHeight} visible={visible} />
 
       {/* Scrollable cards */}
       <div
@@ -510,14 +581,16 @@ function HScrollSection() {
         onMouseDown={onMouseDown} onMouseMove={onMouseMove}
         onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         style={{
-          flex:1, display:'flex', gap:48,
+          flex:1, display:'flex', gap:24,
           overflowX:'auto', overflowY:'hidden',
           scrollbarWidth:'none', msOverflowStyle:'none',
-          cursor:'grab', alignItems:'flex-start',
+          cursor:'grab', alignItems:'flex-end',
+          paddingLeft:'clamp(40px, 7vw, 120px)',
           paddingRight:'50vw',
+          position:'relative', zIndex:1,
         }}>
         {HSCROLL_ITEMS.map((item, i) => (
-          <WorkCard key={item.id} item={item} visible={visible} index={i} />
+          <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={i === 0 ? firstImgRef : null} />
         ))}
       </div>
     </div>
@@ -529,6 +602,7 @@ export default function BankoArts() {
   const [menuOpen, setMenuOpen]               = useState(false);
   const [activePage, setActivePage]           = useState('works');
   const [lightboxProject, setLightboxProject] = useState(null);
+  const [inContact, setInContact]             = useState(false);
 
   const allProjects = projects;
   const lightboxIndex = lightboxProject ? allProjects.findIndex(p => p.id === lightboxProject.id) : -1;
@@ -546,11 +620,11 @@ export default function BankoArts() {
   const toggleContact = () => {
     const contactEl = document.getElementById('section-contact');
     if (!contactEl) return;
-    const rect = contactEl.getBoundingClientRect();
-    const inContact = rect.top <= 120 && rect.bottom > 120;
     if (inContact) {
+      setInContact(false);
       window.lenis?.scrollTo(0, { duration: 1.6 });
     } else {
+      setInContact(true);
       window.lenis?.scrollTo(contactEl, { offset: -20, duration: 1.6 });
     }
   };
@@ -580,20 +654,21 @@ export default function BankoArts() {
 
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--bg)', color:'var(--black)', paddingLeft:'clamp(136px, 8vw, 220px)', paddingRight:'clamp(136px, 8vw, 220px)' }}>
+    <div style={{ minHeight:'100vh', background:'var(--bg)', color:'var(--black)', paddingLeft:'clamp(100px, 7vw, 160px)', paddingRight:'clamp(100px, 7vw, 160px)' }}>
 
       {/* ── Sol çubuk + Menü ── */}
       <LeftBar menuOpen={menuOpen} onOpen={() => setMenuOpen(true)} onClose={() => setMenuOpen(false)} onNav={goPage} activePage={activePage} />
 
       {/* ── Right bar ── */}
       <div className="side-bar side-bar--right" onClick={toggleContact}>
-        <span>Contacts</span>
+        <span>{inContact ? 'Back' : 'Contacts'}</span>
       </div>
 
       {/* ── WORKS ── */}
       <section id="section-works" style={{ borderTop:'1px solid var(--sep)' }}>
         <div style={{ position:'relative', padding:'48px 20px 0 20px', display:'flex', justifyContent:'space-between', alignItems:'flex-end', minHeight:'60vh', gap:0 }}>
           <DotGrid />
+          <img src="/images/logo.svg" alt="Banko Arts" style={{ position:'absolute', top:24, left:20, width:'clamp(60px, 6vw, 100px)', height:'auto', zIndex:2 }} />
           <div style={{ flex:1, minWidth:0, position:'relative', zIndex:1 }}>
             <HeroTitle />
           </div>
@@ -603,17 +678,18 @@ export default function BankoArts() {
         </div>
         <div style={{ margin:'40px 20px 0', borderTop:'1px solid var(--sep)' }} />
         <div style={{ padding:'56px 20px 80px' }}>
-          <p style={{ fontSize:'clamp(28px, 3vw, 64px)', fontWeight:400, letterSpacing:'-0.02em', lineHeight:1.2, maxWidth:1200 }}>
+          <p style={{ fontSize:'clamp(24px, 2.2vw, 44px)', fontWeight:400, letterSpacing:'-0.02em', lineHeight:1.2, maxWidth:1200 }}>
             We believe beauty is born from precision, not chance. Every render tells a story — before the foundation is even laid.
           </p>
         </div>
+        <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
         <HScrollSection />
       </section>
 
       {/* ── SERVICES ── */}
       <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
         <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
-        <h2 style={{ fontSize:'clamp(48px, 7vw, 130px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
+        <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
         <hr className="ba-divider" style={{ marginBottom:64 }}/>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, maxWidth:1600 }}>
           {[
@@ -637,7 +713,7 @@ export default function BankoArts() {
       {/* ── CONTACT ── */}
       <section id="section-contact" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
         <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°003</p>
-        <h2 style={{ fontSize:'clamp(48px, 7vw, 130px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Get in touch</h2>
+        <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Get in touch</h2>
         <hr className="ba-divider" style={{ marginBottom:64 }}/>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
           <div><ContactForm /></div>

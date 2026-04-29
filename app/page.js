@@ -1,2089 +1,697 @@
 'use client'
 
-import React, { useState } from 'react';
-import { Building2, Gamepad2, Mail, Briefcase, Instagram, Menu, X, ChevronLeft, ChevronRight, UtensilsCrossed, ShowerHead, Bed, Sofa } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
 import ContactForm from './components/ContactForm';
-import TiltCard from './components/TiltCard';
-import { ScrollProgressBar, BackToTopButton, AnimatedCounter, FadeInSection } from './components/ScrollAnimations';
-import Lightbox from './components/Lightbox';
-import LazyImage, { VideoThumbnail } from './components/LazyImage';
-import FloatingWhatsApp from './components/FloatingWhatsApp';
+import Lenis from '@studio-freight/lenis';
 
-export default function BankoArtsPortfolio() {
-    const [activeSection, setActiveSection] = useState(null);
-    const [activeFilter, setActiveFilter] = useState('all');
-    const [selectedProject, setSelectedProject] = useState(null);
-    const [imageZoom, setImageZoom] = useState(1);
-    const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-    const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [lightboxProject, setLightboxProject] = useState(null);
-    const [lightboxIndex, setLightboxIndex] = useState(0);
-    const [scrollY, setScrollY] = useState(0);
-    const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
-    const [currentInstagramIndex, setCurrentInstagramIndex] = useState(0);
-    const [instagramFilter, setInstagramFilter] = useState('renders');
-    const [openFaqIndex, setOpenFaqIndex] = useState(null);
+/* ─── data ─────────────────────────────────────────────── */
+const projects = [
+  { id:1,  title:'Exterior — Residential', category:'exterior', type:'render', image:'/images/architecture/Exterior 1.png' },
+  { id:2,  title:'Exterior — Garden View', category:'exterior', type:'render', image:'/images/architecture/Exterior 2.png' },
+  { id:3,  title:'Exterior — Facade',      category:'exterior', type:'render', image:'/images/architecture/Exterior 3.png' },
+  { id:4,  title:'Exterior — Detail',      category:'exterior', type:'render', image:'/images/architecture/Exterior 3.1.png' },
+  { id:5,  title:'Exterior — Night',       category:'exterior', type:'render', image:'/images/architecture/Exterior 3.2.png' },
+  { id:6,  title:'Exterior — Full View',   category:'exterior', type:'render', image:'/images/architecture/Exterior.png' },
+  { id:7,  title:'Living Room',            category:'interior', type:'render', image:'/images/architecture/Living Room.png' },
+  { id:8,  title:'Bedroom',               category:'interior', type:'render', image:'/images/architecture/Bedroom.png' },
+  { id:9,  title:'Kitchen',               category:'interior', type:'render', image:'/images/architecture/Kitchen.png' },
+  { id:10, title:'Bathroom',              category:'interior', type:'render', image:'/images/architecture/Bathroom.png' },
+  { id:11, title:'Bathroom — II',         category:'interior', type:'render', image:'/images/architecture/Bathroom 2.png' },
+  { id:12, title:'Rooftop',               category:'interior', type:'render', image:'/images/architecture/RoofTop.png' },
+  { id:13, title:'Both Views',            category:'animation',type:'video',  image:'/images/architecture/Both.png',        video:'/videos/both_views_animation.mp4' },
+  { id:14, title:'Bedroom Animation',     category:'animation',type:'video',  image:'/images/architecture/Bedroom.png',     video:'/videos/bedroom_animation.mp4' },
+  { id:15, title:'Living Room Animation', category:'animation',type:'video',  image:'/images/architecture/Living Room.png', video:'/videos/livingroom_animation.mp4' },
+  { id:16, title:'Kitchen Animation',     category:'animation',type:'video',  image:'/images/architecture/Kitchen.png',     video:'/videos/kitchen_animation.mp4' },
+  { id:17, title:'Exterior Animation I',  category:'animation',type:'video',  image:'/images/architecture/Exterior 1.png',  video:'/videos/exterior1_animation.mp4' },
+  { id:18, title:'Exterior Animation II', category:'animation',type:'video',  image:'/images/architecture/Exterior 2.png',  video:'/videos/exterior2_animation.mp4' },
+  { id:19, title:'Exterior Animation III',category:'animation',type:'video',  image:'/images/architecture/Exterior 3.png',  video:'/videos/exterior3_animation.mp4' },
+  { id:20, title:'Rooftop Animation',     category:'animation',type:'video',  image:'/images/architecture/RoofTop.png',     video:'/videos/rooftop_animation.mp4' },
+];
 
-    // Video list for hero background
-    const heroVideos = [
-        '/videos/bedroom_animation.mp4',
-        '/videos/livingroom_animation.mp4',
-        '/videos/kitchen_animation.mp4',
-        '/videos/exterior1_animation.mp4',
-        '/videos/exterior2_animation.mp4',
-        '/videos/exterior3_animation.mp4',
-        '/videos/exterior3_1_animation.mp4',
-        '/videos/rooftop_animation.mp4',
-        '/videos/both_views_animation.mp4'
-    ];
+/* ─── Menu overlay ─────────────────────────────────────── */
+/* ─── Sol çubuk + Menü tek element ─────────────────────── */
+function LeftBar({ menuOpen, onOpen, onClose, onNav, activePage }) {
+  const navItems = ['Works', 'Services', 'About', 'Contact'];
+  const [contentVisible, setContentVisible] = useState(false);
 
-    // ESC tuşu ile modal'ı kapat ve scroll kontrolü
-    React.useEffect(() => {
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                setSelectedProject(null);
-                setImageZoom(1);
-                setImagePosition({ x: 0, y: 0 });
-            }
-        };
-
-        if (selectedProject) {
-            // Modal açıkken body scroll'unu engelle
-            document.body.style.overflow = 'hidden';
-            window.addEventListener('keydown', handleEscape);
-            return () => {
-                document.body.style.overflow = 'unset';
-                window.removeEventListener('keydown', handleEscape);
-            };
-        }
-    }, [selectedProject]);
-
-    // Zoom fonksiyonları
-    const handleWheel = (e) => {
-        if (selectedProject && selectedProject.type === 'render') {
-            e.preventDefault();
-            const delta = e.deltaY * -0.001;
-            const newZoom = Math.min(Math.max(1, imageZoom + delta), 5);
-            setImageZoom(newZoom);
-
-            if (newZoom === 1) {
-                setImagePosition({ x: 0, y: 0 });
-            }
-        }
-    };
-
-    const handleMouseDown = (e) => {
-        if (imageZoom > 1 && selectedProject && selectedProject.type === 'render') {
-            e.preventDefault();
-            setIsDragging(true);
-            setDragStart({
-                x: e.clientX - imagePosition.x / 0.4,
-                y: e.clientY - imagePosition.y / 0.4
-            });
-        }
-    };
-
-    const handleMouseMove = (e) => {
-        if (isDragging && imageZoom > 1 && selectedProject && selectedProject.type === 'render') {
-            const container = e.currentTarget;
-            const rect = container.getBoundingClientRect();
-            const img = container.querySelector('img');
-
-            if (img) {
-                const imgRect = img.getBoundingClientRect();
-
-                // Yeni pozisyonu hesapla - hızı %40'a düşür
-                let newX = (e.clientX - dragStart.x) * 0.4;
-                let newY = (e.clientY - dragStart.y) * 0.4;
-
-                // Sınırları hesapla - görselin dışarı taşmamasını sağla
-                const maxX = Math.max(0, (imgRect.width * imageZoom - rect.width) / 2);
-                const maxY = Math.max(0, (imgRect.height * imageZoom - rect.height) / 2);
-
-                newX = Math.max(-maxX, Math.min(maxX, newX));
-                newY = Math.max(-maxY, Math.min(maxY, newY));
-
-                setImagePosition({ x: newX, y: newY });
-            }
-        }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    const resetZoom = () => {
-        setImageZoom(1);
-        setImagePosition({ x: 0, y: 0 });
-        setIsDragging(false);
-    };
-
-    const handleLightboxNavigate = (direction) => {
-        // Navigate through projects based on current filter
-        const filteredProjects = getFilteredInstagramPosts();
-        const currentFilteredIndex = filteredProjects.findIndex(p => p.title === lightboxProject.title);
-
-        if (direction === 'next') {
-            const newFilteredIndex = (currentFilteredIndex + 1) % filteredProjects.length;
-            const newProject = filteredProjects[newFilteredIndex];
-            const newIndex = architectureProjects.findIndex(p => p.title === newProject.title);
-            setLightboxIndex(newIndex);
-            setLightboxProject(newProject);
-        } else {
-            const newFilteredIndex = (currentFilteredIndex - 1 + filteredProjects.length) % filteredProjects.length;
-            const newProject = filteredProjects[newFilteredIndex];
-            const newIndex = architectureProjects.findIndex(p => p.title === newProject.title);
-            setLightboxIndex(newIndex);
-            setLightboxProject(newProject);
-        }
-    };
-
-    // Handle video end - switch to next video when current one ends with smooth fade
-    const handleVideoEnd = () => {
-        setIsTransitioning(true);
-        setTimeout(() => {
-            setCurrentVideoIndex((prevIndex) =>
-                (prevIndex + 1) % heroVideos.length
-            );
-            setTimeout(() => {
-                setIsTransitioning(false);
-            }, 50);
-        }, 1000); // Wait for fade out
-    };
-
-    // Scroll to top when activeSection changes
-    React.useEffect(() => {
-        if (activeSection) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }, [activeSection]);
-
-    // Parallax scroll effect
-    React.useEffect(() => {
-        const handleScroll = () => {
-            setScrollY(window.scrollY);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // Testimonials data
-    const testimonialsData = [
-        {
-            quote: "Outstanding work! The visualizations were exactly what we needed for our presentation. The attention to detail and photorealistic quality exceeded our expectations.",
-            author: "Michael Anderson",
-            position: "Architect, Anderson Design Studio"
-        },
-        {
-            quote: "Professional service from start to finish. Fast delivery and excellent communication throughout the project. Highly recommended!",
-            author: "Sarah Johnson",
-            position: "Developer, Urban Spaces Inc."
-        },
-        {
-            quote: "The 3D animations brought our project to life in ways we couldn't imagine. Clients were impressed and we secured the deal thanks to these visuals.",
-            author: "David Chen",
-            position: "Interior Designer, Chen Interiors"
-        },
-        {
-            quote: "Exceptional quality and remarkable turnaround time. The team understood our vision perfectly and delivered renders that truly captured the essence of our design.",
-            author: "Emily Rodriguez",
-            position: "Project Manager, Vista Developers"
-        },
-        {
-            quote: "Working with Banko Arts was a game-changer for our firm. The level of detail and photorealism in their work helped us win multiple high-value contracts.",
-            author: "Robert Williams",
-            position: "Principal Architect, Williams & Partners"
-        },
-        {
-            quote: "Incredible talent and professionalism. The kitchen and bathroom visualizations were so realistic that our clients thought they were photographs!",
-            author: "Jennifer Lee",
-            position: "Interior Designer, Modern Living Spaces"
-        },
-        {
-            quote: "Best visualization service we've ever used. The lighting design expertise really shows in every render. Worth every penny!",
-            author: "Thomas Martinez",
-            position: "CEO, Skyline Construction"
-        },
-        {
-            quote: "The exterior visualizations helped us sell our entire development before construction even began. Absolutely stunning work!",
-            author: "Amanda Foster",
-            position: "Real Estate Developer, Foster Group"
-        },
-        {
-            quote: "Amazing attention to materials and textures. The post-production work is magazine-quality. Our marketing materials have never looked better!",
-            author: "James Patterson",
-            position: "Marketing Director, Prestige Homes"
-        },
-        {
-            quote: "The 3D walkthrough animations were a hit at our investor presentation. Secured funding within a week. Couldn't be happier with the results!",
-            author: "Lisa Thompson",
-            position: "Founder, Thompson Real Estate Ventures"
-        },
-        {
-            quote: "Delivered exactly what we asked for, on time and within budget. The bedroom renderings captured the mood and ambiance perfectly. Will definitely work together again!",
-            author: "Marcus Brown",
-            position: "Senior Designer, Elegant Interiors"
-        },
-        {
-            quote: "The level of realism in the lighting and shadows is unmatched. Our clients are always amazed when they see the final renders. Truly exceptional work!",
-            author: "Sofia Hernandez",
-            position: "Creative Director, Luxe Living Co."
-        },
-        {
-            quote: "Fast turnaround without sacrificing quality. The architectural visualizations helped us close deals 30% faster. An invaluable partner for our business!",
-            author: "Christopher Taylor",
-            position: "Sales Director, Prime Properties"
-        },
-        {
-            quote: "Every single detail was perfect - from the fabric textures to the natural lighting. The team's understanding of materials and composition is outstanding!",
-            author: "Rachel Kim",
-            position: "Lead Architect, Studio Kim & Associates"
-        },
-        {
-            quote: "We've worked with many visualization studios, but none compare to this level of professionalism and artistry. The renders are simply breathtaking!",
-            author: "Daniel White",
-            position: "Principal, White Architecture Group"
-        },
-        {
-            quote: "The exterior night renders with lighting effects were phenomenal. They captured the exact atmosphere we wanted to convey. Absolutely brilliant work!",
-            author: "Nicole Davis",
-            position: "Design Manager, Metropolitan Developers"
-        },
-        {
-            quote: "Responsive, creative, and incredibly skilled. The 3D visualizations exceeded our expectations and helped us win a major commercial project. Highly professional!",
-            author: "Andrew Wilson",
-            position: "Project Lead, Wilson Construction Ltd."
-        },
-        {
-            quote: "The kitchen renderings were so detailed and realistic that our clients made material selections based directly on them. Saved us countless hours in revisions!",
-            author: "Maria Garcia",
-            position: "Interior Architect, Garcia Design Studio"
-        },
-        {
-            quote: "Exceptional understanding of architectural vision and design intent. The team translated our sketches into stunning photorealistic renders. Couldn't ask for better!",
-            author: "Benjamin Scott",
-            position: "Founder, Scott & Partners Architects"
-        },
-        {
-            quote: "The attention to detail in every render is remarkable. From furniture placement to lighting angles - everything is perfectly executed. A true professional!",
-            author: "Victoria Moore",
-            position: "Senior Interior Designer, Moore Spaces"
-        }
-    ];
-
-
-    const architectureProjects = [
-        {
-            title: "Bedroom",
-            category: "Interior",
-            type: "render",
-            image: "/images/architecture/Bedroom.png"
-        },
-        {
-            title: "Bedroom Animation",
-            category: "Interior",
-            type: "animation",
-            thumbnail: "/images/architecture/Bedroom.png",
-            video: "/videos/bedroom_animation.mp4"
-        },
-        {
-            title: "Living Room",
-            category: "Interior",
-            type: "render",
-            image: "/images/architecture/Living Room.png"
-        },
-        {
-            title: "Living Room Animation",
-            category: "Interior",
-            type: "animation",
-            thumbnail: "/images/architecture/Living Room.png",
-            video: "/videos/livingroom_animation.mp4"
-        },
-        {
-            title: "Kitchen",
-            category: "Interior",
-            type: "render",
-            image: "/images/architecture/Kitchen.png"
-        },
-        {
-            title: "Bathroom",
-            category: "Interior",
-            type: "render",
-            image: "/images/architecture/Bathroom.png"
-        },
-        {
-            title: "Bathroom 2",
-            category: "Interior",
-            type: "render",
-            image: "/images/architecture/Bathroom 2.png"
-        },
-        {
-            title: "Exterior View",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior.png"
-        },
-        {
-            title: "Kitchen Animation",
-            category: "Interior",
-            type: "animation",
-            thumbnail: "/images/architecture/Kitchen.png",
-            video: "/videos/kitchen_animation.mp4"
-        },
-        {
-            title: "Exterior 1",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior 1.png"
-        },
-        {
-            title: "Exterior 1 Animation",
-            category: "Exterior",
-            type: "animation",
-            thumbnail: "/images/architecture/Exterior 1.png",
-            video: "/videos/exterior2_animation.mp4"
-        },
-        {
-            title: "Exterior 2",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior 2.png"
-        },
-        {
-            title: "Exterior 2 Animation",
-            category: "Exterior",
-            type: "animation",
-            thumbnail: "/images/architecture/Exterior 2.png",
-            video: "/videos/exterior1_animation.mp4"
-        },
-        {
-            title: "Exterior 3",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior 3.png"
-        },
-        {
-            title: "Exterior 3.1",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior 3.1.png"
-        },
-        {
-            title: "Exterior 3.2",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/Exterior 3.2.png"
-        },
-        {
-            title: "RoofTop",
-            category: "Exterior",
-            type: "render",
-            image: "/images/architecture/RoofTop.png"
-        },
-        {
-            title: "RoofTop Animation",
-            category: "Exterior",
-            type: "animation",
-            thumbnail: "/images/architecture/RoofTop.png",
-            video: "/videos/rooftop_animation.mp4"
-        },
-        {
-            title: "Both Views",
-            category: "Mixed",
-            type: "render",
-            image: "/images/architecture/Both.png"
-        },
-        {
-            title: "Both Views Animation",
-            category: "Mixed",
-            type: "animation",
-            thumbnail: "/images/architecture/Both.png",
-            video: "/videos/both_views_animation.mp4"
-        }
-    ];
-
-    const filters = [
-        { id: 'all', label: 'All Projects' },
-        { id: 'render', label: 'Renders' },
-        { id: 'animation', label: 'Animations' },
-        { id: 'interior', label: 'Interior' },
-        { id: 'exterior', label: 'Exterior' },
-        { id: 'bedroom', label: 'Bedroom' },
-        { id: 'bathroom', label: 'Bathroom' }
-    ];
-
-    const filteredProjects = activeFilter === 'all'
-        ? architectureProjects.filter(project => project.type === 'render')
-        : activeFilter === 'interior'
-        ? architectureProjects.filter(project => project.category === 'Interior')
-        : activeFilter === 'exterior'
-        ? architectureProjects.filter(project => project.category === 'Exterior')
-        : activeFilter === 'bedroom'
-        ? architectureProjects.filter(project => project.title.toLowerCase().includes('bedroom'))
-        : activeFilter === 'bathroom'
-        ? architectureProjects.filter(project => project.title.toLowerCase().includes('bathroom'))
-        : architectureProjects.filter(project => project.type === activeFilter);
-
-    if (activeSection === 'architecture') {
-        return (
-            <div className="min-h-screen bg-neutral-950 text-white">
-                <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Bebas+Neue&display=swap');
-        `}</style>
-
-                <nav className="sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-sm border-b border-white/10 px-8 py-6">
-                    <div className="max-w-[1600px] mx-auto">
-                        <button
-                            onClick={() => setActiveSection(null)}
-                            className="text-sm tracking-wider text-white/60 hover:text-white transition-colors"
-                        >
-                            ← BACK
-                        </button>
-                    </div>
-                </nav>
-
-                <div className="max-w-[1600px] mx-auto px-8 py-16">
-                    <div className="mb-16 text-center">
-                        <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>3D VISUALIZATION & RENDERS</h2>
-
-                        <div className="flex justify-center gap-4 flex-wrap">
-                            {filters.map((filter) => (
-                                <button
-                                    key={filter.id}
-                                    onClick={() => setActiveFilter(filter.id)}
-                                    className={`px-8 py-3 border rounded-lg transition-all tracking-wider text-sm ${activeFilter === filter.id
-                                            ? 'border-white bg-white text-black'
-                                            : 'border-white/30 text-white/60 hover:border-white/60 hover:text-white'
-                                        }`}
-                                >
-                                    {filter.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredProjects.map((project, idx) => {
-                            // Her projenin orijinal indeksini bul
-                            const originalIndex = architectureProjects.findIndex(p => p.title === project.title);
-
-                            return (
-                            <div key={idx} className="group cursor-pointer">
-                                <div className="aspect-[16/10] bg-neutral-900 overflow-hidden relative border border-white/10 hover:border-white/30 transition-all">
-                                    <div className="w-full h-full relative">
-                                        {project.type === 'render' && (
-                                            <div
-                                                onClick={() => {
-                                                    setLightboxProject(project);
-                                                    setLightboxIndex(originalIndex);
-                                                }}
-                                                className="w-full h-full cursor-pointer"
-                                            >
-                                                <LazyImage
-                                                    src={project.image || project.thumbnail}
-                                                    alt={project.title}
-                                                    className="w-full h-full"
-                                                />
-                                            </div>
-                                        )}
-
-                                        {project.type === 'animation' && (
-                                            <VideoThumbnail
-                                                thumbnail={project.image || project.thumbnail}
-                                                video={project.video}
-                                                alt={project.title}
-                                                className="w-full h-full"
-                                                onThumbnailClick={() => {
-                                                    setLightboxProject(project);
-                                                    setLightboxIndex(originalIndex);
-                                                }}
-                                            />
-                                        )}
-
-                                        {project.type === '360tour' && (
-                                            <div className="absolute top-4 right-4 pointer-events-none">
-                                                <div className="bg-blue-500/80 px-3 py-1 text-xs font-semibold rounded backdrop-blur-sm">360°</div>
-                                            </div>
-                                        )}
-
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                            <p className="text-xs text-white/60 mb-1 tracking-wider uppercase">{project.category}</p>
-                                            <h3 className="text-lg font-semibold">{project.title}</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            );
-                        })}
-                    </div>
-
-                    <div className="border-t border-white/10 py-16 mt-16">
-                        <div className="flex flex-col items-center gap-6">
-                            <div className="flex justify-center gap-4 flex-wrap">
-                                <a
-                                    href="https://www.instagram.com/bankoarts"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-8 py-3 border border-white/30 rounded-lg text-white/60 hover:border-white hover:text-white transition-all flex items-center gap-2 text-sm tracking-wider"
-                                >
-                                    <Instagram size={18} />
-                                    <span>INSTAGRAM</span>
-                                </a>
-                                <a
-                                    href="https://www.freelancer.com/u/brkbnkgll"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-8 py-3 border border-white/30 rounded-lg text-white/60 hover:border-white hover:text-white transition-all flex items-center gap-2 text-sm tracking-wider"
-                                >
-                                    <Briefcase size={18} />
-                                    <span>FREELANCER</span>
-                                </a>
-                                <a
-                                    href="https://www.upwork.com/freelancers/berkbanko"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-8 py-3 border border-white/30 rounded-lg text-white/60 hover:border-white hover:text-white transition-all flex items-center gap-2 text-sm tracking-wider"
-                                >
-                                    <Briefcase size={18} />
-                                    <span>UPWORK</span>
-                                </a>
-                            </div>
-                            <a href="mailto:contact@bankoarts.com" className="text-white/40 hover:text-white/60 transition-colors flex items-center gap-2 text-sm">
-                                <Mail size={16} />
-                                <span>contact@bankoarts.com</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    {selectedProject && (
-                        <div
-                            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-8"
-                            onClick={() => {
-                                setSelectedProject(null);
-                                resetZoom();
-                            }}
-                        >
-                            <button
-                                className="absolute top-8 right-8 text-white/60 hover:text-white text-4xl font-light z-10"
-                                onClick={() => {
-                                    setSelectedProject(null);
-                                    resetZoom();
-                                }}
-                            >
-                                ×
-                            </button>
-
-                            {selectedProject.type === 'render' && imageZoom > 1 && (
-                                <button
-                                    className="absolute top-8 left-8 text-white/60 hover:text-white text-sm tracking-wider z-10 bg-white/10 px-4 py-2 rounded"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        resetZoom();
-                                    }}
-                                >
-                                    RESET ZOOM ({imageZoom.toFixed(1)}x)
-                                </button>
-                            )}
-
-                            {selectedProject.type === 'render' && (
-                                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/40 text-xs tracking-wider z-10">
-                                    SCROLL TO ZOOM • CLICK & DRAG TO PAN
-                                </div>
-                            )}
-
-                            <div className="max-w-7xl w-full" onClick={(e) => e.stopPropagation()}>
-                                <div className="mb-6 text-center">
-                                    <h2 className="text-3xl font-light mb-2">{selectedProject.title}</h2>
-                                    <p className="text-white/40 text-sm uppercase tracking-widest">{selectedProject.category}</p>
-                                </div>
-
-                                {selectedProject.type === 'animation' && selectedProject.video ? (
-                                    <video
-                                        src={selectedProject.video}
-                                        controls
-                                        autoPlay
-                                        loop
-                                        className="w-full max-h-[80vh] object-contain"
-                                    />
-                                ) : selectedProject.image ? (
-                                    <div
-                                        className="relative overflow-hidden"
-                                        onWheel={handleWheel}
-                                        onMouseDown={handleMouseDown}
-                                        onMouseMove={handleMouseMove}
-                                        onMouseUp={handleMouseUp}
-                                        onMouseLeave={handleMouseUp}
-                                        style={{
-                                            cursor: isDragging ? 'grabbing' : (imageZoom > 1 ? 'grab' : 'default'),
-                                            userSelect: 'none'
-                                        }}
-                                    >
-                                        <img
-                                            src={selectedProject.image}
-                                            alt={selectedProject.title}
-                                            className="w-full max-h-[80vh] object-contain transition-transform"
-                                            style={{
-                                                transform: `scale(${imageZoom}) translate(${imagePosition.x}px, ${imagePosition.y}px)`,
-                                                transformOrigin: 'center center',
-                                                transitionDuration: isDragging ? '0ms' : '100ms',
-                                                pointerEvents: 'none'
-                                            }}
-                                            draggable="false"
-                                        />
-                                    </div>
-                                ) : null}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
+  useEffect(() => {
+    if (menuOpen) {
+      const t = setTimeout(() => setContentVisible(true), 320);
+      return () => clearTimeout(t);
+    } else {
+      setContentVisible(false);
     }
+  }, [menuOpen]);
 
-    const scrollToSection = (sectionId) => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    };
+  const item = (delay) => ({
+    opacity: contentVisible ? 1 : 0,
+    transform: contentVisible ? 'translateY(0)' : 'translateY(16px)',
+    transition: `opacity 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+  });
 
-    // Testimonials navigation
-    const nextTestimonial = () => {
-        setCurrentTestimonialIndex((prev) => (prev + 3) % testimonialsData.length);
-    };
+  return (
+    <>
+      <div className={`menu-backdrop${menuOpen ? ' open' : ''}`} onClick={onClose} />
 
-    const prevTestimonial = () => {
-        setCurrentTestimonialIndex((prev) => (prev - 3 + testimonialsData.length) % testimonialsData.length);
-    };
+      <div className={`side-bar side-bar--left${menuOpen ? ' menu-open' : ''}`}
+        onClick={!menuOpen ? onOpen : undefined}
+        style={{ flexDirection:'column', justifyContent: menuOpen ? 'flex-start' : 'center' }}>
 
-    // Get current 3 testimonials to show
-    const getCurrentTestimonials = () => {
-        const testimonials = [];
-        for (let i = 0; i < 3; i++) {
-            testimonials.push(testimonialsData[(currentTestimonialIndex + i) % testimonialsData.length]);
-        }
-        return testimonials;
-    };
+        {!menuOpen && <span>Menu</span>}
 
-    // Instagram carousel navigation
-    const nextInstagramSlide = () => {
-        const filteredPosts = getFilteredInstagramPosts();
-        setCurrentInstagramIndex((prev) => (prev + 6) % filteredPosts.length);
-    };
+        {menuOpen && (
+          <div style={{ display:'flex', flexDirection:'column', height:'100%', width:'100%' }}>
 
-    const prevInstagramSlide = () => {
-        const filteredPosts = getFilteredInstagramPosts();
-        setCurrentInstagramIndex((prev) => (prev - 6 + filteredPosts.length) % filteredPosts.length);
-    };
-
-    // Get filtered Instagram posts based on type
-    const getFilteredInstagramPosts = () => {
-        if (instagramFilter === 'renders') {
-            return architectureProjects.filter(p => p.type === 'render');
-        } else if (instagramFilter === 'animations') {
-            return architectureProjects.filter(p => p.type === 'animation');
-        } else if (instagramFilter === 'exterior') {
-            return architectureProjects.filter(p => p.category === 'Exterior' && p.type === 'render');
-        } else if (instagramFilter === 'interior') {
-            return architectureProjects.filter(p => p.category === 'Interior' && p.type === 'render');
-        } else if (instagramFilter === 'kitchen') {
-            return architectureProjects.filter(p => p.title.toLowerCase().includes('kitchen') && p.type === 'render');
-        } else if (instagramFilter === 'bathroom') {
-            return architectureProjects.filter(p => p.title.toLowerCase().includes('bathroom') && p.type === 'render');
-        } else if (instagramFilter === 'bedroom') {
-            return architectureProjects.filter(p => p.title.toLowerCase().includes('bedroom') && p.type === 'render');
-        } else if (instagramFilter === 'livingroom') {
-            return architectureProjects.filter(p => p.title.toLowerCase().includes('living') && p.type === 'render');
-        }
-        return architectureProjects.filter(p => p.type === 'render'); // default to renders
-    };
-
-    // Get current 6 Instagram posts to show (2 rows x 3 columns)
-    const getCurrentInstagramPosts = () => {
-        const filteredPosts = getFilteredInstagramPosts();
-        const posts = [];
-        // Only show available posts, don't repeat if less than 6
-        for (let i = 0; i < 6; i++) {
-            const index = currentInstagramIndex + i;
-            if (index < filteredPosts.length) {
-                posts.push(filteredPosts[index]);
-            }
-        }
-        return posts;
-    };
-
-    return (
-        <div className="min-h-screen bg-neutral-950 text-white relative">
-            <ScrollProgressBar />
-            <BackToTopButton />
-            <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap');
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-      `}</style>
-
-            {/* Top Navigation Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-md border-b border-white/10">
-                <div className="max-w-[1600px] mx-auto px-8 py-4 flex items-center justify-between">
-                    {/* Logo */}
-                    <div className="flex items-center justify-center">
-                        <button
-                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="text-2xl font-bold tracking-widest hover:text-[#E2725B] transition-colors"
-                            style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}
-                        >
-                            BANKO ARTS
-                        </button>
-                    </div>
-
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-8">
-                        <button onClick={() => scrollToSection('services')} className="text-sm tracking-wider text-white/60 hover:text-white transition-colors">
-                            SERVICES
-                        </button>
-                        <button onClick={() => scrollToSection('contact')} className="text-sm tracking-wider text-white/60 hover:text-white transition-colors">
-                            CONTACT
-                        </button>
-                    </nav>
-
-                    {/* Mobile Menu Button */}
-                    <button
-                        className="md:hidden text-white"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    >
-                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-                </div>
-
-                {/* Mobile Menu */}
-                {mobileMenuOpen && (
-                    <div className="md:hidden bg-neutral-950 border-t border-white/10">
-                        <nav className="flex flex-col px-8 py-4 gap-4">
-                            <button
-                                onClick={() => {
-                                    scrollToSection('services');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="text-left text-sm tracking-wider text-white/60 hover:text-white transition-colors py-2"
-                            >
-                                SERVICES
-                            </button>
-                            <button
-                                onClick={() => {
-                                    scrollToSection('contact');
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="text-left text-sm tracking-wider text-white/60 hover:text-white transition-colors py-2"
-                            >
-                                CONTACT
-                            </button>
-                        </nav>
-                    </div>
-                )}
-            </header>
-
-            {/* Right Side Navigation */}
-            <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
-                <div className="flex flex-col items-end gap-4">
-                    <div className="w-px h-16 bg-white/20"></div>
-
-                    <button
-                        onClick={() => scrollToSection('services')}
-                        className="group flex items-center justify-end gap-4 text-white/40 hover:text-white transition-all py-4 px-6 -mr-6 cursor-pointer"
-                    >
-                        <span className="text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-medium">SERVICES</span>
-                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#E2725B] group-hover:scale-125 transition-all"></div>
-                    </button>
-
-                    <button
-                        onClick={() => scrollToSection('contact')}
-                        className="group flex items-center justify-end gap-4 text-white/40 hover:text-white transition-all py-4 px-6 -mr-6 cursor-pointer"
-                    >
-                        <span className="text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-medium">CONTACT</span>
-                        <div className="w-4 h-4 rounded-full bg-white/40 group-hover:bg-[#E2725B] group-hover:scale-125 transition-all"></div>
-                    </button>
-
-                    <div className="w-px h-16 bg-white/20"></div>
-                </div>
-            </nav>
-
-            {/* Hero Section with Video Background Carousel */}
-            <div className="relative h-[55vh] flex items-center justify-center overflow-hidden">
-                {/* Video Background Carousel */}
-                <div className="absolute inset-0 z-0">
-                    {/* Current Video */}
-                    <video
-                        autoPlay
-                        muted
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{
-                            opacity: isTransitioning ? 0 : 1,
-                            transition: 'opacity 1s ease-in-out',
-                            transform: `translateY(${scrollY * 0.5}px)` // Parallax effect
-                        }}
-                        onEnded={handleVideoEnd}
-                        key={`video-${currentVideoIndex}`}
-                        src={heroVideos[currentVideoIndex]}
-                    />
-                    {/* Dark overlay */}
-                    <div className="absolute inset-0 bg-black/60 z-10"></div>
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-10"></div>
-                </div>
-
-                {/* Hero Content */}
-                <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-8 py-12 sm:py-24 text-center">
-                    <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-widest mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                        BANKO ARTS
-                    </h1>
-                    <p className="text-lg sm:text-2xl font-light mb-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.8)', color: '#ffffff' }}>
-                        3D Artist & Visualization Specialist
-                    </p>
-                    <p className="text-white max-w-3xl mx-auto leading-relaxed mb-8 text-sm sm:text-base md:text-lg px-4" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.6)' }}>
-                        Transforming imagination into reality through photorealistic architectural visualization and creative 3D artistry
-                    </p>
-                    <div className="flex gap-4 justify-center flex-wrap mt-8">
-                        <button
-                            onClick={() => scrollToSection('services')}
-                            className="px-8 py-4 bg-gradient-to-r from-[#E2725B] to-[#C95E48] hover:from-[#C95E48] hover:to-[#B04A36] text-white font-bold tracking-wider transition-all"
-                        >
-                            VIEW SERVICES
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('contact')}
-                            className="px-8 py-4 border-2 border-white/30 hover:border-white hover:bg-white/10 text-white font-bold tracking-wider transition-all"
-                        >
-                            GET IN TOUCH
-                        </button>
-                    </div>
-                </div>
+            {/* Logo — büyük, ortada */}
+            <div style={{ display:'flex', justifyContent:'center', alignItems:'center', marginBottom:32, ...item(0) }}>
+              <img src="/images/logo-white.svg" alt="Banko Arts" style={{ display:'block', width:180, height:'auto' }} />
             </div>
 
-            <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
-
-                {/* Awards & Achievements Section */}
-                <FadeInSection>
-                    <div className="py-12 md:py-16 mb-8 mt-12">
-                        <div className="max-w-[1800px] mx-auto px-4 sm:px-8">
-                            <div className="text-center mb-8 md:mb-10">
-                                <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    AWARDS & ACHIEVEMENTS
-                                </h2>
-                                <p className="text-white/60 text-base md:text-xl px-4 max-w-3xl mx-auto">
-                                    Recognized excellence in architectural visualization across global platforms
-                                </p>
-                            </div>
-
-                            {/* Horizontal Badge Layout */}
-                            <div className="relative mb-8 md:mb-10">
-                                <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-8">
-                                {/* Upwork Top Rated Plus Badge */}
-                                <div className="group relative flex-1 bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border-2 border-white/20 rounded-3xl p-8 lg:p-10 hover:border-[#14A800]/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#14A800]/30">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[#14A800]/0 via-[#14A800]/5 to-[#14A800]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-
-                                    <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
-                                        {/* Badge Icon - Left Side */}
-                                        <div className="flex-shrink-0">
-                                            <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-gradient-to-br from-[#14A800] to-[#0D7A00] p-1.5 shadow-xl shadow-[#14A800]/40">
-                                                <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center">
-                                                    <svg className="w-14 h-14 lg:w-18 lg:h-18 text-[#14A800]" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Content - Right Side */}
-                                        <div className="flex-1 text-center lg:text-left">
-                                            <h3 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-[#14A800] to-[#0D7A00] bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>
-                                                Top Rated Plus
-                                            </h3>
-                                            <p className="text-white/40 text-sm mb-4 uppercase tracking-widest">Upwork</p>
-                                            <p className="text-white/80 text-base lg:text-lg mb-4">
-                                                <span className="text-[#14A800] font-bold">Top 3%</span> of freelancers worldwide
-                                            </p>
-
-                                            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-4">
-                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
-                                                    <p className="text-2xl font-bold text-[#14A800]">100%</p>
-                                                    <p className="text-white/60 text-xs">Job Success</p>
-                                                </div>
-                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
-                                                    <p className="text-2xl font-bold text-[#14A800]">5.0</p>
-                                                    <p className="text-white/60 text-xs">Rating</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    Exceptional Success
-                                                </span>
-                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    High Satisfaction
-                                                </span>
-                                                <span className="inline-flex items-center gap-1 bg-[#14A800]/10 text-[#14A800] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    Proven Reliability
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Freelancer Preferred Badge */}
-                                <div className="group relative flex-1 bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border-2 border-white/20 rounded-3xl p-8 lg:p-10 hover:border-[#0E61D5]/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-[#0E61D5]/30">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[#0E61D5]/0 via-[#0E61D5]/5 to-[#0E61D5]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-
-                                    <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
-                                        {/* Badge Icon - Left Side */}
-                                        <div className="flex-shrink-0">
-                                            <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-gradient-to-br from-[#0E61D5] to-[#0A4AA3] p-1.5 shadow-xl shadow-[#0E61D5]/40">
-                                                <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center">
-                                                    <svg className="w-14 h-14 lg:w-18 lg:h-18 text-[#0E61D5]" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Content - Right Side */}
-                                        <div className="flex-1 text-center lg:text-left">
-                                            <h3 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-[#0E61D5] to-[#0A4AA3] bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>
-                                                Preferred Freelancer
-                                            </h3>
-                                            <p className="text-white/40 text-sm mb-4 uppercase tracking-widest">Freelancer.com</p>
-                                            <p className="text-white/80 text-base lg:text-lg mb-4">
-                                                <span className="text-[#0E61D5] font-bold">Elite status</span> among millions of freelancers
-                                            </p>
-
-                                            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-4">
-                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
-                                                    <p className="text-2xl font-bold text-[#0E61D5]">98%</p>
-                                                    <p className="text-white/60 text-xs">On Time</p>
-                                                </div>
-                                                <div className="bg-neutral-800/50 rounded-lg px-4 py-2">
-                                                    <p className="text-2xl font-bold text-[#0E61D5]">5.0</p>
-                                                    <p className="text-white/60 text-xs">Rating</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    Quality Work
-                                                </span>
-                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    Great Communication
-                                                </span>
-                                                <span className="inline-flex items-center gap-1 bg-[#0E61D5]/10 text-[#0E61D5] text-xs px-3 py-1 rounded-full">
-                                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                                                    </svg>
-                                                    Highly Recommended
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-
-                            {/* Additional Stats Bar */}
-                            <div className="mt-8 md:mt-10">
-                                <div className="bg-gradient-to-r from-[#E2725B]/10 via-neutral-900/50 to-[#E2725B]/10 border-2 border-[#E2725B]/20 rounded-3xl p-6 md:p-8 lg:p-10">
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-                                        <div className="text-center group">
-                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>824+</p>
-                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Completed Projects</p>
-                                        </div>
-                                        <div className="text-center group">
-                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>100%</p>
-                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Client Satisfaction</p>
-                                        </div>
-                                        <div className="text-center group">
-                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>10+</p>
-                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Years Experience</p>
-                                        </div>
-                                        <div className="text-center group">
-                                            <p className="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-br from-[#E2725B] to-[#C95E48] bg-clip-text text-transparent mb-3 group-hover:scale-110 transition-transform" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700' }}>5.0</p>
-                                            <p className="text-white/70 text-sm md:text-base lg:text-lg font-medium">Average Rating</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* Instagram Feed Section - MOVED HERE FROM BELOW */}
-                <FadeInSection>
-                    <div className="py-12 md:py-16 mb-8">
-                        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-                            {/* Section Header */}
-                            <div className="text-center mb-10 md:mb-12">
-                                <h2 className="text-5xl sm:text-6xl md:text-8xl font-bold mb-6 tracking-wider bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    RECENT WORKS
-                                </h2>
-                                <div className="w-32 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-8"></div>
-                                <p className="text-white/70 text-xl md:text-2xl px-4 max-w-3xl mx-auto leading-relaxed">
-                                    Browse our stunning collection of architectural visualizations
-                                </p>
-                            </div>
-
-                            {/* Filter Buttons - Larger and More Prominent */}
-                            <div className="flex justify-center gap-3 md:gap-4 flex-wrap mb-12 px-2">
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('renders');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'renders'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    ALL RENDERS
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('animations');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'animations'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    ANIMATIONS
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('exterior');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'exterior'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    EXTERIOR
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('kitchen');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'kitchen'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    KITCHEN
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('bathroom');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'bathroom'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    BATHROOM
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('bedroom');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'bedroom'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    BEDROOM
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setInstagramFilter('livingroom');
-                                        setCurrentInstagramIndex(0);
-                                    }}
-                                    className={`px-6 md:px-8 py-3 md:py-4 font-bold tracking-wider transition-all rounded-xl text-sm md:text-base ${
-                                        instagramFilter === 'livingroom'
-                                            ? 'bg-gradient-to-r from-[#E2725B] to-[#C95E48] text-white shadow-2xl shadow-[#E2725B]/40 scale-105'
-                                            : 'bg-neutral-800/80 text-white/70 hover:bg-neutral-700 hover:scale-105'
-                                    }`}
-                                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                                >
-                                    LIVING ROOM
-                                </button>
-                            </div>
-
-                            {/* Large Cards Grid - 3 Column Layout */}
-                            <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-                                {getCurrentInstagramPosts().slice(0, 6).map((project, idx) => (
-                                    <TiltCard key={idx}>
-                                        <div
-                                            className="group relative bg-neutral-900 overflow-hidden border-2 border-white/20 hover:border-[#E2725B] transition-all duration-500 cursor-pointer rounded-2xl shadow-2xl hover:shadow-[#E2725B]/30"
-                                            onClick={() => {
-                                                setLightboxProject(project);
-                                                setLightboxIndex(0);
-                                            }}
-                                            style={{ minHeight: '350px' }}
-                                        >
-                                            {/* Image/Video */}
-                                            <div className="relative w-full h-[350px] md:h-[400px]">
-                                                {project.type === 'animation' ? (
-                                                    <VideoThumbnail
-                                                        thumbnail={project.thumbnail}
-                                                        video={project.video}
-                                                        alt={project.title}
-                                                        className="w-full h-full"
-                                                    />
-                                                ) : (
-                                                    <LazyImage
-                                                        src={project.image}
-                                                        alt={project.title}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                )}
-
-                                                {/* Gradient Overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
-                                            </div>
-
-                                            {/* Content Overlay */}
-                                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10">
-                                                <div className="flex items-start justify-between gap-4">
-                                                    <div className="flex-1">
-                                                        <p className="text-white/60 text-sm md:text-base uppercase tracking-widest mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                            {project.category}
-                                                        </p>
-                                                        <h3 className="text-white font-bold text-2xl md:text-4xl mb-3 tracking-wide leading-tight" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                            {project.title}
-                                                        </h3>
-                                                        <div className="flex items-center gap-3 text-[#E2725B] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                                                            <span className="text-base md:text-lg font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>VIEW FULL PROJECT</span>
-                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Play Icon for Videos */}
-                                                    {project.type === 'animation' && (
-                                                        <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-[#E2725B]/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-[#E2725B] transition-all">
-                                                            <svg className="w-8 h-8 md:w-10 md:h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                                <path d="M8 5v14l11-7z"/>
-                                                            </svg>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </TiltCard>
-                                ))}
-                            </div>
-
-                            {/* Navigation - Large and Centered */}
-                            <div className="flex items-center justify-center gap-6 mt-10 md:mt-12">
-                                <button
-                                    onClick={prevInstagramSlide}
-                                    disabled={currentInstagramIndex === 0}
-                                    className="group flex w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full items-center justify-center transition-all shadow-2xl shadow-[#E2725B]/40 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                    aria-label="Previous projects"
-                                >
-                                    <ChevronLeft className="w-9 h-9 md:w-11 md:h-11 text-white" />
-                                </button>
-
-                                <div className="flex items-center gap-3 px-8 py-4 bg-neutral-800/60 backdrop-blur-sm rounded-2xl border-2 border-white/20">
-                                    <span className="text-white font-bold text-lg md:text-xl" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                        {Math.floor(currentInstagramIndex / 6) + 1} / {Math.ceil(getCurrentInstagramPosts().length / 6)}
-                                    </span>
-                                </div>
-
-                                <button
-                                    onClick={nextInstagramSlide}
-                                    disabled={currentInstagramIndex + 6 >= getCurrentInstagramPosts().length}
-                                    className="group flex w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full items-center justify-center transition-all shadow-2xl shadow-[#E2725B]/40 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                    aria-label="Next projects"
-                                >
-                                    <ChevronRight className="w-9 h-9 md:w-11 md:h-11 text-white" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* About Section */}
-                <FadeInSection>
-                    <div id="about" className="py-16 mb-8">
-                        <div className="max-w-6xl mx-auto text-center">
-                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                ABOUT US
-                            </h2>
-                            <p className="text-xl text-white/70 mb-6 leading-relaxed max-w-5xl mx-auto">
-                                At Banko Arts, we specialize in creating stunning 3D architectural visualizations that bring your vision to&nbsp;life.
-                            </p>
-                            <p className="text-lg text-white/60 leading-relaxed mb-8">
-                                With over 10 years of experience and more than 824 completed projects, we've helped architects, developers, and designers transform their concepts into photorealistic renders. Our team combines technical expertise with artistic vision to deliver exceptional results that exceed expectations.
-                            </p>
-                            <div className="grid md:grid-cols-3 gap-8 mt-12">
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <Building2 size={48} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-xl font-bold mb-3" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Expert Team</h3>
-                                        <p className="text-white/60 text-sm">Professional 3D artists with years of industry experience</p>
-                                    </div>
-                                </TiltCard>
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-xl font-bold mb-3" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Fast Delivery</h3>
-                                        <p className="text-white/60 text-sm">Quick turnaround times without compromising on quality</p>
-                                    </div>
-                                </TiltCard>
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-xl font-bold mb-3" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Quality Guaranteed</h3>
-                                        <p className="text-white/60 text-sm">Photorealistic renders that bring your vision to reality</p>
-                                    </div>
-                                </TiltCard>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* Professional Profile Cards */}
-                <FadeInSection>
-                    <div className="py-16 mb-8">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {/* Freelancer.com Card */}
-                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#E2725B]/50 transition-all duration-300 hover:translate-y-[-2px]">
-                                    {/* Freelancer.com Logo */}
-                                    <div className="flex justify-center mb-4">
-                                        <div className="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                                            <span className="text-blue-400 font-bold text-lg tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                                FREELANCER.COM
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Profile Header */}
-                                    <div className="flex flex-col items-center text-center mb-6">
-                                        <div className="relative mb-4">
-                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#C95E48] p-1">
-                                                <img
-                                                    src="/images/profile.png"
-                                                    alt="Berk B."
-                                                    className="w-full h-full rounded-full object-cover object-center"
-                                                />
-                                            </div>
-                                            <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-neutral-900 rounded-full"></div>
-                                        </div>
-                                        <h3 className="text-3xl font-bold mb-3 tracking-wider flex items-center gap-2 justify-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                            Berk B.
-                                            <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                        </h3>
-
-                                        {/* Rating Stars */}
-                                        <div className="flex items-center gap-3 mb-3 bg-neutral-800/80 px-4 py-2 rounded-lg border border-white/10">
-                                            <div className="flex gap-1">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                ))}
-                                            </div>
-                                            <span className="text-xl font-bold text-white" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>5.0</span>
-                                            <span className="text-sm text-white/60">332</span>
-                                        </div>
-
-                                        {/* Badges */}
-                                        <div className="flex gap-2 flex-wrap justify-center">
-                                            <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold border border-purple-500/30 flex items-center gap-1">
-                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                </svg>
-                                                Available Now
-                                            </span>
-                                            <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-semibold border border-blue-500/30">
-                                                Preferred Freelancer
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* CTA Button */}
-                                    <a
-                                        href="https://www.freelancer.com/u/brkbnkgll"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#E2725B] text-white font-bold tracking-wider transition-all rounded-lg text-center"
-                                    >
-                                        View Freelancer Profile
-                                    </a>
-                                </div>
-
-                                {/* Upwork Card */}
-                                <div className="group bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-800 border border-white/20 rounded-2xl p-8 hover:border-[#E2725B]/50 transition-all duration-300 hover:translate-y-[-2px]">
-                                    {/* Upwork Logo */}
-                                    <div className="flex justify-center mb-4">
-                                        <div className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-                                            <span className="text-green-400 font-bold text-lg tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                                UPWORK
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Profile Header */}
-                                    <div className="flex flex-col items-center text-center mb-6">
-                                        <div className="relative mb-4">
-                                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#C95E48] p-1">
-                                                <img
-                                                    src="/images/profile.png"
-                                                    alt="Berk B."
-                                                    className="w-full h-full rounded-full object-cover object-center"
-                                                />
-                                            </div>
-                                            <div className="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-neutral-900 rounded-full"></div>
-                                        </div>
-                                        <h3 className="text-3xl font-bold mb-3 tracking-wider flex items-center gap-2 justify-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                            Berk B.
-                                            <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                        </h3>
-
-                                        {/* Rating Stars */}
-                                        <div className="flex items-center gap-3 mb-3 bg-neutral-800/80 px-4 py-2 rounded-lg border border-white/10">
-                                            <div className="flex gap-1">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                ))}
-                                            </div>
-                                            <span className="text-xl font-bold text-white" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>5.0</span>
-                                            <span className="text-sm text-white/60">84</span>
-                                        </div>
-
-                                        {/* Badges */}
-                                        <div className="flex gap-2 flex-wrap justify-center">
-                                            <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs font-semibold border border-purple-500/30 flex items-center gap-1">
-                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                </svg>
-                                                Available Now
-                                            </span>
-                                            <span className="px-3 py-1 bg-pink-500/20 text-pink-400 rounded-full text-xs font-semibold border border-pink-500/30">
-                                                Top Rated Plus
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* CTA Button */}
-                                    <a
-                                        href="https://www.upwork.com/freelancers/berkbanko"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="block w-full px-6 py-3 bg-transparent border-2 border-white/30 hover:border-[#E2725B] text-white font-bold tracking-wider transition-all rounded-lg text-center"
-                                    >
-                                        View Upwork Profile
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* Services & Skills Section */}
-                <FadeInSection>
-                    <div id="services" className="py-16 mb-8">
-                        <div className="max-w-[1600px] mx-auto px-4 sm:px-8">
-                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-8 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                SERVICES & EXPERTISE
-                            </h2>
-                            <p className="text-xl text-white/70 mb-12 leading-relaxed max-w-3xl mx-auto text-center">
-                                Professional 3D visualization services powered by industry-leading tools and expertise
-                            </p>
-
-                            <div className="grid lg:grid-cols-[2.2fr_1fr_1fr] gap-8">
-                                {/* Services Column */}
-                                <div>
-                                    <h3 className="text-3xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                        OUR SERVICES
-                                    </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <Building2 size={56} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Exterior Visualization</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Photorealistic exterior renders that bring architectural designs to life with stunning detail.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <Sofa size={56} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Interior Visualization</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Detailed interior visualizations showcasing materials, lighting, and spatial design with realism.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <UtensilsCrossed size={56} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Kitchen Design</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Modern kitchen visualizations with attention to every detail, from appliances to finishes.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <ShowerHead size={56} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Bathroom Visualization</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Luxurious bathroom renders showcasing premium materials and sophisticated lighting design.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <Bed size={56} className="mx-auto" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Bedroom Visualization</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Comfortable and elegant bedroom designs that capture the perfect ambiance and mood.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>3D Animation</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Dynamic walkthrough animations and cinematic presentations that showcase projects in motion.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Lighting Design</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Professional lighting design and visualization to create the perfect atmosphere and mood.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Material & Texture</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Realistic material representation and texture mapping for authentic visualization results.</p>
-                                    </div>
-                                </TiltCard>
-
-                                <TiltCard>
-                                    <div className="p-8 bg-neutral-900/50 border border-white/10 rounded-lg hover:border-[#E2725B] transition-all h-full flex flex-col">
-                                        <div className="text-[#E2725B] mb-4">
-                                            <svg className="w-14 h-14 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-2xl font-bold mb-3 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Post Production</h3>
-                                        <p className="text-white/60 text-sm leading-relaxed flex-grow">Professional image enhancement and post-processing for magazine-quality final renders.</p>
-                                    </div>
-                                </TiltCard>
-                                    </div>
-                                </div>
-
-                                {/* Traditional Tools Column */}
-                                <div className="flex flex-col">
-                                    <h3 className="text-3xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                        TOOLS
-                                    </h3>
-                                    <div className="space-y-6 flex-1 flex flex-col justify-between">
-                                        {/* 3ds Max */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-[#F28E7A] via-[#E2725B] to-[#B04A36] rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>3ds Max</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Industry-standard 3D modeling and rendering software</p>
-                                        </div>
-
-                                        {/* V-Ray */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>V-Ray</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Professional photorealistic rendering engine</p>
-                                        </div>
-
-                                        {/* Corona Renderer */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Corona</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">High-performance physically based renderer</p>
-                                        </div>
-
-                                        {/* Adobe Photoshop */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9.5 11.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2v-2H13c.83 0 1.5.67 1.5 1.5zm4.5 2h-1.5v-2h-1v-1.5h1v-1h-1V10h1V8.5H16V11h1.5v1.5H16V14h2.5v1.5z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Photoshop</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Professional post-production and image editing</p>
-                                        </div>
-
-                                        {/* AutoCAD */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>AutoCAD</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Precision drafting and technical documentation</p>
-                                        </div>
-
-                                        {/* SketchUp */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 013 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>SketchUp</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Quick 3D modeling and conceptual design</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {/* AI Tools Column */}
-                                <div>
-                                    <h3 className="text-3xl font-bold mb-8 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                        AI TOOLS
-                                    </h3>
-                                    <div className="space-y-6">
-
-                                        {/* Midjourney */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm-2 18l-4-4 1.41-1.41L10 17.17l6.59-6.59L18 12l-8 8z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Midjourney</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">AI-powered image generation and concept art</p>
-                                        </div>
-
-                                        {/* Stable Diffusion */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>Stable Diffusion</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Open-source AI model for custom image generation</p>
-                                        </div>
-
-                                        {/* ComfyUI */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-lg p-6 hover:border-[#E2725B] transition-all">
-                                            <div className="flex items-center gap-4 mb-3">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                                                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11z"/>
-                                                    </svg>
-                                                </div>
-                                                <h4 className="text-xl font-bold tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>ComfyUI</h4>
-                                            </div>
-                                            <p className="text-white/60 text-sm">Advanced node-based workflow for AI image generation</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* Testimonials Section */}
-                <FadeInSection>
-                    <div id="testimonials" className="py-16 mb-8 bg-neutral-900/30">
-                        <div className="max-w-[1400px] mx-auto px-8">
-                            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-16 tracking-wider text-center" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                CLIENT TESTIMONIALS
-                            </h2>
-
-                            {/* Carousel Container */}
-                            <div className="relative">
-                                {/* Left Arrow */}
-                                <button
-                                    onClick={prevTestimonial}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 w-12 h-12 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full flex items-center justify-center transition-all shadow-lg"
-                                >
-                                    <ChevronLeft className="w-6 h-6 text-white" />
-                                </button>
-
-                                {/* Right Arrow */}
-                                <button
-                                    onClick={nextTestimonial}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 w-12 h-12 bg-gradient-to-br from-[#F28E7A] to-[#E2725B] hover:from-[#C95E48] hover:to-[#B04A36] rounded-full flex items-center justify-center transition-all shadow-lg"
-                                >
-                                    <ChevronRight className="w-6 h-6 text-white" />
-                                </button>
-
-                                {/* Testimonials Grid */}
-                                <div className="grid md:grid-cols-3 gap-8">
-                                    {getCurrentTestimonials().map((testimonial, idx) => (
-                                        <div key={idx} className="p-8 bg-neutral-900 border border-white/10 rounded-lg">
-                                            {/* Star rating */}
-                                            <div className="flex items-center gap-2 mb-4">
-                                                {[...Array(5)].map((_, i) => (
-                                                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                ))}
-                                            </div>
-                                            {/* Quote */}
-                                            <p className="text-white/70 mb-6 italic leading-relaxed">
-                                                "{testimonial.quote}"
-                                            </p>
-                                            {/* Author info */}
-                                            <div className="border-t border-white/10 pt-4">
-                                                <p className="font-semibold">{testimonial.author}</p>
-                                                <p className="text-sm text-white/40">{testimonial.position}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* FAQs & Contact Section - Side by Side Layout */}
-                <FadeInSection>
-                    <div id="faqs" className="py-12 md:py-16 mb-8">
-                        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-
-                                {/* FAQs Column */}
-                                <div>
-                                    {/* Section Header */}
-                                    <div className="text-center mb-12 md:mb-16">
-                                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                            FAQs
-                                        </h2>
-                                        <div className="w-24 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-6"></div>
-                                        <p className="text-white/70 text-lg md:text-xl leading-relaxed">
-                                            Frequently Asked Questions
-                                        </p>
-                                    </div>
-
-                                    {/* FAQ Accordion */}
-                                    <div className="space-y-4">
-                                        {/* FAQ 1 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 0 ? null : 0)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    What is the typical turnaround time for a project?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 0 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 0 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        Standard projects typically take about 1 week to complete. However, this timeline may extend depending on the number of renders, complexity of animations, and additional services required. The final delivery time is determined by project scope and specific requirements.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* FAQ 2 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 1 ? null : 1)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    How much do your services cost?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 1 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 1 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        Pricing varies based on project complexity, number of views, resolution, and deadline requirements. We don't have fixed rates as each project is unique. Please contact us with your project details, and we'll provide a customized quote tailored to your specific needs.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* FAQ 3 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 2 ? null : 2)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    What file formats do you need to start a project?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 2 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 2 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        We accept various file formats including AutoCAD (DWG, DXF), SketchUp (SKP), Revit (RVT), 3ds Max, and PDF plans. If you only have 2D drawings or sketches, we can work from those as well. The more detailed information you provide, the more accurate the final result will be.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* FAQ 4 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 3 ? null : 3)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    How many revisions are included?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 3 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 3 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        We include up to 2 rounds of minor revisions in our standard packages. This covers adjustments like camera angles, lighting tweaks, and material changes. Major design changes or additional views may incur extra charges. We aim for 100% client satisfaction on every project.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* FAQ 5 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 4 ? null : 4)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    Do you offer animation and walkthrough services?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 4 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 4 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        Yes! We specialize in creating dynamic walkthroughs and cinematic animations that showcase your architectural designs. These are perfect for presentations, marketing materials, and social media. Animations are priced based on duration, complexity, and resolution.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* FAQ 6 */}
-                                        <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden transition-all hover:border-[#E2725B]/50">
-                                            <button
-                                                onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
-                                                className="w-full flex items-center justify-between p-6 md:p-8 text-left transition-all"
-                                            >
-                                                <h3 className="text-lg md:text-xl font-bold pr-8 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                                                    Can you work with international clients?
-                                                </h3>
-                                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-[#E2725B]/20 transition-transform duration-300 ${openFaqIndex === 5 ? 'rotate-180' : ''}`}>
-                                                    <svg className="w-5 h-5 text-[#E2725B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                                    </svg>
-                                                </div>
-                                            </button>
-                                            <div className={`overflow-hidden transition-all duration-300 ${openFaqIndex === 5 ? 'max-h-96' : 'max-h-0'}`}>
-                                                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                                                    <p className="text-white/60 leading-relaxed">
-                                                        Absolutely! We work with clients worldwide and have experience delivering projects across different time zones. We communicate via email, WhatsApp, and video calls, and accept international payments through bank transfer and other secure methods.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Contact Column */}
-                                <div id="contact" className="flex flex-col h-full">
-                                    <div className="text-center mb-12 md:mb-16">
-                                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                            GET IN TOUCH
-                                        </h2>
-                                        <div className="w-24 h-1.5 bg-gradient-to-r from-[#E2725B] to-[#C95E48] mx-auto mb-6"></div>
-                                        <div className="flex justify-center gap-6 text-white/40">
-                                            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                                            </a>
-                                            <a href="https://www.instagram.com/bankoarts" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                                <Instagram size={24} />
-                                            </a>
-                                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                                            </a>
-                                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
-                                            </a>
-                                            <a href="https://wa.me/905392698915?text=Hello%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1">
-                                        <ContactForm />
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </FadeInSection>
-
-                {/* Footer */}
-                <footer className="border-t border-white/10 py-16 mt-16">
-                    <div className="max-w-[1400px] mx-auto">
-                        <div className="grid md:grid-cols-4 gap-12 mb-12">
-                            {/* Brand Column */}
-                            <div className="md:col-span-1">
-                                <h3 className="text-3xl font-bold tracking-widest mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    BANKO ARTS
-                                </h3>
-                                <p className="text-white/60 text-sm leading-relaxed">
-                                    Professional 3D architectural visualization and rendering services.
-                                </p>
-                            </div>
-
-                            {/* Quick Links Column */}
-                            <div>
-                                <h4 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    QUICK LINKS
-                                </h4>
-                                <ul className="space-y-3">
-                                    <li>
-                                        <button onClick={() => scrollToSection('services')} className="text-white/60 hover:text-white transition-colors text-sm">
-                                            Services
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button onClick={() => scrollToSection('about')} className="text-white/60 hover:text-white transition-colors text-sm">
-                                            About Us
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button onClick={() => scrollToSection('testimonials')} className="text-white/60 hover:text-white transition-colors text-sm">
-                                            Testimonials
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button onClick={() => scrollToSection('contact')} className="text-white/60 hover:text-white transition-colors text-sm">
-                                            Contact
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Contact Column */}
-                            <div>
-                                <h4 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    CONTACT
-                                </h4>
-                                <ul className="space-y-3">
-                                    <li>
-                                        <a href="mailto:contact@bankoarts.com" className="text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm">
-                                            <Mail size={16} />
-                                            <span>contact@bankoarts.com</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            {/* Social Media Column */}
-                            <div>
-                                <h4 className="text-lg font-bold mb-4 tracking-wider" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: '700', letterSpacing: '0.05em' }}>
-                                    FOLLOW US
-                                </h4>
-                                <div className="flex flex-col gap-3">
-                                    <a
-                                        href="https://www.instagram.com/bankoarts"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
-                                    >
-                                        <Instagram size={18} />
-                                        <span>Instagram</span>
-                                    </a>
-                                    <a
-                                        href="https://www.freelancer.com/u/brkbnkgll"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
-                                    >
-                                        <Briefcase size={18} />
-                                        <span>Freelancer</span>
-                                    </a>
-                                    <a
-                                        href="https://www.upwork.com/freelancers/berkbanko"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-white/60 hover:text-white transition-colors flex items-center gap-2 text-sm"
-                                    >
-                                        <Briefcase size={18} />
-                                        <span>Upwork</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Copyright Bar */}
-                        <div className="border-t border-white/10 pt-8">
-                            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                                <p className="text-white/40 text-sm">
-                                    © {new Date().getFullYear()} Banko Arts. All rights reserved.
-                                </p>
-                                <div className="flex gap-6 text-white/40 text-sm">
-                                    <span>824+ Projects Completed</span>
-                                    <span>•</span>
-                                    <span>10 Years Experience</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+            {/* Kapat butonu */}
+            <div style={{ position:'absolute', top:24, right:24, ...item(0.05) }}>
+              <button onClick={onClose} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:26, lineHeight:1, transition:'color 0.2s' }}
+                onMouseEnter={e=>e.currentTarget.style.color='#fff'}
+                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.5)'}>×</button>
             </div>
 
-            {lightboxProject && (
-                <Lightbox
-                    project={lightboxProject}
-                    onClose={() => setLightboxProject(null)}
-                    allProjects={architectureProjects}
-                    currentIndex={lightboxIndex}
-                    onNavigate={handleLightboxNavigate}
-                />
-            )}
+            {/* Divider */}
+            <div style={{ borderTop:'1px solid rgba(255,255,255,0.1)', marginBottom:24, ...item(0.1) }} />
 
-            {/* Floating WhatsApp Button */}
-            <FloatingWhatsApp />
-        </div>
+            {/* Nav label */}
+            <div style={{ ...item(0.15) }}>
+              <p style={{ fontSize:10, letterSpacing:'0.14em', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', marginBottom:18 }}>Navigation</p>
+            </div>
+
+            {/* Nav links */}
+            {navItems.map((navItem, i) => (
+              <div key={navItem} style={{ ...item(0.2 + i * 0.07) }}>
+                <button onClick={() => { onNav(navItem.toLowerCase()); onClose(); }}
+                  style={{
+                    display:'flex', alignItems:'center', gap:10,
+                    background:'none', border:'none', padding:'10px 0', width:'100%', textAlign:'left',
+                    fontSize:36, fontWeight:700, letterSpacing:'-0.02em',
+                    color: activePage === navItem.toLowerCase() ? 'var(--yellow)' : '#fff',
+                    borderBottom:'1px solid rgba(255,255,255,0.08)', transition:'color 0.2s',
+                  }}
+                  onMouseEnter={e => { if (activePage !== navItem.toLowerCase()) e.currentTarget.style.color='rgba(255,255,255,0.6)'; }}
+                  onMouseLeave={e => { if (activePage !== navItem.toLowerCase()) e.currentTarget.style.color='#fff'; }}>
+                  {activePage === navItem.toLowerCase() && <span style={{ width:7, height:7, borderRadius:'50%', background:'var(--yellow)', flexShrink:0 }} />}
+                  {navItem}
+                </button>
+              </div>
+            ))}
+
+            {/* Alt */}
+            <div style={{ marginTop:'auto', ...item(0.55) }}>
+              <div style={{ borderTop:'1px solid rgba(255,255,255,0.1)', marginBottom:18 }} />
+              <p style={{ fontSize:10, letterSpacing:'0.14em', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', marginBottom:12 }}>Contact</p>
+              <a href="mailto:info@bankoarts.com" style={{ fontSize:13, color:'rgba(255,255,255,0.55)', display:'block', marginBottom:6, transition:'color 0.2s' }}
+                onMouseEnter={e=>e.target.style.color='#fff'} onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.55)'}>
+                info@bankoarts.com
+              </a>
+              <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
+                style={{ fontSize:13, color:'rgba(255,255,255,0.55)', transition:'color 0.2s' }}
+                onMouseEnter={e=>e.target.style.color='#fff'} onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.55)'}>
+                Instagram
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ─── ProjectCard ───────────────────────────────────────── */
+function ProjectCard({ project, onClick }) {
+  const videoRef = useRef(null);
+  const wrapRef  = useRef(null);
+  const cardRef  = useRef(null);
+  const glareRef = useRef(null);
+  const rafRef   = useRef(null);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { el.classList.add('visible'); obs.unobserve(el); } },
+      { threshold: 0.08 }
     );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const handleMouseMove = (e) => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const card = cardRef.current;
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top)  / rect.height;
+      card.style.transform = `perspective(900px) rotateX(${(y-0.5)*-12}deg) rotateY(${(x-0.5)*12}deg) scale3d(1.03,1.03,1.03)`;
+      if (glareRef.current) {
+        glareRef.current.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
+        glareRef.current.style.opacity = '1';
+      }
+    });
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    if (project.type === 'video' && videoRef.current) videoRef.current.play().catch(()=>{});
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (cardRef.current) cardRef.current.style.transform = 'perspective(900px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+    if (glareRef.current) glareRef.current.style.opacity = '0';
+    if (project.type === 'video' && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <div ref={wrapRef} className="reveal" style={{ perspective:'900px' }}>
+      <div ref={cardRef} onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave} onClick={() => onClick(project)}
+        style={{
+          position:'relative', overflow:'hidden', cursor:'pointer', background:'#f0efed',
+          transformStyle:'preserve-3d',
+          transition:'transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s cubic-bezier(0.22,1,0.36,1)',
+          boxShadow: hovered ? '0 20px 50px rgba(0,0,0,0.12)' : '0 2px 8px rgba(0,0,0,0.06)',
+        }}>
+        <img src={project.image} alt={project.title}
+          style={{ display:'block', width:'100%', height:'auto',
+            transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)',
+            opacity: hovered && project.type==='video' ? 0 : 1 }}
+        />
+        {project.type === 'video' && (
+          <video ref={videoRef} src={project.video} muted loop playsInline
+            style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover',
+              opacity: hovered ? 1 : 0, transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }} />
+        )}
+        <div style={{ position:'absolute', inset:0,
+          background:'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 55%)',
+          opacity: hovered ? 1 : 0, transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }} />
+        <div ref={glareRef} style={{ position:'absolute', inset:0, opacity:0, pointerEvents:'none', transition:'opacity 0.3s ease' }} />
+        <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'16px 18px',
+          transform: hovered ? 'translateY(0)' : 'translateY(8px)',
+          opacity: hovered ? 1 : 0,
+          transition:'transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.45s cubic-bezier(0.22,1,0.36,1)' }}>
+          <p style={{ fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:600, color:'#fff' }}>{project.title}</p>
+          {project.type==='video' && <p style={{ fontSize:10, color:'rgba(255,255,255,0.6)', marginTop:2 }}>Animation</p>}
+        </div>
+        {project.type==='video' && (
+          <div style={{ position:'absolute', top:'50%', left:'50%',
+            transform: hovered ? 'translate(-50%,-50%) scale(0)' : 'translate(-50%,-50%) scale(1)',
+            transition:'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
+            width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.15)',
+            backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M5 3l9 5-9 5V3z" fill="white"/></svg>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Lightbox ──────────────────────────────────────────── */
+function Lightbox({ project, onClose, onNext, onPrev }) {
+  const videoRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(true);
+    const t = requestAnimationFrame(() => setOpen(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
+  useEffect(() => {
+    if (project?.type === 'video' && videoRef.current) videoRef.current.play().catch(()=>{});
+  }, [project]);
+
+  useEffect(() => {
+    const fn = (e) => {
+      if (e.key==='Escape') handleClose();
+      if (e.key==='ArrowRight') onNext();
+      if (e.key==='ArrowLeft') onPrev();
+    };
+    window.addEventListener('keydown', fn);
+    return () => window.removeEventListener('keydown', fn);
+  }, [onNext, onPrev]);
+
+  const handleClose = () => { setOpen(false); setTimeout(onClose, 280); };
+  if (!visible) return null;
+
+  const navBtn = { position:'absolute', top:'50%', transform:'translateY(-50%)',
+    width:44, height:44, background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)',
+    color:'#fff', fontSize:22, display:'flex', alignItems:'center', justifyContent:'center',
+    backdropFilter:'blur(8px)', zIndex:10, transition:'background 0.2s' };
+
+  return (
+    <div className={`lightbox-backdrop${open?' open':''}`} onClick={handleClose}>
+      <button onClick={handleClose} style={{ position:'absolute', top:24, right:28,
+        background:'none', border:'none', color:'rgba(255,255,255,0.5)',
+        fontSize:26, lineHeight:1, zIndex:10, transition:'color 0.2s' }}
+        onMouseEnter={e=>e.currentTarget.style.color='#fff'}
+        onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.5)'}>×</button>
+      <button onClick={e=>{e.stopPropagation();onPrev();}} style={{...navBtn,left:20}}
+        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.18)'}
+        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>‹</button>
+      <button onClick={e=>{e.stopPropagation();onNext();}} style={{...navBtn,right:20}}
+        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.18)'}
+        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>›</button>
+      <div className="lightbox-content" style={{ maxWidth:'88vw', maxHeight:'84vh', position:'relative' }}
+        onClick={e=>e.stopPropagation()}>
+        {project.type==='video'
+          ? <video ref={videoRef} src={project.video} controls autoPlay style={{ maxWidth:'88vw', maxHeight:'84vh', display:'block' }}/>
+          : <img src={project.image} alt={project.title} style={{ maxWidth:'88vw', maxHeight:'84vh', display:'block', objectFit:'contain' }}/>}
+        <p style={{ color:'rgba(255,255,255,0.4)', fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', marginTop:14 }}>
+          {project.title}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Dot Grid (WebGL) ───────────────────────────────────── */
+function DotGrid() {
+  const canvasRef = useRef(null);
+  const mouseRef  = useRef([-9999, -9999]);
+  const rafRef    = useRef(null);
+  const glRef     = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: false });
+    if (!gl) return;
+    glRef.current = gl;
+
+    const vert = `
+      attribute vec2 a_pos;
+      void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+    `;
+    const frag = `
+      precision mediump float;
+      uniform vec2  u_res;
+      uniform vec2  u_mouse;
+      uniform float u_dpr;
+      void main() {
+        float spacing = 14.0 * u_dpr;
+        float radius  = 200.0 * u_dpr;
+        vec2 px = gl_FragCoord.xy;
+        px.y = u_res.y - px.y;
+        vec2 cell = floor(px / spacing);
+        vec2 dot  = (cell + 0.5) * spacing;
+        vec2 diff = px - dot;
+        float d   = length(diff);
+        if (d > spacing * 0.5) { discard; return; }
+        vec2  dm   = dot - u_mouse * u_dpr;
+        float dist = length(dm);
+        float inf  = max(0.0, 1.0 - dist / radius);
+        float r    = (1.4 + inf * 2.0) * u_dpr;
+        float dotD = length(diff);
+        if (dotD > r) { discard; return; }
+        float alpha = 0.22 + inf * 0.55;
+        float aa    = 1.0 - smoothstep(r - 1.0, r, dotD);
+        gl_FragColor = vec4(0.04, 0.04, 0.04, alpha * aa);
+      }
+    `;
+
+    const compile = (type, src) => {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes   = gl.getUniformLocation(prog, 'u_res');
+    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+    const uDpr   = gl.getUniformLocation(prog, 'u_dpr');
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    let W, H, dpr;
+    const resize = () => {
+      dpr = window.devicePixelRatio || 1;
+      W   = canvas.offsetWidth;
+      H   = canvas.offsetHeight;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+
+    const onMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = [e.clientX - rect.left, e.clientY - rect.top];
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('resize', resize);
+
+    const draw = () => {
+      rafRef.current = requestAnimationFrame(draw);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(uRes,   canvas.width, canvas.height);
+      gl.uniform2f(uMouse, mouseRef.current[0], mouseRef.current[1]);
+      gl.uniform1f(uDpr,   dpr);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none', zIndex:0 }}
+    />
+  );
+}
+
+/* ─── Work Card ─────────────────────────────────────────── */
+function WorkCard({ item, visible, index }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div style={{
+      flexShrink:0, width:'clamp(280px, 26vw, 560px)',
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(32px)',
+      transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.08}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.08}s`,
+    }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div style={{ overflow:'hidden', borderRadius:4 }}>
+        <img src={item.image} alt={item.title} draggable={false}
+          style={{
+            display:'block', width:'100%',
+            aspectRatio:'3/4', objectFit:'cover',
+            filter: hovered ? 'grayscale(0%)' : 'grayscale(100%)',
+            transform: hovered ? 'scale(1.04)' : 'scale(1)',
+            transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
+            pointerEvents:'none',
+          }}
+        />
+      </div>
+      <div style={{ marginTop:18 }}>
+        <p style={{ fontSize:16, fontWeight:700, letterSpacing:'-0.01em', marginBottom:6 }}>{item.title}</p>
+        <p style={{ fontSize:12, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Hero Title ─────────────────────────────────────────── */
+function HeroTitle() {
+  return (
+    <div style={{ position:'relative', zIndex:1, width:'100%' }}>
+      {/* Logo — sol üst küçük */}
+      <img src="/images/logo.svg" alt="Banko Arts" style={{ display:'block', width:'clamp(80px, 10vw, 140px)', height:'auto', marginBottom:24 }} />
+      {/* BANKO ARTS büyük başlık */}
+      <div style={{ display:'inline-block', background:'#f5e200', padding:'0.02em 0.08em 0.04em 0', marginBottom:'0.04em' }}>
+        <span style={{ display:'block', fontSize:'clamp(88px, 14vw, 260px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', userSelect:'none' }}>BANKO</span>
+      </div>
+      <br/>
+      <span style={{ display:'inline-block', fontSize:'clamp(88px, 14vw, 260px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', filter:'drop-shadow(5px 8px 0px rgba(0,0,0,0.13)) drop-shadow(10px 18px 28px rgba(0,0,0,0.09))', position:'relative', zIndex:2, userSelect:'none' }}>ARTS</span>
+    </div>
+  );
+}
+
+/* ─── Works scroll section ──────────────────────────────── */
+const HSCROLL_ITEMS = [
+  { id:1, title:'Exterior — Residential', sub:'3D Render · Exterior', image:'/images/architecture/Exterior 1.png' },
+  { id:2, title:'Interior — Living Room', sub:'3D Render · Interior', image:'/images/architecture/Living Room.png' },
+  { id:3, title:'Exterior — Facade',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.png' },
+  { id:4, title:'Interior — Bedroom',     sub:'3D Render · Interior', image:'/images/architecture/Bedroom.png' },
+  { id:5, title:'Exterior — Night',       sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.2.png' },
+  { id:6, title:'Interior — Kitchen',     sub:'3D Render · Interior', image:'/images/architecture/Kitchen.png' },
+];
+
+function HScrollSection() {
+  const scrollRef  = useRef(null);
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const drag = useRef({ active:false, startX:0, scrollLeft:0 });
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const onMouseDown = (e) => {
+    const el = scrollRef.current;
+    drag.current = { active:true, startX: e.pageX, scrollLeft: el.scrollLeft };
+    el.style.cursor = 'grabbing';
+  };
+  const onMouseMove = (e) => {
+    if (!drag.current.active) return;
+    scrollRef.current.scrollLeft = drag.current.scrollLeft - (e.pageX - drag.current.startX);
+  };
+  const onMouseUp = () => {
+    drag.current.active = false;
+    if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
+  };
+
+  return (
+    <div ref={sectionRef} style={{ display:'flex', paddingBottom:96, minHeight:560 }}>
+
+      {/* Left sticky label */}
+      <div style={{
+        width:'clamp(120px, 10vw, 180px)', flexShrink:0,
+        display:'flex', alignItems:'center', justifyContent:'center',
+        opacity: visible ? 1 : 0,
+        transition:'opacity 0.8s cubic-bezier(0.22,1,0.36,1)',
+      }}>
+        <p style={{
+          writingMode:'vertical-rl',
+          transform:'rotate(180deg)',
+          fontSize:'clamp(48px, 6vw, 96px)',
+          fontWeight:800, letterSpacing:'-0.03em',
+          color:'var(--black)', userSelect:'none',
+        }}>Our Works</p>
+      </div>
+
+      {/* Scrollable cards */}
+      <div
+        ref={scrollRef}
+        onMouseDown={onMouseDown} onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
+        style={{
+          flex:1, display:'flex', gap:48,
+          overflowX:'auto', overflowY:'hidden',
+          scrollbarWidth:'none', msOverflowStyle:'none',
+          cursor:'grab', alignItems:'flex-start',
+          paddingRight:'50vw',
+        }}>
+        {HSCROLL_ITEMS.map((item, i) => (
+          <WorkCard key={item.id} item={item} visible={visible} index={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main ──────────────────────────────────────────────── */
+export default function BankoArts() {
+  const [menuOpen, setMenuOpen]               = useState(false);
+  const [activePage, setActivePage]           = useState('works');
+  const [lightboxProject, setLightboxProject] = useState(null);
+
+  const allProjects = projects;
+  const lightboxIndex = lightboxProject ? allProjects.findIndex(p => p.id === lightboxProject.id) : -1;
+  const openLightbox  = (p) => { document.body.style.overflow='hidden'; setLightboxProject(p); };
+  const closeLightbox = () => { document.body.style.overflow=''; setLightboxProject(null); };
+  const nextProject   = () => setLightboxProject(allProjects[(lightboxIndex+1) % allProjects.length]);
+  const prevProject   = () => setLightboxProject(allProjects[(lightboxIndex-1+allProjects.length) % allProjects.length]);
+
+  const goPage = (p) => {
+    const map = { about:'section-about', works:'section-works', services:'section-services', contact:'section-contact' };
+    const el = document.getElementById(map[p] || 'section-works');
+    if (el) window.lenis?.scrollTo(el, { offset: -20, duration: 1.6 });
+  };
+
+  const toggleContact = () => {
+    const contactEl = document.getElementById('section-contact');
+    if (!contactEl) return;
+    const rect = contactEl.getBoundingClientRect();
+    const inContact = rect.top <= 120 && rect.bottom > 120;
+    if (inContact) {
+      window.lenis?.scrollTo(0, { duration: 1.6 });
+    } else {
+      window.lenis?.scrollTo(contactEl, { offset: -20, duration: 1.6 });
+    }
+  };
+
+
+
+  // Lenis smooth scroll
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+    });
+    const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+    window.lenis = lenis;
+    return () => { lenis.destroy(); delete window.lenis; };
+  }, []);
+
+  // lock scroll when menu open
+  useEffect(() => {
+    if (menuOpen) window.lenis?.stop();
+    else window.lenis?.start();
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+
+  return (
+    <div style={{ minHeight:'100vh', background:'var(--bg)', color:'var(--black)', paddingLeft:'clamp(136px, 8vw, 220px)', paddingRight:'clamp(136px, 8vw, 220px)' }}>
+
+      {/* ── Sol çubuk + Menü ── */}
+      <LeftBar menuOpen={menuOpen} onOpen={() => setMenuOpen(true)} onClose={() => setMenuOpen(false)} onNav={goPage} activePage={activePage} />
+
+      {/* ── Right bar ── */}
+      <div className="side-bar side-bar--right" onClick={toggleContact}>
+        <span>Contacts</span>
+      </div>
+
+      {/* ── WORKS ── */}
+      <section id="section-works" style={{ borderTop:'1px solid var(--sep)' }}>
+        <div style={{ position:'relative', padding:'48px 20px 0 20px', display:'flex', justifyContent:'space-between', alignItems:'flex-end', minHeight:'60vh', gap:0 }}>
+          <DotGrid />
+          <div style={{ flex:1, minWidth:0, position:'relative', zIndex:1 }}>
+            <HeroTitle />
+          </div>
+          <div style={{ width:'clamp(300px, 32vw, 640px)', flexShrink:0, marginTop:0, marginLeft:'-6vw', position:'relative', zIndex:1 }}>
+            <img src="/images/D2.jpg" alt="Banko Arts" style={{ width:'100%', display:'block', objectFit:'cover', aspectRatio:'3/4' }}/>
+          </div>
+        </div>
+        <div style={{ margin:'40px 20px 0', borderTop:'1px solid var(--sep)' }} />
+        <div style={{ padding:'56px 20px 80px' }}>
+          <p style={{ fontSize:'clamp(28px, 3vw, 64px)', fontWeight:400, letterSpacing:'-0.02em', lineHeight:1.2, maxWidth:1200 }}>
+            We believe beauty is born from precision, not chance. Every render tells a story — before the foundation is even laid.
+          </p>
+        </div>
+        <HScrollSection />
+      </section>
+
+      {/* ── SERVICES ── */}
+      <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
+        <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
+        <h2 style={{ fontSize:'clamp(48px, 7vw, 130px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
+        <hr className="ba-divider" style={{ marginBottom:64 }}/>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, maxWidth:1600 }}>
+          {[
+            ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings — life before construction begins.'],
+            ['Interior Visualization','High-end interior renders covering every room type with accurate lighting and material detail.'],
+            ['3D Animation','Cinematic walkthroughs and flyarounds — let clients experience space before it exists.'],
+            ['Floor Plan Rendering','2D and 3D floor plan visualizations that communicate spatial layouts with clarity.'],
+            ['Real Estate Visualization','Off-plan renders that help developers market and sell before a single brick is laid.'],
+            ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.'],
+          ].map(([t, d], i) => (
+            <div key={t} style={{ padding:'32px 0', borderTop:'1px solid var(--border)' }}>
+              <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
+              <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
+              <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      {/* ── CONTACT ── */}
+      <section id="section-contact" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
+        <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°003</p>
+        <h2 style={{ fontSize:'clamp(48px, 7vw, 130px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Get in touch</h2>
+        <hr className="ba-divider" style={{ marginBottom:64 }}/>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+          <div><ContactForm /></div>
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:24 }}>Direct</p>
+            {[['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],['Instagram','@bankoarts','https://instagram.com/bankoarts']].map(([label,val,href]) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer"
+                style={{ display:'flex', gap:16, padding:'20px 0', borderBottom:'1px solid var(--border)' }}>
+                <span style={{ fontSize:13, color:'var(--muted)', width:80, flexShrink:0 }}>{label} .</span>
+                <span style={{ fontSize:'clamp(16px, 2vw, 22px)', fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ── FOOTER ── */}
+      <footer style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32, marginBottom:64 }}>
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Banko Arts</p>
+            <p style={{ fontSize:13, lineHeight:1.7, color:'rgba(0,0,0,0.6)' }}>Professional 3D Architectural Visualization Studio</p>
+          </div>
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Company</p>
+            {['Works','Services','About','Contact'].map(item => (
+              <button key={item} onClick={()=>goPage(item.toLowerCase())}
+                style={{ display:'block', background:'none', border:'none', fontSize:14, fontWeight:600, marginBottom:10, cursor:'pointer' }}>
+                {item}
+              </button>
+            ))}
+          </div>
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Follow</p>
+            <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
+              style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10 }}>Instagram</a>
+          </div>
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Contact</p>
+            <a href="mailto:info@bankoarts.com" style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10 }}>info@bankoarts.com</a>
+          </div>
+        </div>
+        <hr style={{ border:'none', borderTop:'1px solid rgba(0,0,0,0.15)', marginBottom:24 }}/>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <p style={{ fontSize:13, fontWeight:800, letterSpacing:'0.04em' }}>BANKO ARTS</p>
+          <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
+        </div>
+      </footer>
+
+      {/* Lightbox */}
+      {lightboxProject && (
+        <Lightbox project={lightboxProject} onClose={closeLightbox} onNext={nextProject} onPrev={prevProject}/>
+      )}
+    </div>
+  );
 }

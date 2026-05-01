@@ -13,7 +13,10 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { }
+html {
+  /* 1920px'de 16px, 2560px'de de 16px kalır — font-size sabit */
+  font-size: clamp(12px, 0.833vw, 16px);
+}
 
 * { cursor: url('/cursor.svg') 10 10, auto; }
 a, button, [role="button"], input, textarea, select, label { cursor: url('/cursor.svg') 10 10, pointer; }

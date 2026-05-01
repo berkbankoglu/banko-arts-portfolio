@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Chakra_Petch } from "next/font/google";
+import { Geist, Geist_Mono, Chakra_Petch, Anton } from "next/font/google";
 import "./globals.css";
 import StructuredData from "./components/StructuredData";
 import GoogleAnalytics from "./components/GoogleAnalytics";
@@ -18,6 +18,12 @@ const chakraPetch = Chakra_Petch({
   variable: "--font-hero",
   subsets: ["latin"],
   weight: ["700"],
+});
+
+const anton = Anton({
+  variable: "--font-anton",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -114,7 +120,7 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${chakraPetch.variable} ${anton.variable} antialiased`}
       >
         {/* Google Analytics - Replace with your actual GA4 Measurement ID */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (

@@ -61,7 +61,7 @@ button { font-family: var(--font); cursor: pointer; }
 .side-bar--right { right: 24px; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), right 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
 
 .side-bar--left:hover  { left: 0; top: 0; bottom: 0; width: 80px; }
-.side-bar--right:hover { right: 0; top: 0; bottom: 0; width: 80px; }
+.side-bar--right:hover { right: -2px; top: 0; bottom: 0; width: 84px; }
 
 .side-bar span {
   writing-mode: vertical-rl;

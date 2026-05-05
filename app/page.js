@@ -519,6 +519,8 @@ function FlipCard({ card, index, sectionVisible }) {
   return (
     <div
       onClick={() => setFlipped(f => !f)}
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => setFlipped(false)}
       style={{
         perspective: '1000px',
         cursor: 'pointer',

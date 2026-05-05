@@ -585,9 +585,9 @@ function ContactSection() {
           {/* "Start My Project" kutusu */}
           <div style={{
             position:'absolute', inset:0,
-            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+            display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
             background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
-            textAlign:'center',
+            textAlign:'left',
             transform: (showForm && !leaving) ? 'translateX(200%)' : 'translateX(0)',
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'none' : 'all',

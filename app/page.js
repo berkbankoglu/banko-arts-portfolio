@@ -532,22 +532,21 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         100vw - 100% = bu elementin sağ tarafından viewport sağına olan mesafe.
         Ondan 92px çıkartırsak sidebar sol kenarına dayanırız.
       */}
+      {/* "Start My Project" panel — tam yükseklik, clip için wrapper gerekli */}
       <div style={{
         position:'absolute',
         top:0, bottom:0, left:0,
         right: 'calc(-1 * (100vw - 100% - 92px))',
         overflow:'hidden',
-        pointerEvents:'none',
+        pointerEvents: (showForm && !leaving) ? 'none' : 'all',
+        transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
+        transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
       }}>
-        {/* "Start My Project" panel */}
         <div style={{
           position:'absolute', inset:0,
           display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
           background:'#f2f2f2', borderRadius:8,
           padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
-          transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
-          transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
-          pointerEvents: (showForm && !leaving) ? 'none' : 'all',
         }}>
           <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
             Start My Project
@@ -562,24 +561,27 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
             Contact Us →
           </button>
         </div>
+      </div>
 
-        {/* Form panel */}
-        <div style={{
-          position:'absolute', inset:0,
-          background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-          transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
-          transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
-          pointerEvents: (showForm && !leaving) ? 'all' : 'none',
-          overflowY:'auto',
-        }}>
-          <button onClick={closeForm}
-            style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
-            onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
-            onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
-            ← Back
-          </button>
-          <ContactForm />
-        </div>
+      {/* Form panel — yükseklik içeriğe göre, sadece sağa clip */}
+      <div style={{
+        position:'relative',
+        left:0,
+        right: 'calc(-1 * (100vw - 100% - 92px))',
+        width: 'calc(100% + (100vw - 100% - 92px))',
+        background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
+        transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
+        transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
+        pointerEvents: (showForm && !leaving) ? 'all' : 'none',
+        visibility: (showForm || leaving) ? 'visible' : 'hidden',
+      }}>
+        <button onClick={closeForm}
+          style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
+          onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
+          onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
+          ← Back
+        </button>
+        <ContactForm />
       </div>
     </>
   );
@@ -645,7 +647,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel: fixed-position clip container, viewport'a göre 92px'de biter */}
-        <div style={{ position:'relative', height:'clamp(480px, 55vh, 700px)' }}>
+        <div style={{ position:'relative', minHeight:'clamp(480px, 55vh, 700px)' }}>
           {/* Bu div layout alanını tutar, içindeki fixed div viewport'a uzanır */}
           <ContactSlide
             showForm={showForm}

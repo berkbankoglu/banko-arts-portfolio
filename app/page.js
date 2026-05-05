@@ -436,8 +436,8 @@ function WorkCard({ item, visible, index, imgRef }) {
     <div style={{
       flexShrink:0, width:'clamp(280px, 26vw, 560px)',
       opacity: visible ? 1 : 0,
-      transform: visible ? 'translateY(0)' : 'translateY(32px)',
-      transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.08}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.08}s`,
+      transform: visible ? 'translateX(0)' : 'translateX(120px)',
+      transition: `opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.15}s, transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.15}s`,
     }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

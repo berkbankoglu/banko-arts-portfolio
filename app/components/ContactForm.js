@@ -6,13 +6,12 @@ import emailjs from '@emailjs/browser';
 const PROJECT_TYPES = ['Exterior Rendering', 'Interior Rendering', 'Animation', '3D Modeling', 'Master Plan', 'Other'];
 const SCALES = ['Single Unit / Apartment', 'Residential House', 'Villa / Mansion', 'Small Commercial', 'Mid-Rise Building', 'High-Rise / Tower', 'Large Complex'];
 const BUDGETS = ['Under $500', '$500 – $1,500', '$1,500 – $5,000', '$5,000 – $15,000', '$15,000+', 'Not sure yet'];
-
 const TABS = ['Design Projects', 'Consulting', 'Other'];
 
 const EMPTY = {
   firstName: '', lastName: '', email: '', company: '',
   projectType: '', location: '', scale: '', budget: '', overview: '',
-  subject: '', message: '',
+  message: '',
 };
 
 export default function ContactForm() {
@@ -97,31 +96,33 @@ export default function ContactForm() {
   );
 
   const err = (name) => errors[name]
-    ? <p style={{ color:'rgba(220,80,80,0.9)', fontSize:11, marginTop:4 }}>{errors[name]}</p>
+    ? <p style={{ color: 'rgba(220,80,80,0.9)', fontSize: 11, marginTop: 4 }}>{errors[name]}</p>
     : null;
 
+  const show = (i) => ({ display: tab === i ? 'flex' : 'none', flexDirection: 'column', gap: 16 });
+
   return (
-    <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:0 }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
 
       {/* Tabs */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', border:'1px solid var(--border)', marginBottom:24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', border: '1px solid var(--border)', marginBottom: 24 }}>
         {TABS.map((t, i) => (
           <button key={t} type="button" onClick={() => { setTab(i); setErrors({}); }}
             style={{
-              padding:'12px 8px', border:'none', borderRight: i < 2 ? '1px solid var(--border)' : 'none',
+              padding: '12px 8px', border: 'none', borderRight: i < 2 ? '1px solid var(--border)' : 'none',
               background: tab === i ? '#fff' : '#f5f5f5',
-              fontFamily:'var(--font)', fontSize:12, fontWeight: tab === i ? 700 : 400,
-              letterSpacing:'0.04em', color: tab === i ? 'var(--black)' : 'var(--muted)',
-              cursor:'pointer', transition:'background 0.2s, color 0.2s',
+              fontFamily: 'var(--font)', fontSize: 12, fontWeight: tab === i ? 700 : 400,
+              letterSpacing: '0.04em', color: tab === i ? 'var(--black)' : 'var(--muted)',
+              cursor: 'pointer', transition: 'background 0.2s, color 0.2s',
             }}>
             {t}
           </button>
         ))}
       </div>
 
-      <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
-        {/* First / Last */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(2, minmax(0,1fr))', gap:12 }}>
+      {/* Ortak alanlar */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 12 }}>
           <div>
             <label className="ba-label">First Name *</label>
             {inp('firstName', 'text', 'Jane')}
@@ -133,87 +134,92 @@ export default function ContactForm() {
             {err('lastName')}
           </div>
         </div>
-
-        {/* Email */}
         <div>
           <label className="ba-label">Email *</label>
           {inp('email', 'email', 'jane@brand.com')}
           {err('email')}
         </div>
-
-        {/* Company */}
         <div>
           <label className="ba-label">Brand / Company</label>
           {inp('company', 'text', 'Acme Retail Co.')}
         </div>
-
-        {tab === 0 && (<>
-          {/* Project Type */}
-          <div>
-            <label className="ba-label">Project Type *</label>
-            {sel('projectType', 'Select type...', PROJECT_TYPES)}
-            {err('projectType')}
-          </div>
-
-          {/* Location */}
-          <div>
-            <label className="ba-label">Location</label>
-            {inp('location', 'text', 'City, Country')}
-          </div>
-
-          {/* Scale + Budget */}
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
-            <div>
-              <label className="ba-label">Project Scale</label>
-              {sel('scale', 'Select scale...', SCALES)}
-            </div>
-            <div>
-              <label className="ba-label">Approximate Budget</label>
-              {sel('budget', 'Select range...', BUDGETS)}
-            </div>
-          </div>
-
-          {/* Overview */}
-          <div>
-            <label className="ba-label">Project Overview *</label>
-            <textarea
-              className={`ba-input${errors.overview ? ' ba-input--error' : ''}`}
-              name="overview" value={formData.overview} onChange={handleChange}
-              placeholder="Tell us about the concept, location, scale, and any timelines…"
-              rows={5} disabled={status === 'sending'} style={{ resize:'vertical' }}
-            />
-            {err('overview')}
-          </div>
-        </>)}
-
-        {tab !== 0 && (
-          <div>
-            <label className="ba-label">Message *</label>
-            <textarea
-              className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
-              name="message" value={formData.message} onChange={handleChange}
-              placeholder={tab === 1 ? 'What would you like to consult about?' : 'How can we help?'}
-              rows={6} disabled={status === 'sending'} style={{ resize:'vertical' }}
-            />
-            {err('message')}
-          </div>
-        )}
-
-        {status === 'success' && (
-          <p style={{ fontSize:13, color:'rgba(100,200,120,0.9)', border:'1px solid rgba(100,200,120,0.2)', padding:'12px 16px' }}>
-            Message sent — we'll get back to you within 24 hours.
-          </p>
-        )}
-        {status === 'error' && (
-          <p style={{ fontSize:13, color:'rgba(220,80,80,0.9)', border:'1px solid rgba(220,80,80,0.2)', padding:'12px 16px' }}>
-            Something went wrong. Please email us directly at info@bankoarts.com
-          </p>
-        )}
-
-        <button type="submit" className="ba-btn-primary" disabled={status === 'sending'} style={{ width:'100%', marginTop:4 }}>
-          {status === 'sending' ? 'Sending…' : 'Send Inquiry →'}
-        </button>
       </div>
+
+      {/* Design Projects — display:none ile gizle, DOM'da kalır → yükseklik sabit */}
+      <div style={{ ...show(0), marginTop: 16 }}>
+        <div>
+          <label className="ba-label">Project Type *</label>
+          {sel('projectType', 'Select type...', PROJECT_TYPES)}
+          {err('projectType')}
+        </div>
+        <div>
+          <label className="ba-label">Location</label>
+          {inp('location', 'text', 'City, Country')}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 12 }}>
+          <div>
+            <label className="ba-label">Project Scale</label>
+            {sel('scale', 'Select scale...', SCALES)}
+          </div>
+          <div>
+            <label className="ba-label">Approximate Budget</label>
+            {sel('budget', 'Select range...', BUDGETS)}
+          </div>
+        </div>
+        <div>
+          <label className="ba-label">Project Overview *</label>
+          <textarea
+            className={`ba-input${errors.overview ? ' ba-input--error' : ''}`}
+            name="overview" value={formData.overview} onChange={handleChange}
+            placeholder="Tell us about the concept, location, scale, and any timelines…"
+            rows={5} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+          />
+          {err('overview')}
+        </div>
+      </div>
+
+      {/* Consulting — display:none ile gizle */}
+      <div style={{ ...show(1), marginTop: 16 }}>
+        <div>
+          <label className="ba-label">Message *</label>
+          <textarea
+            className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
+            name="message" value={formData.message} onChange={handleChange}
+            placeholder="What would you like to consult about?"
+            rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+          />
+          {err('message')}
+        </div>
+      </div>
+
+      {/* Other — display:none ile gizle */}
+      <div style={{ ...show(2), marginTop: 16 }}>
+        <div>
+          <label className="ba-label">Message *</label>
+          <textarea
+            className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
+            name="message" value={formData.message} onChange={handleChange}
+            placeholder="How can we help?"
+            rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+          />
+          {err('message')}
+        </div>
+      </div>
+
+      {status === 'success' && (
+        <p style={{ fontSize: 13, color: 'rgba(100,200,120,0.9)', border: '1px solid rgba(100,200,120,0.2)', padding: '12px 16px', marginTop: 16 }}>
+          Message sent — we'll get back to you within 24 hours.
+        </p>
+      )}
+      {status === 'error' && (
+        <p style={{ fontSize: 13, color: 'rgba(220,80,80,0.9)', border: '1px solid rgba(220,80,80,0.2)', padding: '12px 16px', marginTop: 16 }}>
+          Something went wrong. Please email us directly at info@bankoarts.com
+        </p>
+      )}
+
+      <button type="submit" className="ba-btn-primary" disabled={status === 'sending'} style={{ width: '100%', marginTop: 20 }}>
+        {status === 'sending' ? 'Sending…' : 'Send Inquiry →'}
+      </button>
     </form>
   );
 }

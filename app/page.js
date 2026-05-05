@@ -33,10 +33,21 @@ function useSectionWipe() {
   useEffect(() => {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-        else e.target.classList.remove('visible');
+        if (e.isIntersecting) {
+          e.target.classList.remove('leaving');
+          e.target.classList.add('visible');
+        } else {
+          const goingUp = e.boundingClientRect.top > 0;
+          if (goingUp) {
+            e.target.classList.remove('visible');
+            e.target.classList.remove('leaving');
+          } else {
+            e.target.classList.remove('visible');
+            e.target.classList.add('leaving');
+          }
+        }
       });
-    }, { threshold: 0, rootMargin: '0px 0px -120px 0px' });
+    }, { threshold: 0.15, rootMargin: '0px 0px -200px 0px' });
 
     const attach = () => {
       document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));

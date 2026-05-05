@@ -486,6 +486,124 @@ function OurWorksLabel({ imgHeight, visible }) {
   );
 }
 
+/* ─── Flip Card Stats ───────────────────────────────────── */
+const STAT_CARDS = [
+  {
+    icon: '★',
+    value: 'Top Rated Plus',
+    label: 'Upwork',
+    back: 'Achieved Top Rated Plus status on Upwork — awarded to the top 3% of freelancers with a consistent record of exceptional client satisfaction and delivery.',
+  },
+  {
+    icon: '◎',
+    value: '$70K+',
+    label: 'Total Earnings on Upwork',
+    back: 'Over $70,000 in completed contracts on Upwork across 100 jobs and 1,474 hours — architectural visualization, 3D rendering, and design projects for clients worldwide.',
+  },
+  {
+    icon: '✦',
+    value: 'Preferred Freelancer',
+    label: 'Freelancer.com',
+    back: 'Preferred Freelancer badge on Freelancer.com — recognition given to top-performing freelancers with proven reliability, quality, and client trust across 342 completed projects.',
+  },
+  {
+    icon: '●',
+    value: '5.0 · 99%',
+    label: '342 Reviews · Full Rating',
+    back: 'Perfect 5.0 rating with 342 client reviews and 99% job completion rate on Freelancer.com. Every project delivered with precision — no exceptions.',
+  },
+];
+
+function FlipCard({ card, index, sectionVisible }) {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div
+      onClick={() => setFlipped(f => !f)}
+      style={{
+        perspective: '1000px',
+        cursor: 'pointer',
+        opacity: sectionVisible ? 1 : 0,
+        transform: sectionVisible ? 'translateY(0)' : 'translateY(32px)',
+        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index * 0.1}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${0.1 + index * 0.1}s`,
+      }}
+    >
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        height: 280,
+        transformStyle: 'preserve-3d',
+        transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1)',
+        transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+      }}>
+        {/* Front */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          border: '1px solid var(--border)',
+          padding: '32px 28px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          background: '#fff',
+        }}>
+          <span style={{ fontSize: 22, lineHeight: 1 }}>{card.icon}</span>
+          <div>
+            <p style={{ fontSize: 'clamp(22px, 2.2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>{card.value}</p>
+            <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{card.label}</p>
+          </div>
+        </div>
+        {/* Back */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          transform: 'rotateY(180deg)',
+          border: '1px solid var(--border)',
+          padding: '32px 28px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          background: 'var(--black)',
+        }}>
+          <span style={{ fontSize: 22, lineHeight: 1, color: 'var(--yellow)' }}>{card.icon}</span>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.8 }}>{card.back}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatsSection() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} style={{ padding: '120px 20px 80px', borderTop: '1px solid var(--sep)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
+        <div>
+          <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
+          <h2 style={{ fontSize: 'clamp(36px, 4vw, 72px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
+        </div>
+        <p style={{ fontSize: 13, color: 'var(--muted)', maxWidth: 360, textAlign: 'right', lineHeight: 1.7 }}>
+          10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.
+        </p>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+        {STAT_CARDS.map((card, i) => (
+          <FlipCard key={i} card={card} index={i} sectionVisible={visible} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* ─── Works scroll section ──────────────────────────────── */
 const HSCROLL_ITEMS = [
   { id:1, title:'Exterior — Residential', sub:'3D Render · Exterior', image:'/images/architecture/Exterior 1.png' },
@@ -685,6 +803,8 @@ export default function BankoArts() {
         <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
         <HScrollSection />
       </section>
+
+      <StatsSection />
 
       {/* ── SERVICES ── */}
       <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>

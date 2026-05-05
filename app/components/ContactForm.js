@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
 const PROJECT_TYPES = ['Exterior Rendering', 'Interior Rendering', 'Animation', '3D Modeling', 'Master Plan', 'Other'];
@@ -13,6 +13,55 @@ const EMPTY = {
   projectType: '', location: '', scale: '', budget: '', overview: '',
   message: '',
 };
+
+/* Animasyonlu tab içerik wrapper */
+function TabPanel({ active, children }) {
+  const ref = useRef(null);
+  const [height, setHeight] = useState('auto');
+  const [visible, setVisible] = useState(active);
+  const [animating, setAnimating] = useState(false);
+  const timerRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (active) {
+      setVisible(true);
+      setAnimating(true);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setAnimating(false), 20);
+    } else {
+      setAnimating(true);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => { setVisible(false); setAnimating(false); }, 320);
+    }
+  }, [active]);
+
+  useEffect(() => {
+    if (!ref.current || !visible) return;
+    const ro = new ResizeObserver(() => {
+      if (ref.current) setHeight(ref.current.scrollHeight);
+    });
+    ro.observe(ref.current);
+    setHeight(ref.current.scrollHeight);
+    return () => ro.disconnect();
+  }, [visible]);
+
+  if (!visible && !animating) return null;
+
+  return (
+    <div style={{
+      overflow: 'hidden',
+      height: visible ? height : 0,
+      opacity: (visible && !animating) ? 1 : 0,
+      transform: (visible && !animating) ? 'translateY(0)' : 'translateY(10px)',
+      transition: 'height 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease, transform 0.28s ease',
+      marginTop: 16,
+    }}>
+      <div ref={ref}>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default function ContactForm() {
   const [tab, setTab] = useState(0);
@@ -99,8 +148,6 @@ export default function ContactForm() {
     ? <p style={{ color: 'rgba(220,80,80,0.9)', fontSize: 11, marginTop: 4 }}>{errors[name]}</p>
     : null;
 
-  const show = (i) => ({ display: tab === i ? 'flex' : 'none', flexDirection: 'column', gap: 16 });
-
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
 
@@ -145,66 +192,72 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* Design Projects — display:none ile gizle, DOM'da kalır → yükseklik sabit */}
-      <div style={{ ...show(0), marginTop: 16 }}>
-        <div>
-          <label className="ba-label">Project Type *</label>
-          {sel('projectType', 'Select type...', PROJECT_TYPES)}
-          {err('projectType')}
-        </div>
-        <div>
-          <label className="ba-label">Location</label>
-          {inp('location', 'text', 'City, Country')}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 12 }}>
+      {/* Design Projects */}
+      <TabPanel active={tab === 0}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label className="ba-label">Project Scale</label>
-            {sel('scale', 'Select scale...', SCALES)}
+            <label className="ba-label">Project Type *</label>
+            {sel('projectType', 'Select type...', PROJECT_TYPES)}
+            {err('projectType')}
           </div>
           <div>
-            <label className="ba-label">Approximate Budget</label>
-            {sel('budget', 'Select range...', BUDGETS)}
+            <label className="ba-label">Location</label>
+            {inp('location', 'text', 'City, Country')}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0,1fr))', gap: 12 }}>
+            <div>
+              <label className="ba-label">Project Scale</label>
+              {sel('scale', 'Select scale...', SCALES)}
+            </div>
+            <div>
+              <label className="ba-label">Approximate Budget</label>
+              {sel('budget', 'Select range...', BUDGETS)}
+            </div>
+          </div>
+          <div>
+            <label className="ba-label">Project Overview *</label>
+            <textarea
+              className={`ba-input${errors.overview ? ' ba-input--error' : ''}`}
+              name="overview" value={formData.overview} onChange={handleChange}
+              placeholder="Tell us about the concept, location, scale, and any timelines…"
+              rows={5} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+            />
+            {err('overview')}
           </div>
         </div>
-        <div>
-          <label className="ba-label">Project Overview *</label>
-          <textarea
-            className={`ba-input${errors.overview ? ' ba-input--error' : ''}`}
-            name="overview" value={formData.overview} onChange={handleChange}
-            placeholder="Tell us about the concept, location, scale, and any timelines…"
-            rows={5} disabled={status === 'sending'} style={{ resize: 'vertical' }}
-          />
-          {err('overview')}
-        </div>
-      </div>
+      </TabPanel>
 
-      {/* Consulting — display:none ile gizle */}
-      <div style={{ ...show(1), marginTop: 16 }}>
-        <div>
-          <label className="ba-label">Message *</label>
-          <textarea
-            className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
-            name="message" value={formData.message} onChange={handleChange}
-            placeholder="What would you like to consult about?"
-            rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
-          />
-          {err('message')}
+      {/* Consulting */}
+      <TabPanel active={tab === 1}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label className="ba-label">Message *</label>
+            <textarea
+              className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
+              name="message" value={formData.message} onChange={handleChange}
+              placeholder="What would you like to consult about?"
+              rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+            />
+            {err('message')}
+          </div>
         </div>
-      </div>
+      </TabPanel>
 
-      {/* Other — display:none ile gizle */}
-      <div style={{ ...show(2), marginTop: 16 }}>
-        <div>
-          <label className="ba-label">Message *</label>
-          <textarea
-            className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
-            name="message" value={formData.message} onChange={handleChange}
-            placeholder="How can we help?"
-            rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
-          />
-          {err('message')}
+      {/* Other */}
+      <TabPanel active={tab === 2}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label className="ba-label">Message *</label>
+            <textarea
+              className={`ba-input${errors.message ? ' ba-input--error' : ''}`}
+              name="message" value={formData.message} onChange={handleChange}
+              placeholder="How can we help?"
+              rows={6} disabled={status === 'sending'} style={{ resize: 'vertical' }}
+            />
+            {err('message')}
+          </div>
         </div>
-      </div>
+      </TabPanel>
 
       {status === 'success' && (
         <p style={{ fontSize: 13, color: 'rgba(100,200,120,0.9)', border: '1px solid rgba(100,200,120,0.2)', padding: '12px 16px', marginTop: 16 }}>

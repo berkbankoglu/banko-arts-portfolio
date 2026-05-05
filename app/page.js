@@ -580,7 +580,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel */}
-        <div style={{ position:'relative', overflow:'visible', height:'clamp(480px, 55vh, 700px)' }}>
+        <div style={{ position:'relative', overflow:'visible', height:'clamp(480px, 55vh, 700px)', marginRight:'calc(-1 * clamp(100px, 7vw, 160px) + 20px - 92px)' }}>
 
           {/* "Start My Project" kutusu */}
           <div style={{

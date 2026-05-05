@@ -545,7 +545,7 @@ function ContactSection() {
   };
 
   return (
-    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
+    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)', overflow:'hidden' }}>
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px' }}>
 
         {/* Sol — hiç değişmez */}
@@ -580,7 +580,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel */}
-        <div style={{ position:'relative', overflow:'hidden', height:'clamp(480px, 55vh, 700px)' }}>
+        <div style={{ position:'relative', overflow:'visible', height:'clamp(480px, 55vh, 700px)' }}>
 
           {/* "Start My Project" kutusu */}
           <div style={{

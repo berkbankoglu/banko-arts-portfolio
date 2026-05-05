@@ -838,22 +838,41 @@ export default function BankoArts() {
 
 
       {/* ── CONTACT ── */}
-      <section id="section-contact" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
-        <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°003</p>
-        <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Get in touch</h2>
-        <hr className="ba-divider" style={{ marginBottom:64 }}/>
+      <section id="section-contact" style={{ padding:'120px 20px 100px', borderTop:'1px solid var(--sep)' }}>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
-          <div><ContactForm /></div>
+
+          {/* Sol — başlık + linkler */}
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:24 }}>Direct</p>
-            {[['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],['Instagram','@bankoarts','https://instagram.com/bankoarts']].map(([label,val,href]) => (
-              <a key={label} href={href} target="_blank" rel="noreferrer"
-                style={{ display:'flex', gap:16, padding:'20px 0', borderBottom:'1px solid var(--border)' }}>
-                <span style={{ fontSize:13, color:'var(--muted)', width:80, flexShrink:0 }}>{label} .</span>
-                <span style={{ fontSize:'clamp(16px, 2vw, 22px)', fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
-              </a>
-            ))}
+            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
+            <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
+              Let's Build<br/>Something<br/>Remarkable.
+            </h2>
+            <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
+              Photorealistic architectural visualizations delivered fast. Tell us about your project and we'll get back within 24 hours.
+            </p>
+            <div>
+              {[
+                ['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],
+                ['Instagram','@bankoarts','https://instagram.com/bankoarts'],
+                ['Upwork','Banko Arts','https://upwork.com'],
+                ['Freelancer','@brkbnkgll','https://freelancer.com'],
+              ].map(([label,val,href]) => (
+                <a key={label} href={href} target="_blank" rel="noreferrer"
+                  style={{ display:'flex', gap:16, padding:'16px 0', borderBottom:'1px solid var(--border)', textDecoration:'none', transition:'opacity 0.2s' }}
+                  onMouseEnter={e=>e.currentTarget.style.opacity='0.6'}
+                  onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+                  <span style={{ fontSize:11, color:'var(--muted)', width:80, flexShrink:0, letterSpacing:'0.08em', textTransform:'uppercase', paddingTop:2 }}>{label}</span>
+                  <span style={{ fontSize:15, fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
+                </a>
+              ))}
+            </div>
           </div>
+
+          {/* Sağ — form kartı */}
+          <div style={{ background:'#f7f7f7', padding:'clamp(28px, 3vw, 48px)', borderRadius:4 }}>
+            <ContactForm />
+          </div>
+
         </div>
       </section>
 

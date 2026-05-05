@@ -586,19 +586,17 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel */}
-        <div style={{ position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'relative', overflow:'hidden', minHeight:'clamp(400px, 45vh, 600px)' }}>
 
           {/* "Start My Project" kutusu */}
           <div style={{
+            position:'absolute', inset:0,
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
             background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
-            textAlign:'center', minHeight:'clamp(400px, 45vh, 600px)',
+            textAlign:'center',
             transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
-            opacity: (showForm && !leaving) ? 0 : 1,
-            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
-            pointerEvents: showForm ? 'none' : 'all',
-            position: (showForm && !leaving) ? 'absolute' : 'relative',
-            width:'100%',
+            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
+            pointerEvents: (showForm && !leaving) ? 'none' : 'all',
           }}>
             <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
               Start My Project
@@ -616,13 +614,12 @@ function ContactSection() {
 
           {/* Form */}
           <div style={{
+            position:'absolute', inset:0,
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
             transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
-            opacity: (showForm || leaving) ? 1 : 0,
-            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease',
+            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'all' : 'none',
-            position: (showForm || leaving) ? 'relative' : 'absolute',
-            width:'100%',
+            overflowY: 'auto',
           }}>
             <button onClick={closeForm}
               style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}

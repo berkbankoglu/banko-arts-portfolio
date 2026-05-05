@@ -47,7 +47,7 @@ function useSectionWipe() {
           }
         }
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.15 });
 
     const attach = () => {
       document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));

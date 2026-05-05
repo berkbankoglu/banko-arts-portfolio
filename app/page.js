@@ -542,13 +542,11 @@ function ContactSection() {
 
       {/* ── İlk görünüm ── */}
       <div style={{
-        display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center',
+        display: showForm ? 'none' : 'grid',
+        gridTemplateColumns:'1fr 1fr', alignItems:'center',
         padding:'120px 20px 100px',
         opacity: showForm ? 0 : 1,
-        pointerEvents: showForm ? 'none' : 'all',
         transition:'opacity 0.5s cubic-bezier(0.22,1,0.36,1)',
-        position: showForm ? 'absolute' : 'relative',
-        inset: showForm ? '120px 20px auto' : 'auto',
       }}>
         {/* Sol — soldan gelir */}
         <div style={{
@@ -611,12 +609,12 @@ function ContactSection() {
 
       {/* ── Form görünümü ── */}
       <div style={{
-        display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start',
+        display: showForm ? 'grid' : 'none',
+        gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start',
         padding:'120px 20px 100px',
         opacity: showForm ? 1 : 0,
         transform: showForm ? 'translateY(0)' : 'translateY(40px)',
-        pointerEvents: showForm ? 'all' : 'none',
-        transition:'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s',
+        transition:'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s',
       }}>
         <div>
           <button onClick={() => setShowForm(false)}

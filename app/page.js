@@ -546,7 +546,7 @@ function ContactSection() {
 
   return (
     <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px', marginRight:'calc(-1 * clamp(100px, 7vw, 160px) + 20px)' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px' }}>
 
         {/* Sol — hiç değişmez */}
         <div style={{
@@ -580,7 +580,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel */}
-        <div style={{ position:'relative', overflow:'hidden', height:'clamp(480px, 55vh, 700px)', marginRight:'calc(-1 * clamp(100px, 7vw, 160px) + 20px + 92px)' }}>
+        <div style={{ position:'relative', overflow:'hidden', height:'clamp(480px, 55vh, 700px)' }}>
 
           {/* "Start My Project" kutusu */}
           <div style={{
@@ -588,7 +588,7 @@ function ContactSection() {
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
             background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
             textAlign:'center',
-            transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
+            transform: (showForm && !leaving) ? 'translateX(200%)' : 'translateX(0)',
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'none' : 'all',
           }}>
@@ -610,7 +610,7 @@ function ContactSection() {
           <div style={{
             position:'absolute', inset:0,
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-            transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
+            transform: leaving ? 'translateX(200%)' : showForm ? 'translateX(0)' : 'translateX(200%)',
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'all' : 'none',
             overflowY: 'auto',

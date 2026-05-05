@@ -526,7 +526,6 @@ function ContactSection() {
   const [visible, setVisible] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const [ctaEntering, setCtaEntering] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -539,15 +538,10 @@ function ContactSection() {
     return () => obs.disconnect();
   }, []);
 
-  const openForm = () => { setLeaving(false); setCtaEntering(false); setShowForm(true); };
+  const openForm = () => { setLeaving(false); setShowForm(true); };
   const closeForm = () => {
     setLeaving(true);
-    setCtaEntering(true);
-    setTimeout(() => {
-      setShowForm(false);
-      setLeaving(false);
-      setTimeout(() => setCtaEntering(false), 50);
-    }, 2100);
+    setTimeout(() => { setShowForm(false); setLeaving(false); }, 2100);
   };
 
   return (

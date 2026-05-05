@@ -618,10 +618,10 @@ function ContactSection() {
           <div style={{
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
             transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
-            opacity: showForm ? 1 : 0,
-            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
+            opacity: (showForm || leaving) ? 1 : 0,
+            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease',
             pointerEvents: (showForm && !leaving) ? 'all' : 'none',
-            position: showForm ? 'relative' : 'absolute',
+            position: (showForm || leaving) ? 'relative' : 'absolute',
             width:'100%',
           }}>
             <button onClick={closeForm}

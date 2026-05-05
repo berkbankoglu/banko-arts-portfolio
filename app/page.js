@@ -31,15 +31,23 @@ const projects = [
 /* ─── Section wipe hook ─────────────────────────────────── */
 function useSectionWipe() {
   useEffect(() => {
-    const els = document.querySelectorAll('.section-wipe');
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) e.target.classList.add('visible');
         else e.target.classList.remove('visible');
       });
-    }, { threshold: 0.08 });
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+    const attach = () => {
+      document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));
+    };
+
+    attach();
+
+    const mo = new MutationObserver(attach);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => { obs.disconnect(); mo.disconnect(); };
   }, []);
 }
 
@@ -818,13 +826,13 @@ export default function BankoArts() {
           </div>
         </div>
         <div style={{ margin:'40px 20px 0', borderTop:'1px solid var(--sep)' }} />
-        <div style={{ padding:'56px 20px 80px' }}>
+        <div className="section-wipe" style={{ padding:'56px 20px 80px' }}>
           <p style={{ fontSize:'clamp(24px, 2.2vw, 44px)', fontWeight:400, letterSpacing:'-0.02em', lineHeight:1.2, maxWidth:1200 }}>
             We believe beauty is born from precision, not chance. Every render tells a story — before the foundation is even laid.
           </p>
         </div>
         <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
-        <HScrollSection />
+        <div className="section-wipe"><HScrollSection /></div>
       </section>
 
       <StatsSection />
@@ -894,7 +902,7 @@ export default function BankoArts() {
 
 
       {/* ── FOOTER ── */}
-      <footer style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
+      <footer className="section-wipe" style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32, marginBottom:64 }}>
           <div>
             <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Banko Arts</p>

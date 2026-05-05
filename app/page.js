@@ -520,6 +520,126 @@ function OurWorksLabel({ imgHeight, visible }) {
   );
 }
 
+/* ─── Contact Section ───────────────────────────────────── */
+function ContactSection() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); else setVisible(false); },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)', overflow:'hidden', position:'relative' }}>
+
+      {/* ── İlk görünüm ── */}
+      <div style={{
+        display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center',
+        padding:'120px 20px 100px',
+        opacity: showForm ? 0 : 1,
+        pointerEvents: showForm ? 'none' : 'all',
+        transition:'opacity 0.5s cubic-bezier(0.22,1,0.36,1)',
+        position: showForm ? 'absolute' : 'relative',
+        inset: showForm ? '120px 20px auto' : 'auto',
+      }}>
+        {/* Sol — soldan gelir */}
+        <div style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateX(0)' : 'translateX(-80px)',
+          transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s',
+        }}>
+          <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
+          <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
+            Let's Build<br/>Something<br/>Remarkable.
+          </h2>
+          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
+            Photorealistic architectural visualizations delivered fast. Tell us about your project and we'll get back within 24 hours.
+          </p>
+          <div>
+            {[
+              ['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],
+              ['Instagram','@bankoarts','https://instagram.com/bankoarts'],
+              ['Upwork','Banko Arts','https://upwork.com'],
+              ['Freelancer','@brkbnkgll','https://freelancer.com'],
+            ].map(([label,val,href]) => (
+              <a key={label} href={href} target="_blank" rel="noreferrer"
+                style={{ display:'flex', gap:16, padding:'16px 0', borderBottom:'1px solid var(--border)', textDecoration:'none', transition:'opacity 0.2s' }}
+                onMouseEnter={e=>e.currentTarget.style.opacity='0.6'}
+                onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+                <span style={{ fontSize:11, color:'var(--muted)', width:80, flexShrink:0, letterSpacing:'0.08em', textTransform:'uppercase', paddingTop:2 }}>{label}</span>
+                <span style={{ fontSize:15, fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Sağ — "Start My Project" kutusu */}
+        <div style={{
+          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+          background:'#f2f2f2', borderRadius:8, padding:'80px 48px', textAlign:'center',
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateX(0)' : 'translateX(80px)',
+          transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.25s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.25s',
+        }}>
+          <h3 style={{ fontSize:'clamp(28px, 3vw, 52px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20 }}>
+            Start My Project
+          </h3>
+          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:40 }}>
+            Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally to help you execute.
+          </p>
+          <button onClick={() => setShowForm(true)}
+            style={{
+              padding:'14px 40px', background:'var(--black)', color:'#fff',
+              border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em',
+              textTransform:'uppercase', borderRadius:4, cursor:'pointer',
+              transition:'opacity 0.2s',
+            }}
+            onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
+            onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+            Contact Us →
+          </button>
+        </div>
+      </div>
+
+      {/* ── Form görünümü ── */}
+      <div style={{
+        display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start',
+        padding:'120px 20px 100px',
+        opacity: showForm ? 1 : 0,
+        transform: showForm ? 'translateY(0)' : 'translateY(40px)',
+        pointerEvents: showForm ? 'all' : 'none',
+        transition:'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s',
+      }}>
+        <div>
+          <button onClick={() => setShowForm(false)}
+            style={{ background:'none', border:'none', fontSize:13, color:'var(--muted)', letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:40, cursor:'pointer', display:'flex', alignItems:'center', gap:8 }}>
+            ← Back
+          </button>
+          <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
+          <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
+            Let's Build<br/>Something<br/>Remarkable.
+          </h2>
+          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320 }}>
+            Photorealistic architectural visualizations delivered fast. We'll get back within 24 hours.
+          </p>
+        </div>
+        <div style={{ background:'#f7f7f7', padding:'clamp(28px, 3vw, 48px)', borderRadius:4 }}>
+          <ContactForm />
+        </div>
+      </div>
+
+    </section>
+  );
+}
+
 /* ─── Flip Card Stats ───────────────────────────────────── */
 const STAT_CARDS = [
   {
@@ -873,43 +993,7 @@ export default function BankoArts() {
 
 
       {/* ── CONTACT ── */}
-      <section id="section-contact" className="section-wipe" style={{ padding:'120px 20px 100px', borderTop:'1px solid var(--sep)' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
-
-          {/* Sol — başlık + linkler */}
-          <div>
-            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
-            <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
-              Let's Build<br/>Something<br/>Remarkable.
-            </h2>
-            <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
-              Photorealistic architectural visualizations delivered fast. Tell us about your project and we'll get back within 24 hours.
-            </p>
-            <div>
-              {[
-                ['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],
-                ['Instagram','@bankoarts','https://instagram.com/bankoarts'],
-                ['Upwork','Banko Arts','https://upwork.com'],
-                ['Freelancer','@brkbnkgll','https://freelancer.com'],
-              ].map(([label,val,href]) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer"
-                  style={{ display:'flex', gap:16, padding:'16px 0', borderBottom:'1px solid var(--border)', textDecoration:'none', transition:'opacity 0.2s' }}
-                  onMouseEnter={e=>e.currentTarget.style.opacity='0.6'}
-                  onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
-                  <span style={{ fontSize:11, color:'var(--muted)', width:80, flexShrink:0, letterSpacing:'0.08em', textTransform:'uppercase', paddingTop:2 }}>{label}</span>
-                  <span style={{ fontSize:15, fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Sağ — form kartı */}
-          <div style={{ background:'#f7f7f7', padding:'clamp(28px, 3vw, 48px)', borderRadius:4 }}>
-            <ContactForm />
-          </div>
-
-        </div>
-      </section>
+      <ContactSection />
 
 
       {/* ── FOOTER ── */}

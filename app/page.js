@@ -525,7 +525,7 @@ function ContactSection() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const [animating, setAnimating] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -538,8 +538,8 @@ function ContactSection() {
     return () => obs.disconnect();
   }, []);
 
-  const openForm = () => { setShowForm(true); };
-  const closeForm = () => { setShowForm(false); };
+  const openForm = () => { setLeaving(false); setShowForm(true); };
+  const closeForm = () => { setLeaving(true); setTimeout(() => { setShowForm(false); setLeaving(false); }, 50); };
 
   return (
     <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
@@ -584,7 +584,7 @@ function ContactSection() {
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
             background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
             textAlign:'center', minHeight:'clamp(400px, 45vh, 600px)',
-            transform: showForm ? 'translateX(110%)' : 'translateX(0)',
+            transform: showForm ? 'translateX(110%)' : leaving ? 'translateX(-110%)' : 'translateX(0)',
             opacity: showForm ? 0 : 1,
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
             pointerEvents: showForm ? 'none' : 'all',
@@ -608,7 +608,7 @@ function ContactSection() {
           {/* Form */}
           <div style={{
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-            transform: showForm ? 'translateX(0)' : 'translateX(110%)',
+            transform: showForm ? 'translateX(0)' : leaving ? 'translateX(110%)' : 'translateX(110%)',
             opacity: showForm ? 1 : 0,
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
             pointerEvents: showForm ? 'all' : 'none',

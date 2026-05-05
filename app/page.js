@@ -538,7 +538,7 @@ function ContactSection() {
     return () => obs.disconnect();
   }, []);
 
-  const openForm = () => { setAnimating(true); setTimeout(() => { setShowForm(true); setAnimating(false); }, 10); };
+  const openForm = () => { setShowForm(true); };
   const closeForm = () => { setShowForm(false); };
 
   return (
@@ -608,7 +608,7 @@ function ContactSection() {
           {/* Form */}
           <div style={{
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-            transform: showForm ? 'translateX(0)' : 'translateX(-110%)',
+            transform: showForm ? 'translateX(0)' : 'translateX(110%)',
             opacity: showForm ? 1 : 0,
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
             pointerEvents: showForm ? 'all' : 'none',

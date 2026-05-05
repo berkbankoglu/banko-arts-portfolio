@@ -522,40 +522,22 @@ function OurWorksLabel({ imgHeight, visible }) {
 
 /* ─── Contact Slide (viewport-pinned panels) ────────────── */
 function ContactSlide({ showForm, leaving, openForm, closeForm }) {
-  const anchorRef = useRef(null);
-  const [rect, setRect] = useState(null);
-
-  useEffect(() => {
-    const update = () => {
-      if (anchorRef.current) setRect(anchorRef.current.getBoundingClientRect());
-    };
-    update();
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, { passive: true });
-    return () => { window.removeEventListener('resize', update); window.removeEventListener('scroll', update); };
-  }, []);
-
-  const top    = rect ? rect.top + window.scrollY : 0;
-  const left   = rect ? rect.left : 0;
-  const height = rect ? rect.height : 0;
-  // Panel sağ kenarı = viewport sağından 92px içeride (sidebar'ın sol kenarı)
-  const right  = 92;
-
   return (
     <>
-      {/* Anchor: layout'taki yeri tutar */}
-      <div ref={anchorRef} style={{ position:'absolute', inset:0 }} />
 
-      {/* Clip wrapper: overflow:hidden, tam viewport-based koordinatlarla */}
+      {/*
+        Clip wrapper: sol kenar bu grid hücresinin sol kenarı,
+        sağ kenar viewport'tan 92px içeride (sidebar sol kenarı).
+        "right" negatif değer = sağa taşma.
+        100vw - 100% = bu elementin sağ tarafından viewport sağına olan mesafe.
+        Ondan 92px çıkartırsak sidebar sol kenarına dayanırız.
+      */}
       <div style={{
-        position:'fixed',
-        top: rect ? rect.top : 0,
-        left: left,
-        right: right,
-        height: height,
+        position:'absolute',
+        top:0, bottom:0, left:0,
+        right: 'calc(-1 * (100vw - 100% - 92px))',
         overflow:'hidden',
         pointerEvents:'none',
-        zIndex: 10,
       }}>
         {/* "Start My Project" panel */}
         <div style={{

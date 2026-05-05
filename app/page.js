@@ -489,28 +489,32 @@ function OurWorksLabel({ imgHeight, visible }) {
 /* ─── Flip Card Stats ───────────────────────────────────── */
 const STAT_CARDS = [
   {
-    icon: '★',
-    value: 'Top Rated Plus',
-    label: 'Upwork',
-    back: 'Achieved Top Rated Plus status on Upwork — awarded to the top 3% of freelancers with a consistent record of exceptional client satisfaction and delivery.',
-  },
-  {
     icon: '◎',
-    value: '$70K+',
-    label: 'Total Earnings on Upwork',
-    back: 'Over $70,000 in completed contracts on Upwork across 100 jobs and 1,474 hours — architectural visualization, 3D rendering, and design projects for clients worldwide.',
+    value: 'Top Rated Plus',
+    sub: '$70K+ · 100 Jobs · 1,474 Hours',
+    label: 'Upwork',
+    back: 'Top Rated Plus on Upwork — awarded to the top 3% of freelancers. Over $70,000 in completed contracts across 100 jobs and 1,474 hours of architectural visualization and 3D rendering for clients worldwide.',
   },
   {
     icon: '✦',
     value: 'Preferred Freelancer',
+    sub: '5.0 Rating · 342 Reviews · 99%',
     label: 'Freelancer.com',
-    back: 'Preferred Freelancer badge on Freelancer.com — recognition given to top-performing freelancers with proven reliability, quality, and client trust across 342 completed projects.',
+    back: 'Preferred Freelancer badge with a perfect 5.0 rating, 342 client reviews and 99% job completion rate. Recognition given to top-performing freelancers with proven reliability and quality.',
   },
   {
-    icon: '●',
-    value: '5.0 · 99%',
-    label: '342 Reviews · Full Rating',
-    back: 'Perfect 5.0 rating with 342 client reviews and 99% job completion rate on Freelancer.com. Every project delivered with precision — no exceptions.',
+    icon: '◆',
+    value: '824+',
+    sub: 'Completed Projects',
+    label: 'Total Work',
+    back: 'Over 824 architectural visualization projects completed across both platforms — exterior renders, interior scenes, 3D animations, and floor plans for clients in 30+ countries.',
+  },
+  {
+    icon: '○',
+    value: '10 Years',
+    sub: 'Professional Experience',
+    label: 'Since 2015',
+    back: '10 years of professional 3D architectural visualization experience. From early freelance work to building a studio-level output — consistently delivering photorealistic renders that move projects forward.',
   },
 ];
 
@@ -534,7 +538,7 @@ function FlipCard({ card, index, sectionVisible }) {
         width: '100%',
         height: 280,
         transformStyle: 'preserve-3d',
-        transition: 'transform 0.7s cubic-bezier(0.22,1,0.36,1)',
+        transition: 'transform 1.4s cubic-bezier(0.22,1,0.36,1)',
         transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
       }}>
         {/* Front */}
@@ -549,8 +553,9 @@ function FlipCard({ card, index, sectionVisible }) {
         }}>
           <span style={{ fontSize: 22, lineHeight: 1 }}>{card.icon}</span>
           <div>
-            <p style={{ fontSize: 'clamp(22px, 2.2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 10 }}>{card.value}</p>
-            <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{card.label}</p>
+            <p style={{ fontSize: 'clamp(22px, 2.2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 6 }}>{card.value}</p>
+            <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.04em', marginBottom: 6 }}>{card.sub}</p>
+            <p style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
           </div>
         </div>
         {/* Back */}

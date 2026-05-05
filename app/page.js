@@ -582,20 +582,23 @@ function ContactSection() {
           {/* "Start My Project" kutusu */}
           <div style={{
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-            background:'#f2f2f2', borderRadius:8, padding:'80px 48px', textAlign:'center',
+            background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
+            textAlign:'center', minHeight:'clamp(400px, 45vh, 600px)',
             transform: showForm ? 'translateX(110%)' : 'translateX(0)',
             opacity: showForm ? 0 : 1,
-            transition:'transform 0.7s cubic-bezier(0.77,0,0.18,1), opacity 0.4s ease',
+            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
             pointerEvents: showForm ? 'none' : 'all',
+            position: showForm ? 'absolute' : 'relative',
+            width:'100%',
           }}>
-            <h3 style={{ fontSize:'clamp(28px, 3vw, 52px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20 }}>
+            <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
               Start My Project
             </h3>
-            <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:300, marginBottom:40 }}>
+            <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
               Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally.
             </p>
             <button onClick={openForm}
-              style={{ padding:'14px 40px', background:'var(--black)', color:'#fff', border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', borderRadius:4, cursor:'pointer', transition:'opacity 0.2s' }}
+              style={{ padding:'16px 48px', background:'var(--black)', color:'#fff', border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', borderRadius:4, cursor:'pointer', transition:'opacity 0.2s' }}
               onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
               onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
               Contact Us →
@@ -604,13 +607,13 @@ function ContactSection() {
 
           {/* Form */}
           <div style={{
-            position:'absolute', inset:0,
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
             transform: showForm ? 'translateX(0)' : 'translateX(-110%)',
             opacity: showForm ? 1 : 0,
-            transition:'transform 0.7s cubic-bezier(0.77,0,0.18,1), opacity 0.4s ease',
+            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1), opacity 1.2s ease',
             pointerEvents: showForm ? 'all' : 'none',
-            overflowY:'auto',
+            position: showForm ? 'relative' : 'absolute',
+            width:'100%',
           }}>
             <button onClick={closeForm}
               style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}

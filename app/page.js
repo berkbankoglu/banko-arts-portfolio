@@ -520,6 +520,89 @@ function OurWorksLabel({ imgHeight, visible }) {
   );
 }
 
+/* ─── Contact Slide (viewport-pinned panels) ────────────── */
+function ContactSlide({ showForm, leaving, openForm, closeForm }) {
+  const anchorRef = useRef(null);
+  const [rect, setRect] = useState(null);
+
+  useEffect(() => {
+    const update = () => {
+      if (anchorRef.current) setRect(anchorRef.current.getBoundingClientRect());
+    };
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, { passive: true });
+    return () => { window.removeEventListener('resize', update); window.removeEventListener('scroll', update); };
+  }, []);
+
+  const top    = rect ? rect.top + window.scrollY : 0;
+  const left   = rect ? rect.left : 0;
+  const height = rect ? rect.height : 0;
+  // Panel sağ kenarı = viewport sağından 92px içeride (sidebar'ın sol kenarı)
+  const right  = 92;
+
+  return (
+    <>
+      {/* Anchor: layout'taki yeri tutar */}
+      <div ref={anchorRef} style={{ position:'absolute', inset:0 }} />
+
+      {/* Clip wrapper: overflow:hidden, tam viewport-based koordinatlarla */}
+      <div style={{
+        position:'fixed',
+        top: rect ? rect.top : 0,
+        left: left,
+        right: right,
+        height: height,
+        overflow:'hidden',
+        pointerEvents:'none',
+        zIndex: 10,
+      }}>
+        {/* "Start My Project" panel */}
+        <div style={{
+          position:'absolute', inset:0,
+          display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
+          background:'#f2f2f2', borderRadius:8,
+          padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
+          transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
+          transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
+          pointerEvents: (showForm && !leaving) ? 'none' : 'all',
+        }}>
+          <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
+            Start My Project
+          </h3>
+          <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
+            Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally.
+          </p>
+          <button onClick={openForm}
+            style={{ padding:'16px 48px', background:'var(--black)', color:'#fff', border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', borderRadius:4, cursor:'pointer', transition:'opacity 0.2s' }}
+            onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
+            onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+            Contact Us →
+          </button>
+        </div>
+
+        {/* Form panel */}
+        <div style={{
+          position:'absolute', inset:0,
+          background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
+          transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
+          transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
+          pointerEvents: (showForm && !leaving) ? 'all' : 'none',
+          overflowY:'auto',
+        }}>
+          <button onClick={closeForm}
+            style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
+            onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
+            onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
+            ← Back
+          </button>
+          <ContactForm />
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ─── Contact Section ───────────────────────────────────── */
 function ContactSection() {
   const ref = useRef(null);
@@ -545,7 +628,7 @@ function ContactSection() {
   };
 
   return (
-    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)', overflow:'hidden', marginRight:'calc(-1 * clamp(100px, 7vw, 160px) - 92px)' }}>
+    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px' }}>
 
         {/* Sol — hiç değişmez */}
@@ -579,51 +662,15 @@ function ContactSection() {
           </div>
         </div>
 
-        {/* Sağ — slide panel */}
-        <div style={{ position:'relative', overflow:'visible', height:'clamp(480px, 55vh, 700px)' }}>
-
-          {/* "Start My Project" kutusu */}
-          <div style={{
-            position:'absolute', inset:0,
-            display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
-            background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
-            textAlign:'left',
-            transform: (showForm && !leaving) ? 'translateX(100vw)' : 'translateX(0)',
-            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
-            pointerEvents: (showForm && !leaving) ? 'none' : 'all',
-          }}>
-            <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
-              Start My Project
-            </h3>
-            <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
-              Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally.
-            </p>
-            <button onClick={openForm}
-              style={{ padding:'16px 48px', background:'var(--black)', color:'#fff', border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', borderRadius:4, cursor:'pointer', transition:'opacity 0.2s' }}
-              onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
-              onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
-              Contact Us →
-            </button>
-          </div>
-
-          {/* Form */}
-          <div style={{
-            position:'absolute', inset:0,
-            background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-            transform: leaving ? 'translateX(100vw)' : showForm ? 'translateX(0)' : 'translateX(100vw)',
-            transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
-            pointerEvents: (showForm && !leaving) ? 'all' : 'none',
-            overflowY: 'auto',
-          }}>
-            <button onClick={closeForm}
-              style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
-              onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
-              onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
-              ← Back
-            </button>
-            <ContactForm />
-          </div>
-
+        {/* Sağ — slide panel: fixed-position clip container, viewport'a göre 92px'de biter */}
+        <div style={{ position:'relative', height:'clamp(480px, 55vh, 700px)' }}>
+          {/* Bu div layout alanını tutar, içindeki fixed div viewport'a uzanır */}
+          <ContactSlide
+            showForm={showForm}
+            leaving={leaving}
+            openForm={openForm}
+            closeForm={closeForm}
+          />
         </div>
       </div>
     </section>

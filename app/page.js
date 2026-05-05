@@ -541,6 +541,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         pointerEvents: (showForm && !leaving) ? 'none' : 'all',
         transform: (showForm && !leaving) ? 'translateX(110%)' : 'translateX(0)',
         transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
+        zIndex: (showForm || leaving) ? 0 : 1,
       }}>
         <div style={{
           position:'absolute', inset:0,
@@ -566,6 +567,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
       {/* Form panel — arka plan sağa uzanır ama form içeriği grid hücre genişliğinde kalır */}
       <div style={{
         position:'relative',
+        zIndex: (showForm || leaving) ? 1 : 0,
         transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
         transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
         pointerEvents: (showForm && !leaving) ? 'all' : 'none',

@@ -588,7 +588,7 @@ function ContactSection() {
             display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
             background:'#f2f2f2', borderRadius:8, padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
             textAlign:'left',
-            transform: (showForm && !leaving) ? 'translateX(400%)' : 'translateX(0)',
+            transform: (showForm && !leaving) ? 'translateX(100vw)' : 'translateX(0)',
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'none' : 'all',
           }}>
@@ -610,7 +610,7 @@ function ContactSection() {
           <div style={{
             position:'absolute', inset:0,
             background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
-            transform: leaving ? 'translateX(400%)' : showForm ? 'translateX(0)' : 'translateX(400%)',
+            transform: leaving ? 'translateX(100vw)' : showForm ? 'translateX(0)' : 'translateX(100vw)',
             transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
             pointerEvents: (showForm && !leaving) ? 'all' : 'none',
             overflowY: 'auto',

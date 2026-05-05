@@ -121,7 +121,7 @@ export default function ContactForm() {
 
       <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
         {/* First / Last */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(2, minmax(0,1fr))', gap:12 }}>
           <div>
             <label className="ba-label">First Name *</label>
             {inp('firstName', 'text', 'Jane')}

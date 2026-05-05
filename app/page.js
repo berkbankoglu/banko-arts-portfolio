@@ -563,25 +563,31 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         </div>
       </div>
 
-      {/* Form panel — yükseklik içeriğe göre, sadece sağa clip */}
+      {/* Form panel — arka plan sağa uzanır ama form içeriği grid hücre genişliğinde kalır */}
       <div style={{
         position:'relative',
-        left:0,
-        right: 'calc(-1 * (100vw - 100% - 92px))',
-        width: 'calc(100% + (100vw - 100% - 92px))',
-        background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
         transform: leaving ? 'translateX(110%)' : showForm ? 'translateX(0)' : 'translateX(110%)',
         transition:'transform 2.1s cubic-bezier(0.77,0,0.18,1)',
         pointerEvents: (showForm && !leaving) ? 'all' : 'none',
         visibility: (showForm || leaving) ? 'visible' : 'hidden',
       }}>
-        <button onClick={closeForm}
-          style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
-          onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
-          onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
-          ← Back
-        </button>
-        <ContactForm />
+        {/* Arka plan sağa viewport - 92px kadar uzanır */}
+        <div style={{
+          position:'absolute', inset:0,
+          right: 'calc(-1 * (100vw - 100% - 92px))',
+          background:'#f7f7f7', borderRadius:8,
+          zIndex:0,
+        }} />
+        {/* İçerik grid hücre genişliğinde */}
+        <div style={{ position:'relative', zIndex:1, padding:'clamp(24px, 3vw, 40px)' }}>
+          <button onClick={closeForm}
+            style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
+            onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
+            onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
+            ← Back
+          </button>
+          <ContactForm />
+        </div>
       </div>
     </>
   );

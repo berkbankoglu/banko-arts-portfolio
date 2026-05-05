@@ -46,7 +46,7 @@ button { font-family: var(--font); cursor: pointer; }
   width: 68px;
   background: var(--black);
   border-radius: 0;
-  z-index: 200;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;

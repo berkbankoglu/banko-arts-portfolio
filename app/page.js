@@ -36,7 +36,7 @@ function useSectionWipe() {
         if (e.isIntersecting) e.target.classList.add('visible');
         else e.target.classList.remove('visible');
       });
-    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px -120px 0px' });
 
     const attach = () => {
       document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));

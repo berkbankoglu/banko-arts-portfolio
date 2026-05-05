@@ -525,6 +525,7 @@ function ContactSection() {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -537,18 +538,14 @@ function ContactSection() {
     return () => obs.disconnect();
   }, []);
 
-  return (
-    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)', overflow:'hidden', position:'relative' }}>
+  const openForm = () => { setAnimating(true); setTimeout(() => { setShowForm(true); setAnimating(false); }, 10); };
+  const closeForm = () => { setShowForm(false); };
 
-      {/* ── İlk görünüm ── */}
-      <div style={{
-        display: showForm ? 'none' : 'grid',
-        gridTemplateColumns:'1fr 1fr', alignItems:'center',
-        padding:'120px 20px 100px',
-        opacity: showForm ? 0 : 1,
-        transition:'opacity 0.5s cubic-bezier(0.22,1,0.36,1)',
-      }}>
-        {/* Sol — soldan gelir */}
+  return (
+    <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center', padding:'120px 20px 100px' }}>
+
+        {/* Sol — hiç değişmez */}
         <div style={{
           opacity: visible ? 1 : 0,
           transform: visible ? 'translateX(0)' : 'translateX(-80px)',
@@ -579,61 +576,53 @@ function ContactSection() {
           </div>
         </div>
 
-        {/* Sağ — "Start My Project" kutusu */}
-        <div style={{
-          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-          background:'#f2f2f2', borderRadius:8, padding:'80px 48px', textAlign:'center',
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateX(0)' : 'translateX(80px)',
-          transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.25s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.25s',
-        }}>
-          <h3 style={{ fontSize:'clamp(28px, 3vw, 52px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20 }}>
-            Start My Project
-          </h3>
-          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:40 }}>
-            Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally to help you execute.
-          </p>
-          <button onClick={() => setShowForm(true)}
-            style={{
-              padding:'14px 40px', background:'var(--black)', color:'#fff',
-              border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em',
-              textTransform:'uppercase', borderRadius:4, cursor:'pointer',
-              transition:'opacity 0.2s',
-            }}
-            onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
-            onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
-            Contact Us →
-          </button>
+        {/* Sağ — slide panel */}
+        <div style={{ position:'relative', overflow:'hidden' }}>
+
+          {/* "Start My Project" kutusu */}
+          <div style={{
+            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+            background:'#f2f2f2', borderRadius:8, padding:'80px 48px', textAlign:'center',
+            transform: showForm ? 'translateX(110%)' : 'translateX(0)',
+            opacity: showForm ? 0 : 1,
+            transition:'transform 0.7s cubic-bezier(0.77,0,0.18,1), opacity 0.4s ease',
+            pointerEvents: showForm ? 'none' : 'all',
+          }}>
+            <h3 style={{ fontSize:'clamp(28px, 3vw, 52px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:20 }}>
+              Start My Project
+            </h3>
+            <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:300, marginBottom:40 }}>
+              Every standout project begins with one simple conversation. Tell us your vision and we'll get back personally.
+            </p>
+            <button onClick={openForm}
+              style={{ padding:'14px 40px', background:'var(--black)', color:'#fff', border:'none', fontSize:13, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', borderRadius:4, cursor:'pointer', transition:'opacity 0.2s' }}
+              onMouseEnter={e=>e.currentTarget.style.opacity='0.75'}
+              onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
+              Contact Us →
+            </button>
+          </div>
+
+          {/* Form */}
+          <div style={{
+            position:'absolute', inset:0,
+            background:'#f7f7f7', borderRadius:8, padding:'clamp(24px, 3vw, 40px)',
+            transform: showForm ? 'translateX(0)' : 'translateX(-110%)',
+            opacity: showForm ? 1 : 0,
+            transition:'transform 0.7s cubic-bezier(0.77,0,0.18,1), opacity 0.4s ease',
+            pointerEvents: showForm ? 'all' : 'none',
+            overflowY:'auto',
+          }}>
+            <button onClick={closeForm}
+              style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
+              onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
+              onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
+              ← Back
+            </button>
+            <ContactForm />
+          </div>
+
         </div>
       </div>
-
-      {/* ── Form görünümü ── */}
-      <div style={{
-        display: showForm ? 'grid' : 'none',
-        gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start',
-        padding:'120px 20px 100px',
-        opacity: showForm ? 1 : 0,
-        transform: showForm ? 'translateY(0)' : 'translateY(40px)',
-        transition:'opacity 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s',
-      }}>
-        <div>
-          <button onClick={() => setShowForm(false)}
-            style={{ background:'none', border:'none', fontSize:13, color:'var(--muted)', letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:40, cursor:'pointer', display:'flex', alignItems:'center', gap:8 }}>
-            ← Back
-          </button>
-          <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
-          <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
-            Let's Build<br/>Something<br/>Remarkable.
-          </h2>
-          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320 }}>
-            Photorealistic architectural visualizations delivered fast. We'll get back within 24 hours.
-          </p>
-        </div>
-        <div style={{ background:'#f7f7f7', padding:'clamp(28px, 3vw, 48px)', borderRadius:4 }}>
-          <ContactForm />
-        </div>
-      </div>
-
     </section>
   );
 }

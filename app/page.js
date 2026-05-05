@@ -692,15 +692,12 @@ function FlipCard({ card, index, sectionVisible }) {
           WebkitBackfaceVisibility: 'hidden',
           border: '1px solid var(--border)',
           padding: '32px 28px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-          background: '#fff',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          background: '#fff', textAlign: 'center', gap: 10,
         }}>
-          <span style={{ fontSize: 22, lineHeight: 1 }}>{card.icon}</span>
-          <div>
-            <p style={{ fontSize: 'clamp(22px, 2.2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 6 }}>{card.value}</p>
-            <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.04em', marginBottom: 6 }}>{card.sub}</p>
-            <p style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
-          </div>
+          <p style={{ fontSize: 'clamp(36px, 3.5vw, 60px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1 }}>{card.value}</p>
+          <p style={{ fontSize: 13, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
+          <p style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
         </div>
         {/* Back */}
         <div style={{

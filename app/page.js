@@ -546,7 +546,7 @@ function ContactSection() {
 
   return (
     <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 100px', marginRight:'calc(-1 * clamp(100px, 7vw, 160px) + 20px)' }}>
 
         {/* Sol — hiç değişmez */}
         <div style={{

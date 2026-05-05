@@ -28,6 +28,21 @@ const projects = [
   { id:20, title:'Rooftop Animation',     category:'animation',type:'video',  image:'/images/architecture/RoofTop.png',     video:'/videos/rooftop_animation.mp4' },
 ];
 
+/* ─── Section wipe hook ─────────────────────────────────── */
+function useSectionWipe() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.section-wipe');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+        else e.target.classList.remove('visible');
+      });
+    }, { threshold: 0.08 });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
 /* ─── Menu overlay ─────────────────────────────────────── */
 /* ─── Sol çubuk + Menü tek element ─────────────────────── */
 function LeftBar({ menuOpen, onOpen, onClose, onNav, activePage }) {
@@ -592,7 +607,7 @@ function StatsSection() {
   }, []);
 
   return (
-    <section ref={ref} style={{ padding: '120px 20px 80px', borderTop: '1px solid var(--sep)' }}>
+    <section ref={ref} className="section-wipe" style={{ padding: '120px 20px 80px', borderTop: '1px solid var(--sep)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
         <div>
           <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
@@ -728,6 +743,7 @@ export default function BankoArts() {
   const [activePage, setActivePage]           = useState('works');
   const [lightboxProject, setLightboxProject] = useState(null);
   const [inContact, setInContact]             = useState(false);
+  useSectionWipe();
 
   const allProjects = projects;
   const lightboxIndex = lightboxProject ? allProjects.findIndex(p => p.id === lightboxProject.id) : -1;
@@ -814,7 +830,7 @@ export default function BankoArts() {
       <StatsSection />
 
       {/* ── SERVICES ── */}
-      <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
+      <section id="section-services" className="section-wipe" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
         <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
         <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
         <hr className="ba-divider" style={{ marginBottom:64 }}/>
@@ -838,7 +854,7 @@ export default function BankoArts() {
 
 
       {/* ── CONTACT ── */}
-      <section id="section-contact" style={{ padding:'120px 20px 100px', borderTop:'1px solid var(--sep)' }}>
+      <section id="section-contact" className="section-wipe" style={{ padding:'120px 20px 100px', borderTop:'1px solid var(--sep)' }}>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
 
           {/* Sol — başlık + linkler */}

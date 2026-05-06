@@ -734,7 +734,7 @@ function FlipCard({ card, index, sectionVisible }) {
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           background: '#fff', textAlign: 'center', gap: 10,
         }}>
-          <p style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>{card.value}</p>
+          <p style={{ fontSize: 'clamp(36px, 3.5vw, 60px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1 }}>{card.value}</p>
           <p style={{ fontSize: 13, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
           <p style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
         </div>
@@ -776,7 +776,7 @@ function StatsSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
         <div>
           <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
-          <h2 style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
+          <h2 style={{ fontSize: 'clamp(36px, 4vw, 72px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
         </div>
         <p style={{ fontSize: 13, color: 'var(--muted)', maxWidth: 360, textAlign: 'right', lineHeight: 1.7 }}>
           10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.
@@ -1010,7 +1010,7 @@ export default function BankoArts() {
           ].map(([t, d], i) => (
             <div key={t} style={{ padding:'32px 0', borderTop:'1px solid var(--border)' }}>
               <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
-              <p style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, marginBottom:12, letterSpacing:'-0.04em', lineHeight:0.9 }}>{t}</p>
+              <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
               <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
             </div>
           ))}

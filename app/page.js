@@ -61,7 +61,7 @@ function useSectionWipe() {
           e.target.classList.remove('visible');
         }
       });
-    }, { threshold: 0.25 });
+    }, { threshold: 0.15 });
 
     const attach = () => {
       document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));

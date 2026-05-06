@@ -182,14 +182,14 @@ button { font-family: var(--font); cursor: pointer; }
 
 .reveal-left {
   opacity: 0; transform: translateX(-200px);
-  transition: opacity 20s cubic-bezier(0.22,1,0.36,1), transform 20s cubic-bezier(0.22,1,0.36,1);
+  transition: opacity 30s cubic-bezier(0.1,0,0.3,1), transform 30s cubic-bezier(0.1,0,0.3,1);
   will-change: opacity, transform;
 }
 .reveal-left.visible { opacity: 1; transform: translateX(0); }
 
 .reveal-right {
   opacity: 0; transform: translateX(200px);
-  transition: opacity 20s cubic-bezier(0.22,1,0.36,1) 20s, transform 20s cubic-bezier(0.22,1,0.36,1) 20s;
+  transition: opacity 30s cubic-bezier(0.1,0,0.3,1) 30s, transform 30s cubic-bezier(0.1,0,0.3,1) 30s;
   will-change: opacity, transform;
 }
 .reveal-right.visible { opacity: 1; transform: translateX(0); }

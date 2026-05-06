@@ -847,7 +847,7 @@ function HScrollSection() {
 
   return (
     <div ref={sectionRef} style={{ padding:'0 20px 96px' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:16 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:16 }}>
         {GRID_ITEMS.map((item, i) => (
           <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={null} />
         ))}

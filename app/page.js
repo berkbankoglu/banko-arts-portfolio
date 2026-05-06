@@ -485,7 +485,7 @@ function WorkCard({ item, visible, index }) {
         <img ref={imgRef} src={item.image} alt={item.title} draggable={false}
           style={{
             display:'block', width:'100%',
-            aspectRatio:'16/9', objectFit:'cover',
+            aspectRatio:'9/16', objectFit:'cover',
             filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
             transform: 'scale(1)',
             transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1)',
@@ -847,7 +847,7 @@ function HScrollSection() {
 
   return (
     <div ref={sectionRef} style={{ padding:'0 20px 96px' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:16 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:16 }}>
         {GRID_ITEMS.map((item, i) => (
           <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={null} />
         ))}

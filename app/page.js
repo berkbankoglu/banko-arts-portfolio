@@ -577,7 +577,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         <div style={{
           position:'absolute', inset:0,
           right: 'calc(-1 * (100vw - 100% - 92px))',
-          background:'#f7f7f7', borderRadius:8,
+          background:'var(--yellow)', borderRadius:8,
           zIndex:0,
         }} />
         {/* İçerik grid hücre genişliğinde */}

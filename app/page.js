@@ -734,9 +734,9 @@ function FlipCard({ card, index, sectionVisible }) {
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           background: '#fff', textAlign: 'center', gap: 10,
         }}>
-          <p style={{ fontSize: 'clamp(36px, 3.5vw, 60px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1 }}>{card.value}</p>
-          <p style={{ fontSize: 13, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
-          <p style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
+          <p style={{ fontSize: 'clamp(24px, 2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{card.value}</p>
+          <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
+          <p style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
         </div>
         {/* Back */}
         <div style={{

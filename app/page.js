@@ -577,17 +577,10 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         <div style={{
           position:'absolute', inset:0,
           right: 'calc(-1 * (100vw - 100% - 92px))',
-          background:'#f7f7f7', borderRadius:8,
-          zIndex:0,
-        }} />
-        {/* Sarı overlay */}
-        <div style={{
-          position:'absolute', inset:0,
-          right: 'calc(-1 * (100vw - 100% - 92px))',
-          background:'rgba(245, 226, 0, 0.18)',
+          background:'#f7f7f7',
+          border:'2px solid var(--yellow)',
           borderRadius:8,
           zIndex:0,
-          pointerEvents:'none',
         }} />
         {/* İçerik grid hücre genişliğinde */}
         <div style={{ position:'relative', zIndex:1, padding:'clamp(24px, 3vw, 40px)' }}>

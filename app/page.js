@@ -461,7 +461,7 @@ function WorkCard({ item, visible, index }) {
         <img src={item.image} alt={item.title} draggable={false}
           style={{
             display:'block', width:'100%',
-            aspectRatio:'4/3', objectFit:'cover',
+            aspectRatio:'16/9', objectFit:'cover',
             filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
             transform: hovered ? 'scale(1.04)' : 'scale(1)',
             transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',

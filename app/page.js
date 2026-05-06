@@ -58,7 +58,8 @@ function useSectionWipe() {
             e.target.classList.add('visible');
           }
         } else {
-          e.target.classList.remove('visible');
+          // ikisi birlikte kaybolsun
+          document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => el.classList.remove('visible'));
         }
       });
     }, { threshold: 0.15 });

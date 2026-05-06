@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
 const PROJECT_TYPES = ['Exterior Rendering', 'Interior Rendering', 'Animation', '3D Modeling', 'Master Plan', 'Other'];
@@ -15,50 +15,20 @@ const EMPTY = {
 };
 
 /* Animasyonlu tab içerik wrapper */
-function TabPanel({ active, children }) {
-  const ref = useRef(null);
-  const [height, setHeight] = useState('auto');
-  const [visible, setVisible] = useState(active);
-  const [animating, setAnimating] = useState(false);
-  const timerRef = useRef(null);
-
-  useLayoutEffect(() => {
-    if (active) {
-      setVisible(true);
-      setAnimating(true);
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setAnimating(false), 20);
-    } else {
-      setAnimating(true);
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => { setVisible(false); setAnimating(false); }, 320);
-    }
-  }, [active]);
-
-  useEffect(() => {
-    if (!ref.current || !visible) return;
-    const ro = new ResizeObserver(() => {
-      if (ref.current) setHeight(ref.current.scrollHeight);
-    });
-    ro.observe(ref.current);
-    setHeight(ref.current.scrollHeight);
-    return () => ro.disconnect();
-  }, [visible]);
-
-  if (!visible && !animating) return null;
-
+function TabPanel({ active, isFirst, children }) {
   return (
     <div style={{
-      overflow: 'hidden',
-      height: visible ? height : 0,
-      opacity: (visible && !animating) ? 1 : 0,
-      transform: (visible && !animating) ? 'translateY(0)' : 'translateY(10px)',
-      transition: 'height 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease, transform 0.28s ease',
+      position: isFirst ? 'relative' : 'absolute',
+      top: isFirst ? undefined : 0,
+      left: isFirst ? undefined : 0,
+      right: isFirst ? undefined : 0,
+      opacity: active ? 1 : 0,
+      pointerEvents: active ? 'all' : 'none',
+      transition: 'opacity 0.25s ease',
       marginTop: 16,
+      visibility: active ? 'visible' : 'hidden',
     }}>
-      <div ref={ref}>
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
@@ -192,8 +162,10 @@ export default function ContactForm() {
         </div>
       </div>
 
+      {/* Tab panels — position:relative wrapper, yükseklik hep tab 0'a göre sabit */}
+      <div style={{ position: 'relative' }}>
       {/* Design Projects */}
-      <TabPanel active={tab === 0}>
+      <TabPanel active={tab === 0} isFirst={true}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label className="ba-label">Project Type *</label>
@@ -228,7 +200,7 @@ export default function ContactForm() {
       </TabPanel>
 
       {/* Consulting */}
-      <TabPanel active={tab === 1}>
+      <TabPanel active={tab === 1} isFirst={false}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label className="ba-label">Message *</label>
@@ -244,7 +216,7 @@ export default function ContactForm() {
       </TabPanel>
 
       {/* Other */}
-      <TabPanel active={tab === 2}>
+      <TabPanel active={tab === 2} isFirst={false}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label className="ba-label">Message *</label>
@@ -258,6 +230,7 @@ export default function ContactForm() {
           </div>
         </div>
       </TabPanel>
+      </div>{/* end tab panels wrapper */}
 
       {status === 'success' && (
         <p style={{ fontSize: 13, color: 'rgba(100,200,120,0.9)', border: '1px solid rgba(100,200,120,0.2)', padding: '12px 16px', marginTop: 16 }}>

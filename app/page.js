@@ -804,10 +804,10 @@ const GRID_ITEMS = [
   { id:2, title:'Interior — Living Room', sub:'3D Render · Interior', image:'/images/architecture/Living Room.png' },
   { id:3, title:'Exterior — Facade',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.png' },
   { id:4, title:'Interior — Bedroom',     sub:'3D Render · Interior', image:'/images/architecture/Bedroom.png' },
-  { id:5, title:'Exterior — Night',       sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.2.png' },
-  { id:6, title:'Interior — Kitchen',     sub:'3D Render · Interior', image:'/images/architecture/Kitchen.png' },
+  { id:5, title:'Exterior — Full View',   sub:'3D Render · Exterior', image:'/images/architecture/Exterior.png' },
+  { id:6, title:'Exterior — Detail',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.1.png' },
   { id:7, title:'Exterior — Garden',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 2.png' },
-  { id:8, title:'Interior — Bathroom',    sub:'3D Render · Interior', image:'/images/architecture/Bathroom.png' },
+  { id:8, title:'Interior — Rooftop',     sub:'3D Render · Interior', image:'/images/architecture/RoofTop.png' },
 ];
 
 function HScrollSection() {

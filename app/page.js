@@ -988,32 +988,88 @@ export default function BankoArts() {
 
       {/* ── SERVICES ── */}
       <section id="section-services" className="section-wipe" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
-        <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
-        <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
-        <hr className="ba-divider" style={{ marginBottom:64 }}/>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, maxWidth:1600 }}>
-          {[
-            ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings — life before construction begins.','/images/architecture/Exterior 1.png'],
-            ['Interior Visualization','High-end interior renders covering every room type with accurate lighting and material detail.','/images/architecture/Living Room.png'],
-            ['3D Animation','Cinematic walkthroughs and flyarounds — let clients experience space before it exists.','/images/architecture/Both.png'],
-            ['Floor Plan Rendering','2D and 3D floor plan visualizations that communicate spatial layouts with clarity.','/images/architecture/Exterior 3.png'],
-            ['Real Estate Visualization','Off-plan renders that help developers market and sell before a single brick is laid.','/images/architecture/Exterior.png'],
-            ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.','/images/architecture/Bedroom.png'],
-          ].map(([t, d, img], i) => (
-            <div key={t} style={{ borderTop:'1px solid var(--border)', overflow:'hidden' }}>
-              <div style={{ overflow:'hidden', height:280 }}>
-                <img src={img} alt={t} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform 0.6s cubic-bezier(0.22,1,0.36,1)' }}
-                  onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'}
-                  onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
-                />
-              </div>
-              <div style={{ padding:'24px 0 32px' }}>
-                <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
-                <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
-                <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
-              </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+
+          {/* Sol — Services listesi */}
+          <div>
+            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
+            <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
+            <div>
+              {[
+                ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings.'],
+                ['Interior Visualization','High-end interior renders covering every room type with accurate lighting and material detail.'],
+                ['3D Animation','Cinematic walkthroughs and flyarounds — let clients experience space before it exists.'],
+                ['Floor Plan Rendering','2D and 3D floor plan visualizations that communicate spatial layouts with clarity.'],
+                ['Real Estate Visualization','Off-plan renders that help developers market and sell before a single brick is laid.'],
+                ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.'],
+              ].map(([t, d], i) => (
+                <div key={t} style={{ padding:'20px 0', borderTop:'1px solid var(--border)' }}>
+                  <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:10 }}>N°{String(i+1).padStart(3,'0')}</p>
+                  <p style={{ fontSize:'clamp(16px, 1.4vw, 24px)', fontWeight:700, marginBottom:8, letterSpacing:'-0.01em' }}>{t}</p>
+                  <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Sağ — About / Profil */}
+          <div style={{ position:'sticky', top:120 }}>
+            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
+            <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</h2>
+            <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, marginBottom:48, maxWidth:480 }}>
+              3D architectural visualization artist based in Turkey with 10+ years of experience. Specializing in photorealistic exterior and interior renders, animations, and floor plans for architects, developers, and real estate agencies worldwide.
+            </p>
+
+            {/* Stats */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:0, marginBottom:48, borderTop:'1px solid var(--border)' }}>
+              {[
+                ['824+','Completed Projects'],
+                ['10 Years','Professional Experience'],
+                ['30+','Countries Served'],
+                ['5.0','Average Rating'],
+              ].map(([val, label]) => (
+                <div key={label} style={{ padding:'20px 0', borderBottom:'1px solid var(--border)', paddingRight:24 }}>
+                  <p style={{ fontSize:'clamp(24px, 2.5vw, 40px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1, marginBottom:6 }}>{val}</p>
+                  <p style={{ fontSize:11, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Profil butonları */}
+            <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+              <a href="https://www.upwork.com/freelancers/berkbankoglu" target="_blank" rel="noreferrer"
+                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', border:'1px solid var(--border)', textDecoration:'none', transition:'border-color 0.2s, background 0.2s' }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor='var(--black)'; e.currentTarget.style.background='var(--black)'; e.currentTarget.querySelectorAll('span').forEach(s=>s.style.color='#fff'); }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; e.currentTarget.querySelectorAll('span').forEach(s=>{ s.style.color=''; }); }}>
+                <div>
+                  <span style={{ display:'block', fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--muted)', marginBottom:4, transition:'color 0.2s' }}>Upwork</span>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--black)', transition:'color 0.2s' }}>Top Rated Plus · $70K+ Earned</span>
+                </div>
+                <span style={{ fontSize:18, color:'var(--black)', transition:'color 0.2s' }}>→</span>
+              </a>
+              <a href="https://www.freelancer.com/u/brkbnkgll" target="_blank" rel="noreferrer"
+                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', border:'1px solid var(--border)', textDecoration:'none', transition:'border-color 0.2s, background 0.2s' }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor='var(--black)'; e.currentTarget.style.background='var(--black)'; e.currentTarget.querySelectorAll('span').forEach(s=>s.style.color='#fff'); }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; e.currentTarget.querySelectorAll('span').forEach(s=>{ s.style.color=''; }); }}>
+                <div>
+                  <span style={{ display:'block', fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--muted)', marginBottom:4, transition:'color 0.2s' }}>Freelancer.com</span>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--black)', transition:'color 0.2s' }}>Preferred Freelancer · 5.0 Rating</span>
+                </div>
+                <span style={{ fontSize:18, color:'var(--black)', transition:'color 0.2s' }}>→</span>
+              </a>
+              <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
+                style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', border:'1px solid var(--border)', textDecoration:'none', transition:'border-color 0.2s, background 0.2s' }}
+                onMouseEnter={e=>{ e.currentTarget.style.borderColor='var(--black)'; e.currentTarget.style.background='var(--black)'; e.currentTarget.querySelectorAll('span').forEach(s=>s.style.color='#fff'); }}
+                onMouseLeave={e=>{ e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; e.currentTarget.querySelectorAll('span').forEach(s=>{ s.style.color=''; }); }}>
+                <div>
+                  <span style={{ display:'block', fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--muted)', marginBottom:4, transition:'color 0.2s' }}>Instagram</span>
+                  <span style={{ fontSize:14, fontWeight:700, color:'var(--black)', transition:'color 0.2s' }}>@bankoarts</span>
+                </div>
+                <span style={{ fontSize:18, color:'var(--black)', transition:'color 0.2s' }}>→</span>
+              </a>
+            </div>
+          </div>
+
         </div>
       </section>
 

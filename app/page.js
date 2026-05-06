@@ -49,8 +49,16 @@ function useSectionWipe() {
       });
     }, { threshold: 0.15 });
 
+    const obs2 = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+        else e.target.classList.remove('visible');
+      });
+    }, { threshold: 0.1 });
+
     const attach = () => {
-      document.querySelectorAll('.section-wipe, .reveal-left, .reveal-right').forEach(el => obs.observe(el));
+      document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));
+      document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => obs2.observe(el));
     };
 
     attach();
@@ -58,7 +66,7 @@ function useSectionWipe() {
     const mo = new MutationObserver(attach);
     mo.observe(document.body, { childList: true, subtree: true });
 
-    return () => { obs.disconnect(); mo.disconnect(); };
+    return () => { obs.disconnect(); obs2.disconnect(); mo.disconnect(); };
   }, []);
 }
 
@@ -1013,7 +1021,7 @@ export default function BankoArts() {
           </div>
 
           {/* Sağ — About / Profil */}
-          <div className="reveal-right" style={{ position:'sticky', top:120 }}>
+          <div className="reveal-right">
             <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
             <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</h2>
             <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, marginBottom:48, maxWidth:480 }}>

@@ -993,17 +993,25 @@ export default function BankoArts() {
         <hr className="ba-divider" style={{ marginBottom:64 }}/>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:40, maxWidth:1600 }}>
           {[
-            ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings — life before construction begins.'],
-            ['Interior Visualization','High-end interior renders covering every room type with accurate lighting and material detail.'],
-            ['3D Animation','Cinematic walkthroughs and flyarounds — let clients experience space before it exists.'],
-            ['Floor Plan Rendering','2D and 3D floor plan visualizations that communicate spatial layouts with clarity.'],
-            ['Real Estate Visualization','Off-plan renders that help developers market and sell before a single brick is laid.'],
-            ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.'],
-          ].map(([t, d], i) => (
-            <div key={t} style={{ padding:'32px 0', borderTop:'1px solid var(--border)' }}>
-              <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
-              <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
-              <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
+            ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings — life before construction begins.','/images/architecture/Exterior 1.png'],
+            ['Interior Visualization','High-end interior renders covering every room type with accurate lighting and material detail.','/images/architecture/Living Room.png'],
+            ['3D Animation','Cinematic walkthroughs and flyarounds — let clients experience space before it exists.','/images/architecture/Both.png'],
+            ['Floor Plan Rendering','2D and 3D floor plan visualizations that communicate spatial layouts with clarity.','/images/architecture/Exterior 3.png'],
+            ['Real Estate Visualization','Off-plan renders that help developers market and sell before a single brick is laid.','/images/architecture/Exterior.png'],
+            ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.','/images/architecture/Bedroom.png'],
+          ].map(([t, d, img], i) => (
+            <div key={t} style={{ borderTop:'1px solid var(--border)', overflow:'hidden' }}>
+              <div style={{ overflow:'hidden', height:280 }}>
+                <img src={img} alt={t} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform 0.6s cubic-bezier(0.22,1,0.36,1)' }}
+                  onMouseEnter={e => e.currentTarget.style.transform='scale(1.04)'}
+                  onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+                />
+              </div>
+              <div style={{ padding:'24px 0 32px' }}>
+                <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
+                <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
+                <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
+              </div>
             </div>
           ))}
         </div>

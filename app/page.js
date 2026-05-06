@@ -549,7 +549,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
           background:'#f2f2f2', borderRadius:8,
           padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
         }}>
-          <h3 style={{ fontSize:'clamp(32px, 3.5vw, 60px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.1, marginBottom:24 }}>
+          <h3 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:24 }}>
             Start My Project
           </h3>
           <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
@@ -630,7 +630,7 @@ function ContactSection() {
           transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s',
         }}>
           <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
-          <h2 style={{ fontSize:'clamp(36px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.95, marginBottom:32 }}>
+          <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>
             Let's Build<br/>Something<br/>Remarkable.
           </h2>
           <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
@@ -776,7 +776,7 @@ function StatsSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
         <div>
           <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
-          <h2 style={{ fontSize: 'clamp(36px, 4vw, 72px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
+          <h2 style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
         </div>
         <p style={{ fontSize: 13, color: 'var(--muted)', maxWidth: 360, textAlign: 'right', lineHeight: 1.7 }}>
           10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.

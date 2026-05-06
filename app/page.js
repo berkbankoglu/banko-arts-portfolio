@@ -53,7 +53,7 @@ function useSectionWipe() {
       entries.forEach(e => {
         if (e.isIntersecting) {
           if (e.target.classList.contains('reveal-right')) {
-            setTimeout(() => e.target.classList.add('visible'), 800);
+            setTimeout(() => e.target.classList.add('visible'), 300);
           } else {
             e.target.classList.add('visible');
           }

@@ -189,7 +189,7 @@ button { font-family: var(--font); cursor: pointer; }
 
 .reveal-right {
   opacity: 0; transform: translateX(400px);
-  transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  transition: opacity 1.5s cubic-bezier(0.22,1,0.36,1), transform 1.5s cubic-bezier(0.22,1,0.36,1);
   will-change: opacity, transform;
 }
 .reveal-right.visible { opacity: 1; transform: translateX(0); }

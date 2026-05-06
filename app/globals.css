@@ -58,21 +58,12 @@ button { font-family: var(--font); cursor: pointer; }
               width  0.55s cubic-bezier(0.22,1,0.36,1);
 }
 .side-bar--left  { left: 24px; transition: opacity 0.2s ease, top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), left 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
-.side-bar--right { right: 24px; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), right 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
+.side-bar--right { right: 0; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
 
 .side-bar--left:hover  { left: 0; top: 0; bottom: 0; width: 80px; }
-.side-bar--right:hover { right: 0; top: 0; bottom: 0; width: 80px; }
+.side-bar--right:hover { top: 0; bottom: 0; width: 80px; }
 
-/* Sağ kenar boşluğunu örter — bar animasyonu sırasında beyaz gap kalmaması için */
-.sidebar-right-mask {
-  position: fixed;
-  top: 0; bottom: 0;
-  left: calc(100vw - 92px);
-  right: 0;
-  background: var(--black);
-  z-index: 999;
-  pointer-events: none;
-}
+.sidebar-right-mask { display: none; }
 
 .side-bar span {
   writing-mode: vertical-rl;

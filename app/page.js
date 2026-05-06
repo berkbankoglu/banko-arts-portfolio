@@ -652,7 +652,7 @@ function ContactSection() {
 
   return (
     <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center', gap:80, padding:'120px 20px 120px' }}>
+      <div className="grid-contact">
 
         {/* Sol — hiç değişmez */}
         <div style={{
@@ -813,7 +813,7 @@ function StatsSection() {
           10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.
         </p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+      <div className="grid-4col">
         {STAT_CARDS.map((card, i) => (
           <FlipCard key={i} card={card} index={i} sectionVisible={visible} />
         ))}
@@ -847,7 +847,7 @@ function HScrollSection() {
 
   return (
     <div ref={sectionRef} style={{ padding:'0 20px 96px' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:16 }}>
+      <div className="grid-works">
         {GRID_ITEMS.map((item, i) => (
           <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={null} />
         ))}
@@ -914,7 +914,7 @@ export default function BankoArts() {
 
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--bg)', color:'var(--black)', paddingLeft:'clamp(100px, 7vw, 160px)', paddingRight:'clamp(100px, 7vw, 160px)' }}>
+    <div style={{ minHeight:'100vh', background:'var(--bg)', color:'var(--black)', paddingLeft:'clamp(52px, 7vw, 160px)', paddingRight:'clamp(52px, 7vw, 160px)' }}>
 
       {/* ── Sol çubuk + Menü ── */}
       <LeftBar menuOpen={menuOpen} onOpen={() => setMenuOpen(true)} onClose={() => setMenuOpen(false)} onNav={goPage} activePage={activePage} />
@@ -926,13 +926,13 @@ export default function BankoArts() {
 
       {/* ── WORKS ── */}
       <section id="section-works" style={{ borderTop:'1px solid var(--sep)' }}>
-        <div style={{ position:'relative', padding:'48px 20px 0 20px', display:'flex', justifyContent:'space-between', alignItems:'flex-end', minHeight:'60vh', gap:0 }}>
+        <div className="hero-flex" style={{ position:'relative', padding:'48px 20px 0 20px', display:'flex', justifyContent:'space-between', alignItems:'flex-end', minHeight:'60vh', gap:0 }}>
           <DotGrid />
           <img src="/images/logo.svg" alt="Banko Arts" style={{ position:'absolute', top:24, left:20, width:'clamp(60px, 6vw, 100px)', height:'auto', zIndex:2 }} />
           <div style={{ flex:1, minWidth:0, position:'relative', zIndex:1 }}>
             <HeroTitle />
           </div>
-          <div style={{ width:'clamp(300px, 32vw, 640px)', flexShrink:0, marginTop:0, marginLeft:'-6vw', position:'relative', zIndex:1 }}>
+          <div className="hero-img" style={{ width:'clamp(300px, 32vw, 640px)', flexShrink:0, marginTop:0, marginLeft:'-6vw', position:'relative', zIndex:1 }}>
             <img src="/images/D2.jpg" alt="Banko Arts" style={{ width:'100%', display:'block', objectFit:'cover', aspectRatio:'3/4' }}/>
           </div>
         </div>
@@ -950,7 +950,7 @@ export default function BankoArts() {
 
       {/* ── SERVICES ── */}
       <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
+        <div className="grid-2col">
 
           {/* Sol — Services listesi */}
           <div className="reveal-left">
@@ -1042,7 +1042,7 @@ export default function BankoArts() {
 
       {/* ── FOOTER ── */}
       <footer className="section-wipe" style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32, marginBottom:64 }}>
+        <div className="grid-4col" style={{ marginBottom:64 }}>
           <div>
             <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Banko Arts</p>
             <p style={{ fontSize:13, lineHeight:1.7, color:'rgba(255,255,255,0.7)' }}>Professional 3D Architectural Visualization Studio</p>

@@ -227,6 +227,42 @@ button { font-family: var(--font); cursor: pointer; }
 /* 3d card */
 .reveal { transform-style: preserve-3d; }
 
+/* ── Responsive grid helpers ── */
+.grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.grid-4col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.grid-contact { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 80px; padding: 120px 20px; }
+.grid-works { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+
+  .side-bar { width: 44px; }
+  .side-bar--left  { left: 0; top: 0; bottom: 0; width: 44px; }
+  .side-bar--right { right: 0; top: 0; bottom: 0; width: 44px; }
+  .side-bar--left:hover  { left: 0; width: 44px; top: 0; bottom: 0; }
+  .side-bar--right:hover { width: 44px; top: 0; bottom: 0; }
+  .side-bar--left.menu-open { width: 85vw; padding: 32px 24px 24px; }
+
+  .reveal-left  { transform: translateX(-40px); }
+  .reveal-right { transform: translateX(40px); }
+
+  .grid-2col   { grid-template-columns: 1fr; gap: 48px; }
+  .grid-4col   { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-contact { grid-template-columns: 1fr; gap: 40px; padding: 60px 20px; }
+  .grid-works  { grid-template-columns: 1fr 1fr; }
+
+  /* Hero */
+  .hero-flex { flex-direction: column !important; min-height: unset !important; }
+  .hero-flex .hero-img { width: 100% !important; margin-left: 0 !important; }
+
+  /* Services section padding */
+  #section-services { padding: 60px 20px 60px !important; }
+
+  /* Footer */
+  .grid-4col { grid-template-columns: 1fr 1fr; }
+}
+
 /* ── Horizontal drag scroll ── */
 .hscroll-track {
   display: flex;

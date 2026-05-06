@@ -482,7 +482,7 @@ function HeroTitle() {
   return (
     <div style={{ position:'relative', zIndex:1, width:'100%' }}>
       {/* BANKO ARTS büyük başlık */}
-      <div style={{ display:'inline-block', background:'#f5e200', padding:'0.02em 0.08em 0.04em 0', marginBottom:'0.04em' }}>
+      <div style={{ display:'inline-block', background:'var(--yellow)', padding:'0.02em 0.08em 0.04em 0', marginBottom:'0.04em' }}>
         <span style={{ display:'block', fontSize:'clamp(88px, 11vw, 180px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', userSelect:'none' }}>BANKO</span>
       </div>
       <br/>

@@ -455,7 +455,7 @@ function WorkCard({ item, visible, index }) {
   useEffect(() => {
     if (hovered) {
       const grow = () => {
-        scaleRef.current = Math.min(scaleRef.current + 0.0003, 1.35);
+        scaleRef.current = Math.min(scaleRef.current + 0.0001, 1.35);
         if (imgRef.current) imgRef.current.style.transform = `scale(${scaleRef.current})`;
         rafRef.current = requestAnimationFrame(grow);
       };

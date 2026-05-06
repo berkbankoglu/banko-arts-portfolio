@@ -546,7 +546,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         <div style={{
           position:'absolute', inset:0,
           display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
-          background:'#f2f2f2', borderRadius:8,
+          background:'var(--bg)', borderRadius:8,
           padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
         }}>
           <h3 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:24 }}>

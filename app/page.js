@@ -54,7 +54,7 @@ function useSectionWipe() {
         if (e.isIntersecting) e.target.classList.add('visible');
         else e.target.classList.remove('visible');
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.5 });
 
     const attach = () => {
       document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));
@@ -1045,7 +1045,7 @@ export default function BankoArts() {
 
             {/* Profil butonları */}
             <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
-              <a href="https://www.upwork.com/freelancers/berkbankoglu" target="_blank" rel="noreferrer"
+              <a href="https://www.upwork.com/freelancers/berkbanko" target="_blank" rel="noreferrer"
                 style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', border:'1px solid var(--border)', textDecoration:'none', transition:'border-color 0.2s, background 0.2s' }}
                 onMouseEnter={e=>{ e.currentTarget.style.borderColor='var(--black)'; e.currentTarget.style.background='var(--black)'; e.currentTarget.querySelectorAll('span').forEach(s=>s.style.color='#fff'); }}
                 onMouseLeave={e=>{ e.currentTarget.style.borderColor='var(--border)'; e.currentTarget.style.background='transparent'; e.currentTarget.querySelectorAll('span').forEach(s=>{ s.style.color=''; }); }}>

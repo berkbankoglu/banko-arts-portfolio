@@ -448,6 +448,30 @@ function DotGrid() {
 /* ─── Work Card ─────────────────────────────────────────── */
 function WorkCard({ item, visible, index }) {
   const [hovered, setHovered] = useState(false);
+  const scaleRef = useRef(1);
+  const rafRef = useRef(null);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (hovered) {
+      const grow = () => {
+        scaleRef.current = Math.min(scaleRef.current + 0.0003, 1.35);
+        if (imgRef.current) imgRef.current.style.transform = `scale(${scaleRef.current})`;
+        rafRef.current = requestAnimationFrame(grow);
+      };
+      rafRef.current = requestAnimationFrame(grow);
+    } else {
+      cancelAnimationFrame(rafRef.current);
+      scaleRef.current = 1;
+      if (imgRef.current) {
+        imgRef.current.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.55s cubic-bezier(0.22,1,0.36,1)';
+        imgRef.current.style.transform = 'scale(1)';
+        setTimeout(() => { if (imgRef.current) imgRef.current.style.transition = 'filter 0.55s cubic-bezier(0.22,1,0.36,1)'; }, 600);
+      }
+    }
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [hovered]);
+
   return (
     <div style={{
       opacity: visible ? 1 : 0,
@@ -458,13 +482,13 @@ function WorkCard({ item, visible, index }) {
       onMouseLeave={() => setHovered(false)}
     >
       <div style={{ overflow:'hidden' }}>
-        <img src={item.image} alt={item.title} draggable={false}
+        <img ref={imgRef} src={item.image} alt={item.title} draggable={false}
           style={{
             display:'block', width:'100%',
             aspectRatio:'16/9', objectFit:'cover',
             filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
-            transform: hovered ? 'scale(1.12)' : 'scale(1)',
-            transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
+            transform: 'scale(1)',
+            transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1)',
             pointerEvents:'none',
           }}
         />

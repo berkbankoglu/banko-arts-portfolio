@@ -573,12 +573,21 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         pointerEvents: (showForm && !leaving) ? 'all' : 'none',
         visibility: (showForm || leaving) ? 'visible' : 'hidden',
       }}>
-        {/* Arka plan sağa viewport - 92px kadar uzanır */}
+        {/* Arka plan */}
         <div style={{
           position:'absolute', inset:0,
           right: 'calc(-1 * (100vw - 100% - 92px))',
-          background:'var(--yellow)', borderRadius:8,
+          background:'#f7f7f7', borderRadius:8,
           zIndex:0,
+        }} />
+        {/* Sarı overlay */}
+        <div style={{
+          position:'absolute', inset:0,
+          right: 'calc(-1 * (100vw - 100% - 92px))',
+          background:'rgba(245, 226, 0, 0.18)',
+          borderRadius:8,
+          zIndex:0,
+          pointerEvents:'none',
         }} />
         {/* İçerik grid hücre genişliğinde */}
         <div style={{ position:'relative', zIndex:1, padding:'clamp(24px, 3vw, 40px)' }}>

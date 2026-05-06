@@ -446,23 +446,22 @@ function DotGrid() {
 }
 
 /* ─── Work Card ─────────────────────────────────────────── */
-function WorkCard({ item, visible, index, imgRef }) {
+function WorkCard({ item, visible, index }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div style={{
-      flexShrink:0, width:'clamp(280px, 26vw, 560px)',
       opacity: visible ? 1 : 0,
-      transform: visible ? 'translateX(0)' : 'translateX(120px)',
-      transition: `opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.15}s, transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.1 + index*0.15}s`,
+      transform: visible ? 'translateY(0)' : 'translateY(40px)',
+      transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${0.05 + index*0.08}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${0.05 + index*0.08}s`,
     }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ overflow:'hidden', borderRadius:4 }}>
-        <img ref={imgRef} src={item.image} alt={item.title} draggable={false}
+      <div style={{ overflow:'hidden' }}>
+        <img src={item.image} alt={item.title} draggable={false}
           style={{
             display:'block', width:'100%',
-            aspectRatio:'3/4', objectFit:'cover',
+            aspectRatio:'4/3', objectFit:'cover',
             filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
             transform: hovered ? 'scale(1.04)' : 'scale(1)',
             transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
@@ -470,9 +469,9 @@ function WorkCard({ item, visible, index, imgRef }) {
           }}
         />
       </div>
-      <div style={{ marginTop:18 }}>
-        <p style={{ fontSize:16, fontWeight:700, letterSpacing:'-0.01em', marginBottom:6 }}>{item.title}</p>
-        <p style={{ fontSize:12, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
+      <div style={{ marginTop:14 }}>
+        <p style={{ fontSize:14, fontWeight:700, letterSpacing:'-0.01em', marginBottom:4 }}>{item.title}</p>
+        <p style={{ fontSize:11, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
       </div>
     </div>
   );
@@ -800,22 +799,20 @@ function StatsSection() {
 }
 
 /* ─── Works scroll section ──────────────────────────────── */
-const HSCROLL_ITEMS = [
+const GRID_ITEMS = [
   { id:1, title:'Exterior — Residential', sub:'3D Render · Exterior', image:'/images/architecture/Exterior 1.png' },
   { id:2, title:'Interior — Living Room', sub:'3D Render · Interior', image:'/images/architecture/Living Room.png' },
   { id:3, title:'Exterior — Facade',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.png' },
   { id:4, title:'Interior — Bedroom',     sub:'3D Render · Interior', image:'/images/architecture/Bedroom.png' },
   { id:5, title:'Exterior — Night',       sub:'3D Render · Exterior', image:'/images/architecture/Exterior 3.2.png' },
   { id:6, title:'Interior — Kitchen',     sub:'3D Render · Interior', image:'/images/architecture/Kitchen.png' },
+  { id:7, title:'Exterior — Garden',      sub:'3D Render · Exterior', image:'/images/architecture/Exterior 2.png' },
+  { id:8, title:'Interior — Bathroom',    sub:'3D Render · Interior', image:'/images/architecture/Bathroom.png' },
 ];
 
 function HScrollSection() {
-  const scrollRef   = useRef(null);
-  const sectionRef  = useRef(null);
-  const firstImgRef = useRef(null);
+  const sectionRef = useRef(null);
   const [visible, setVisible] = useState(false);
-  const [imgHeight, setImgHeight] = useState(0);
-  const drag = useRef({ active:false, startX:0, scrollLeft:0 });
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -828,82 +825,11 @@ function HScrollSection() {
     return () => obs.disconnect();
   }, []);
 
-  useEffect(() => {
-    const measure = () => {
-      if (firstImgRef.current) setImgHeight(firstImgRef.current.offsetHeight);
-    };
-    const ro = new ResizeObserver(measure);
-    if (firstImgRef.current) ro.observe(firstImgRef.current);
-    if (firstImgRef.current?.complete) measure();
-    firstImgRef.current?.addEventListener('load', measure);
-    window.addEventListener('resize', measure);
-    return () => {
-      ro.disconnect();
-      firstImgRef.current?.removeEventListener('load', measure);
-      window.removeEventListener('resize', measure);
-    };
-  }, [visible]);
-
-  const onMouseDown = (e) => {
-    const el = scrollRef.current;
-    drag.current = { active:true, startX: e.pageX, scrollLeft: el.scrollLeft };
-    el.style.cursor = 'grabbing';
-  };
-  const onMouseMove = (e) => {
-    if (!drag.current.active) return;
-    scrollRef.current.scrollLeft = drag.current.scrollLeft - (e.pageX - drag.current.startX);
-  };
-  const onMouseUp = () => {
-    drag.current.active = false;
-    if (scrollRef.current) scrollRef.current.style.cursor = 'grab';
-  };
-
-  const bgImgs = [
-    { src:'/images/architecture/Exterior 1.png',   top:'5%',  left:'-4%',  w:'22vw', rot:'-6deg',  op:0.07 },
-    { src:'/images/architecture/Living Room.png',   top:'10%', right:'-3%', w:'18vw', rot:'5deg',   op:0.06 },
-    { src:'/images/architecture/Exterior 3.2.png',  top:'45%', left:'8%',   w:'16vw', rot:'8deg',   op:0.07 },
-    { src:'/images/architecture/Bedroom.png',       top:'55%', right:'2%',  w:'20vw', rot:'-4deg',  op:0.06 },
-    { src:'/images/architecture/Kitchen.png',       top:'20%', left:'35%',  w:'14vw', rot:'3deg',   op:0.05 },
-  ];
-
   return (
-    <div ref={sectionRef} style={{ display:'flex', paddingBottom:96, minHeight:560, alignItems:'flex-start', position:'relative', overflow:'hidden' }}>
-
-      {/* Background ghost images */}
-      {bgImgs.map((bg, i) => (
-        <img key={i} src={bg.src} alt="" aria-hidden="true" style={{
-          position:'absolute',
-          top: bg.top, left: bg.left, right: bg.right,
-          width: bg.w, height:'auto',
-          objectFit:'cover',
-          transform: `rotate(${bg.rot})`,
-          opacity: bg.op,
-          filter:'grayscale(100%)',
-          pointerEvents:'none',
-          userSelect:'none',
-          zIndex:0,
-        }} />
-      ))}
-
-      {/* Left sticky label — fotoğrafla tam boydan boya */}
-      <OurWorksLabel imgHeight={imgHeight} visible={visible} />
-
-      {/* Scrollable cards */}
-      <div
-        ref={scrollRef}
-        onMouseDown={onMouseDown} onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
-        style={{
-          flex:1, display:'flex', gap:24,
-          overflowX:'auto', overflowY:'hidden',
-          scrollbarWidth:'none', msOverflowStyle:'none',
-          cursor:'grab', alignItems:'flex-end',
-          paddingLeft:'clamp(40px, 7vw, 120px)',
-          paddingRight:'50vw',
-          position:'relative', zIndex:1,
-        }}>
-        {HSCROLL_ITEMS.map((item, i) => (
-          <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={i === 0 ? firstImgRef : null} />
+    <div ref={sectionRef} style={{ padding:'0 20px 96px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:16 }}>
+        {GRID_ITEMS.map((item, i) => (
+          <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={null} />
         ))}
       </div>
     </div>

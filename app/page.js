@@ -532,10 +532,10 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         100vw - 100% = bu elementin sağ tarafından viewport sağına olan mesafe.
         Ondan 92px çıkartırsak sidebar sol kenarına dayanırız.
       */}
-      {/* "Start My Project" panel — tam yükseklik, clip için wrapper gerekli */}
+      {/* "Start My Project" panel */}
       <div style={{
         position:'absolute',
-        top:0, bottom:0, left:0,
+        top:0, left:0,
         right: 'calc(-1 * (100vw - 100% - 92px))',
         overflow:'hidden',
         pointerEvents: (showForm && !leaving) ? 'none' : 'all',
@@ -544,10 +544,10 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         zIndex: (showForm || leaving) ? 0 : 1,
       }}>
         <div style={{
-          position:'absolute', inset:0,
           display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'center',
-          background:'var(--bg)', borderRadius:8,
+          background:'var(--bg)',
           padding:'clamp(48px, 6vw, 80px) clamp(32px, 4vw, 60px)',
+          minHeight:'clamp(480px, 55vh, 700px)',
         }}>
           <h3 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:24 }}>
             Start My Project
@@ -655,7 +655,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel: fixed-position clip container, viewport'a göre 92px'de biter */}
-        <div style={{ position:'relative', minHeight:'clamp(480px, 55vh, 700px)' }}>
+        <div style={{ position:'relative' }}>
           {/* Bu div layout alanını tutar, içindeki fixed div viewport'a uzanır */}
           <ContactSlide
             showForm={showForm}

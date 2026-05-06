@@ -647,8 +647,8 @@ function ContactSection() {
             {[
               ['Mail','info@bankoarts.com','mailto:info@bankoarts.com'],
               ['Instagram','@bankoarts','https://instagram.com/bankoarts'],
-              ['Upwork','Banko Arts','https://upwork.com'],
-              ['Freelancer','@brkbnkgll','https://freelancer.com'],
+              ['Upwork','Banko Arts','https://www.upwork.com/freelancers/berkbanko'],
+              ['Freelancer','@brkbnkgll','https://www.freelancer.com/u/brkbnkgll'],
             ].map(([label,val,href]) => (
               <a key={label} href={href} target="_blank" rel="noreferrer"
                 style={{ display:'flex', gap:16, padding:'16px 0', borderBottom:'1px solid var(--border)', textDecoration:'none', transition:'opacity 0.2s' }}

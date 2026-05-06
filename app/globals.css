@@ -63,6 +63,17 @@ button { font-family: var(--font); cursor: pointer; }
 .side-bar--left:hover  { left: 0; top: 0; bottom: 0; width: 80px; }
 .side-bar--right:hover { right: -2px; top: 0; bottom: 0; width: 84px; }
 
+/* Sağ sidebar'ın solundan viewport sağ kenarına kadar beyaz mask — animasyonların arkasını örter */
+.sidebar-right-mask {
+  position: fixed;
+  top: 0; bottom: 0;
+  left: calc(100vw - 92px);
+  right: 0;
+  background: var(--bg);
+  z-index: 999;
+  pointer-events: none;
+}
+
 .side-bar span {
   writing-mode: vertical-rl;
   font-size: 11px;

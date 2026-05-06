@@ -127,6 +127,7 @@ export default function RootLayout({
           <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
         {children}
+        <div className="sidebar-right-mask" />
       </body>
     </html>
   );

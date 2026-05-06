@@ -613,7 +613,7 @@ function ContactSection() {
 
   return (
     <section id="section-contact" ref={ref} style={{ borderTop:'1px solid var(--sep)' }}>
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'start', gap:80, padding:'120px 20px 0' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center', gap:80, padding:'120px 20px 120px' }}>
 
         {/* Sol — hiç değişmez */}
         <div style={{
@@ -647,7 +647,7 @@ function ContactSection() {
         </div>
 
         {/* Sağ — slide panel */}
-        <div style={{ position:'relative', marginTop:'-120px', paddingBottom:'100px' }}>
+        <div style={{ position:'relative' }}>
           {/* Bu div layout alanını tutar, içindeki fixed div viewport'a uzanır */}
           <ContactSlide
             showForm={showForm}

@@ -1098,32 +1098,32 @@ export default function BankoArts() {
       <footer className="section-wipe" style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:32, marginBottom:64 }}>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Banko Arts</p>
-            <p style={{ fontSize:13, lineHeight:1.7, color:'rgba(0,0,0,0.6)' }}>Professional 3D Architectural Visualization Studio</p>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Banko Arts</p>
+            <p style={{ fontSize:13, lineHeight:1.7, color:'rgba(255,255,255,0.7)' }}>Professional 3D Architectural Visualization Studio</p>
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Company</p>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Company</p>
             {['Works','Services','About','Contact'].map(item => (
               <button key={item} onClick={()=>goPage(item.toLowerCase())}
-                style={{ display:'block', background:'none', border:'none', fontSize:14, fontWeight:600, marginBottom:10, cursor:'pointer' }}>
+                style={{ display:'block', background:'none', border:'none', fontSize:14, fontWeight:600, marginBottom:10, cursor:'pointer', color:'#fff' }}>
                 {item}
               </button>
             ))}
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Follow</p>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Follow</p>
             <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
-              style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10 }}>Instagram</a>
+              style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10, color:'#fff' }}>Instagram</a>
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(0,0,0,0.45)', marginBottom:16 }}>Contact</p>
-            <a href="mailto:info@bankoarts.com" style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10 }}>info@bankoarts.com</a>
+            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Contact</p>
+            <a href="mailto:info@bankoarts.com" style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10, color:'#fff' }}>info@bankoarts.com</a>
           </div>
         </div>
-        <hr style={{ border:'none', borderTop:'1px solid rgba(0,0,0,0.15)', marginBottom:24 }}/>
+        <hr style={{ border:'none', borderTop:'1px solid rgba(255,255,255,0.2)', marginBottom:24 }}/>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-          <p style={{ fontSize:13, fontWeight:800, letterSpacing:'0.04em' }}>BANKO ARTS</p>
-          <p style={{ fontSize:12, color:'rgba(0,0,0,0.45)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
+          <p style={{ fontSize:13, fontWeight:800, letterSpacing:'0.04em', color:'#fff' }}>BANKO ARTS</p>
+          <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
         </div>
       </footer>
 

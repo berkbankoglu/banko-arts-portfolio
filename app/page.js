@@ -1010,7 +1010,7 @@ export default function BankoArts() {
           ].map(([t, d], i) => (
             <div key={t} style={{ padding:'32px 0', borderTop:'1px solid var(--border)' }}>
               <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:14 }}>N°{String(i+1).padStart(3,'0')}</p>
-              <p style={{ fontSize:'clamp(18px, 1.6vw, 28px)', fontWeight:700, marginBottom:12, letterSpacing:'-0.01em' }}>{t}</p>
+              <p style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, marginBottom:12, letterSpacing:'-0.04em', lineHeight:0.9 }}>{t}</p>
               <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
             </div>
           ))}

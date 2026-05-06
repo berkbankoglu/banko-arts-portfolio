@@ -50,7 +50,7 @@ function useSectionWipe() {
     }, { threshold: 0.15 });
 
     const attach = () => {
-      document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));
+      document.querySelectorAll('.section-wipe, .reveal-left, .reveal-right').forEach(el => obs.observe(el));
     };
 
     attach();
@@ -987,11 +987,11 @@ export default function BankoArts() {
       <StatsSection />
 
       {/* ── SERVICES ── */}
-      <section id="section-services" className="section-wipe" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
+      <section id="section-services" style={{ padding:'120px 20px 80px', borderTop:'1px solid var(--sep)' }}>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:80, alignItems:'start' }}>
 
           {/* Sol — Services listesi */}
-          <div>
+          <div className="reveal-left">
             <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
             <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
             <div>
@@ -1013,7 +1013,7 @@ export default function BankoArts() {
           </div>
 
           {/* Sağ — About / Profil */}
-          <div style={{ position:'sticky', top:120 }}>
+          <div className="reveal-right" style={{ position:'sticky', top:120 }}>
             <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
             <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</h2>
             <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, marginBottom:48, maxWidth:480 }}>

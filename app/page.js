@@ -573,15 +573,7 @@ function ContactSlide({ showForm, leaving, openForm, closeForm }) {
         pointerEvents: (showForm && !leaving) ? 'all' : 'none',
         visibility: (showForm || leaving) ? 'visible' : 'hidden',
       }}>
-        {/* Arka plan */}
-        <div style={{
-          position:'absolute', inset:0,
-          right: 'calc(-1 * (100vw - 100% - 92px))',
-          background:'#f7f7f7',
-          zIndex:0,
-        }} />
-        {/* İçerik grid hücre genişliğinde — sarı border burada */}
-        <div style={{ position:'relative', zIndex:1, padding:'clamp(24px, 3vw, 40px)', border:'2px solid var(--yellow)' }}>
+        <div style={{ position:'relative', zIndex:1, padding:'clamp(24px, 3vw, 40px)', border:'2px solid var(--yellow)', background:'var(--bg)' }}>
           <button onClick={closeForm}
             style={{ background:'none', border:'none', fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:24, cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}
             onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}

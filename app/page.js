@@ -51,8 +51,15 @@ function useSectionWipe() {
 
     const obs2 = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('visible');
-        else e.target.classList.remove('visible');
+        if (e.isIntersecting) {
+          if (e.target.classList.contains('reveal-right')) {
+            setTimeout(() => e.target.classList.add('visible'), 1700);
+          } else {
+            e.target.classList.add('visible');
+          }
+        } else {
+          e.target.classList.remove('visible');
+        }
       });
     }, { threshold: 0.5 });
 

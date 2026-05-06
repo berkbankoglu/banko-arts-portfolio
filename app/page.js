@@ -826,7 +826,7 @@ function StatsSection() {
 const GRID_ITEMS = [
   { id:1, title:'Exterior — Residential', sub:'3D Render · Exterior', image:'/images/architecture/Exterior 1.png' },
   { id:2, title:'Interior — Living Room', sub:'3D Render · Interior', image:'/images/architecture/Living Room.png' },
-  { id:3, title:'Interior — Kitchen',     sub:'3D Render · Interior', image:'/images/architecture/Kitchen.png' },
+  { id:3, title:'Interior — Kitchen',     sub:'3D Render · Interior', image:'/images/architecture/Kitchen2.jpg' },
   { id:4, title:'Interior — Bedroom',     sub:'3D Render · Interior', image:'/images/architecture/Bedroom.png' },
 ];
 

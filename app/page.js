@@ -354,24 +354,22 @@ function DotGrid() {
       uniform vec2  u_mouse;
       uniform float u_dpr;
       void main() {
-        float spacing = 14.0 * u_dpr;
-        float radius  = 200.0 * u_dpr;
+        float spacing = 22.0 * u_dpr;
+        float radius  = 280.0 * u_dpr;
         vec2 px = gl_FragCoord.xy;
         px.y = u_res.y - px.y;
         vec2 cell = floor(px / spacing);
         vec2 dot  = (cell + 0.5) * spacing;
         vec2 diff = px - dot;
-        float d   = length(diff);
-        if (d > spacing * 0.5) { discard; return; }
-        vec2  dm   = dot - u_mouse * u_dpr;
+        vec2 dm   = dot - u_mouse * u_dpr;
         float dist = length(dm);
         float inf  = max(0.0, 1.0 - dist / radius);
-        float r    = (1.4 + inf * 2.0) * u_dpr;
+        float r    = (1.5 + inf * 3.0) * u_dpr;
         float dotD = length(diff);
         if (dotD > r) { discard; return; }
-        float alpha = 0.22 + inf * 0.55;
-        float aa    = 1.0 - smoothstep(r - 1.0, r, dotD);
-        gl_FragColor = vec4(0.04, 0.04, 0.04, alpha * aa);
+        float alpha = 0.18 + inf * 0.6;
+        float aa    = 1.0 - smoothstep(r - 0.8, r, dotD);
+        gl_FragColor = vec4(0.12, 0.12, 0.12, alpha * aa);
       }
     `;
 
@@ -440,7 +438,7 @@ function DotGrid() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ position:'absolute', inset:0, width:'100%', height:'100%', pointerEvents:'none', zIndex:0 }}
+      style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:'100vw', height:'calc(100% + 150px)', pointerEvents:'none', zIndex:0 }}
     />
   );
 }
@@ -497,6 +495,34 @@ function WorkCard({ item, visible, index }) {
         <p style={{ fontSize:14, fontWeight:700, letterSpacing:'-0.01em', marginBottom:4 }}>{item.title}</p>
         <p style={{ fontSize:11, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
       </div>
+    </div>
+  );
+}
+
+/* ─── Reveal Heading ────────────────────────────────────── */
+function RevealHeading({ children, style }) {
+  const ref = useRef(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setTimeout(() => { setActive(true); }, 800);
+        obs.unobserve(el);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} style={{ position:'relative', overflow:'hidden', display:'table' }}>
+      {active && <div className="reveal-box" style={{ animationDelay:'0s, 0.4s' }} />}
+      <h2 className={active ? 'reveal-text' : ''} style={{ opacity: active ? undefined : 0, animationDelay:'0.4s', ...style }}>
+        {children}
+      </h2>
     </div>
   );
 }
@@ -661,9 +687,9 @@ function ContactSection() {
           transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s',
         }}>
           <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
-          <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>
+          <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>
             Let's Build<br/>Something<br/>Remarkable.
-          </h2>
+          </RevealHeading>
           <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
             Photorealistic architectural visualizations delivered fast. Tell us about your project and we'll get back within 24 hours.
           </p>
@@ -807,7 +833,7 @@ function StatsSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 64 }}>
         <div>
           <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
-          <h2 style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</h2>
+          <RevealHeading style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</RevealHeading>
         </div>
         <p style={{ fontSize: 13, color: 'var(--muted)', maxWidth: 360, textAlign: 'right', lineHeight: 1.7 }}>
           10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.
@@ -926,21 +952,79 @@ export default function BankoArts() {
 
       {/* ── WORKS ── */}
       <section id="section-works" style={{ borderTop:'1px solid var(--sep)' }}>
-        <div className="hero-flex" style={{ position:'relative', padding:'48px 20px 0 20px', display:'flex', justifyContent:'space-between', alignItems:'flex-end', minHeight:'60vh', gap:0 }}>
-          <DotGrid />
-          <img src="/images/logo.svg" alt="Banko Arts" style={{ position:'absolute', top:24, left:20, width:'clamp(60px, 6vw, 100px)', height:'auto', zIndex:2 }} />
-          <div style={{ flex:1, minWidth:0, position:'relative', zIndex:1 }}>
-            <HeroTitle />
-          </div>
-          <div className="hero-img" style={{ width:'clamp(300px, 32vw, 640px)', flexShrink:0, marginTop:0, marginLeft:'-6vw', position:'relative', zIndex:1 }}>
-            <img src="/images/D2.jpg" alt="Banko Arts" style={{ width:'100%', display:'block', objectFit:'cover', aspectRatio:'3/4' }}/>
-          </div>
+        {/* Logo */}
+        <div style={{ padding:'20px 20px 0', position:'relative', zIndex:3 }}>
+          <img src="/images/logo.svg" alt="Banko Arts" style={{ width:'clamp(60px, 6vw, 100px)', height:'auto' }} />
         </div>
-        <div style={{ margin:'40px 20px 0', borderTop:'1px solid var(--sep)' }} />
-        <div className="section-wipe" style={{ padding:'56px 20px 80px' }}>
-          <p style={{ fontSize:'clamp(24px, 2.2vw, 44px)', fontWeight:400, letterSpacing:'-0.02em', lineHeight:1.2, maxWidth:1200 }}>
-            We believe beauty is born from precision, not chance. Every render tells a story — before the foundation is even laid.
-          </p>
+
+        <div className="hero-flex" style={{ position:'relative', height:'calc(100vh - 160px)', display:'grid', gridTemplateColumns:'1fr 1fr', overflow:'hidden' }}>
+          <DotGrid />
+
+          {/* Sol panel */}
+          <div style={{ position:'relative', zIndex:2, display:'flex', flexDirection:'column', justifyContent:'space-between', padding:'24px 40px 16px 20px' }}>
+
+            {/* Boş üst alan */}
+            <div />
+
+            {/* Alt — başlık + açıklama */}
+            <div>
+              {/* H1 reveal — 0s başlar */}
+              <div style={{ position:'relative', overflow:'hidden', marginBottom:24, display:'table' }}>
+                <div className="reveal-box" style={{ animationDelay:'0s, 0.4s' }} />
+                <h1 className="reveal-text" style={{ fontSize:'clamp(36px, 4.5vw, 72px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1.05, color:'var(--black)', margin:0, animationDelay:'0.4s' }}>
+                  We are an architectural visualization studio for renders, 3D & animation.
+                </h1>
+              </div>
+
+              <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:420, marginBottom:32 }}>
+                824+ projects delivered worldwide. Photorealistic exterior, interior renders and animations — fast turnaround, studio quality.
+              </p>
+
+              <button
+                onClick={() => { const el = document.getElementById('section-contact'); window.lenis?.scrollTo(el, { offset:-20, duration:1.6 }); }}
+                style={{ fontSize:12, color:'var(--muted)', background:'none', border:'none', cursor:'pointer', letterSpacing:'0.08em', textTransform:'lowercase', padding:0, display:'flex', alignItems:'center', gap:6 }}
+                onMouseEnter={e=>e.currentTarget.style.color='var(--black)'}
+                onMouseLeave={e=>e.currentTarget.style.color='var(--muted)'}>
+                scroll to explore ↓
+              </button>
+            </div>
+          </div>
+
+          {/* Sağ panel */}
+          <div style={{ position:'relative', zIndex:2, display:'flex', flexDirection:'column' }}>
+
+            {/* Üst büyük — siyah */}
+            <div style={{ flex:1, background:'var(--black)' }} />
+
+            {/* Alt iki küçük */}
+            <div style={{ height:160, display:'grid', gridTemplateColumns:'1fr 1fr' }}>
+
+              {/* Upwork */}
+              <a href="https://www.upwork.com/freelancers/berkbanko" target="_blank" rel="noreferrer"
+                style={{ background:'#e8e8e6', padding:'24px 28px', display:'flex', flexDirection:'column', justifyContent:'space-between', cursor:'pointer', transition:'background 0.2s', textDecoration:'none' }}
+                onMouseEnter={e=>e.currentTarget.style.background='#ddddd9'}
+                onMouseLeave={e=>e.currentTarget.style.background='#e8e8e6'}>
+                <span style={{ fontSize:18, color:'rgba(0,0,0,0.3)' }}>→</span>
+                <div>
+                  <p style={{ fontSize:22, fontWeight:800, letterSpacing:'-0.02em', color:'var(--black)', marginBottom:4 }}>Upwork</p>
+                  <p style={{ fontSize:12, color:'var(--muted)' }}>Top Rated Plus</p>
+                </div>
+              </a>
+
+              {/* Freelancer */}
+              <a href="https://www.freelancer.com/u/brkbnkgll" target="_blank" rel="noreferrer"
+                style={{ background:'#2a2a2a', padding:'24px 28px', display:'flex', flexDirection:'column', justifyContent:'space-between', cursor:'pointer', transition:'background 0.2s', textDecoration:'none' }}
+                onMouseEnter={e=>e.currentTarget.style.background='#333'}
+                onMouseLeave={e=>e.currentTarget.style.background='#2a2a2a'}>
+                <span style={{ fontSize:18, color:'rgba(255,255,255,0.3)' }}>→</span>
+                <div>
+                  <p style={{ fontSize:22, fontWeight:800, letterSpacing:'-0.02em', color:'#fff', marginBottom:4 }}>Freelancer</p>
+                  <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)' }}>Preferred Freelancer</p>
+                </div>
+              </a>
+
+            </div>
+          </div>
         </div>
         <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
         <div className="section-wipe"><HScrollSection /></div>
@@ -955,7 +1039,7 @@ export default function BankoArts() {
           {/* Sol — Services listesi */}
           <div className="reveal-left">
             <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
-            <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:64 }}>Services</h2>
+            <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Services</RevealHeading>
             <div>
               {[
                 ['Exterior Visualization','Photorealistic renders of building facades, landscapes and surroundings.'],
@@ -976,11 +1060,16 @@ export default function BankoArts() {
 
           {/* Sağ — About / Profil */}
           <div className="reveal-right">
-            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
-            <h2 style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</h2>
-            <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, marginBottom:48, maxWidth:480 }}>
-              3D architectural visualization artist based in Turkey with 10+ years of experience. Specializing in photorealistic exterior and interior renders, animations, and floor plans for architects, developers, and real estate agencies worldwide.
-            </p>
+            <div style={{ display:'flex', alignItems:'flex-start', gap:32, marginBottom:32 }}>
+              <div style={{ flex:1 }}>
+                <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
+                <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</RevealHeading>
+                <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, maxWidth:480 }}>
+                  3D architectural visualization artist based in Turkey with 10+ years of experience. Specializing in photorealistic exterior and interior renders, animations, and floor plans for architects, developers, and real estate agencies worldwide.
+                </p>
+              </div>
+              <img src="/images/D2.jpg" alt="Berk Bankoglu" style={{ width:'clamp(160px, 18vw, 260px)', aspectRatio:'3/4', objectFit:'cover', flexShrink:0 }} />
+            </div>
 
             {/* Stats */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:0, marginBottom:48, borderTop:'1px solid var(--border)' }}>

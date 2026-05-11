@@ -39,6 +39,35 @@ button { font-family: var(--font); cursor: pointer; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: #ccc; }
 
+/* ── Reveal animasyonu ── */
+@keyframes reveal-in {
+  0%   { transform: translateX(-101%); visibility: visible; }
+  100% { transform: translateX(0%);    visibility: visible; }
+}
+@keyframes reveal-out {
+  0%   { transform: translateX(0%);    visibility: visible; }
+  100% { transform: translateX(101%);  visibility: hidden; }
+}
+
+.reveal-box {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--black);
+  z-index: 2;
+  visibility: hidden;
+  animation:
+    reveal-in  0.4s cubic-bezier(0.77,0,0.18,1) forwards,
+    reveal-out 0.4s cubic-bezier(0.77,0,0.18,1) 0.4s forwards;
+}
+
+.reveal-text {
+  opacity: 0;
+  animation: reveal-text-show 0s forwards;
+}
+@keyframes reveal-text-show {
+  to { opacity: 1; }
+}
+
 /* ── Side bars ── */
 .side-bar {
   position: fixed;
@@ -58,10 +87,10 @@ button { font-family: var(--font); cursor: pointer; }
               width  0.55s cubic-bezier(0.22,1,0.36,1);
 }
 .side-bar--left  { left: 24px; transition: opacity 0.2s ease, top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), left 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
-.side-bar--right { right: 0; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
+.side-bar--right { right: 24px; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), right 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
 
 .side-bar--left:hover  { left: 0; top: 0; bottom: 0; width: 80px; }
-.side-bar--right:hover { top: 0; bottom: 0; width: 80px; }
+.side-bar--right:hover { right: 0; top: 0; bottom: 0; width: 80px; }
 
 .sidebar-right-mask { display: none; }
 

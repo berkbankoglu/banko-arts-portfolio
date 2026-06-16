@@ -417,7 +417,9 @@ function DotGrid() {
     window.addEventListener('mousemove', onMove);
     window.addEventListener('resize', resize);
 
+    let running = true;
     const draw = () => {
+      if (!running) return;
       rafRef.current = requestAnimationFrame(draw);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -426,10 +428,18 @@ function DotGrid() {
       gl.uniform1f(uDpr,   dpr);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { running = true; draw(); }
+      else { running = false; cancelAnimationFrame(rafRef.current); }
+    }, { threshold: 0 });
+    obs.observe(canvas);
     draw();
 
     return () => {
+      running = false;
       cancelAnimationFrame(rafRef.current);
+      obs.disconnect();
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('resize', resize);
     };
@@ -920,9 +930,9 @@ export default function BankoArts() {
   // Lenis smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
+      lerp: 0.1,
     });
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -958,7 +968,6 @@ export default function BankoArts() {
         </div>
 
         <div className="hero-flex" style={{ position:'relative', height:'calc(100vh - 160px)', display:'grid', gridTemplateColumns:'1fr 1fr', overflow:'hidden' }}>
-          <DotGrid />
 
           {/* Sol panel */}
           <div style={{ position:'relative', zIndex:2, display:'flex', flexDirection:'column', justifyContent:'space-between', padding:'24px 40px 16px 20px' }}>

@@ -89,9 +89,8 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  verification: {
-    google: "your-google-verification-code",
-  },
+  // Search Console doğrulaması yapılınca gerçek kodu buraya ekle:
+  // verification: { google: "GERÇEK-KOD" },
 };
 
 export default function RootLayout({

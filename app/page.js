@@ -4,30 +4,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import ContactForm from './components/ContactForm';
 import Lenis from 'lenis';
 
-/* ─── data ─────────────────────────────────────────────── */
-const projects = [
-  { id:1,  title:'Exterior — Residential', category:'exterior', type:'render', image:'/images/architecture/Exterior 1.png' },
-  { id:2,  title:'Exterior — Garden View', category:'exterior', type:'render', image:'/images/architecture/Exterior 2.png' },
-  { id:3,  title:'Exterior — Facade',      category:'exterior', type:'render', image:'/images/architecture/Exterior 3.png' },
-  { id:4,  title:'Exterior — Detail',      category:'exterior', type:'render', image:'/images/architecture/Exterior 3.1.png' },
-  { id:5,  title:'Exterior — Night',       category:'exterior', type:'render', image:'/images/architecture/Exterior 3.2.png' },
-  { id:6,  title:'Exterior — Full View',   category:'exterior', type:'render', image:'/images/architecture/Exterior.png' },
-  { id:7,  title:'Living Room',            category:'interior', type:'render', image:'/images/architecture/Living Room.png' },
-  { id:8,  title:'Bedroom',               category:'interior', type:'render', image:'/images/architecture/Bedroom.png' },
-  { id:9,  title:'Kitchen',               category:'interior', type:'render', image:'/images/architecture/Kitchen.png' },
-  { id:10, title:'Bathroom',              category:'interior', type:'render', image:'/images/architecture/Bathroom.png' },
-  { id:11, title:'Bathroom — II',         category:'interior', type:'render', image:'/images/architecture/Bathroom 2.png' },
-  { id:12, title:'Rooftop',               category:'interior', type:'render', image:'/images/architecture/RoofTop.png' },
-  { id:13, title:'Both Views',            category:'animation',type:'video',  image:'/images/architecture/Both.png',        video:'/videos/both_views_animation.mp4' },
-  { id:14, title:'Bedroom Animation',     category:'animation',type:'video',  image:'/images/architecture/Bedroom.png',     video:'/videos/bedroom_animation.mp4' },
-  { id:15, title:'Living Room Animation', category:'animation',type:'video',  image:'/images/architecture/Living Room.png', video:'/videos/livingroom_animation.mp4' },
-  { id:16, title:'Kitchen Animation',     category:'animation',type:'video',  image:'/images/architecture/Kitchen.png',     video:'/videos/kitchen_animation.mp4' },
-  { id:17, title:'Exterior Animation I',  category:'animation',type:'video',  image:'/images/architecture/Exterior 1.png',  video:'/videos/exterior1_animation.mp4' },
-  { id:18, title:'Exterior Animation II', category:'animation',type:'video',  image:'/images/architecture/Exterior 2.png',  video:'/videos/exterior2_animation.mp4' },
-  { id:19, title:'Exterior Animation III',category:'animation',type:'video',  image:'/images/architecture/Exterior 3.png',  video:'/videos/exterior3_animation.mp4' },
-  { id:20, title:'Rooftop Animation',     category:'animation',type:'video',  image:'/images/architecture/RoofTop.png',     video:'/videos/rooftop_animation.mp4' },
-];
-
 /* ─── Section wipe hook ─────────────────────────────────── */
 function useSectionWipe() {
   useEffect(() => {
@@ -64,17 +40,31 @@ function useSectionWipe() {
       });
     }, { threshold: 0.15 });
 
+    // Aynı elementi tekrar tekrar observe etmemek için işaretle
+    const seen = new WeakSet();
     const attach = () => {
-      document.querySelectorAll('.section-wipe').forEach(el => obs.observe(el));
-      document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => obs2.observe(el));
+      document.querySelectorAll('.section-wipe').forEach(el => {
+        if (!seen.has(el)) { seen.add(el); obs.observe(el); }
+      });
+      document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => {
+        if (!seen.has(el)) { seen.add(el); obs2.observe(el); }
+      });
     };
 
     attach();
 
-    const mo = new MutationObserver(attach);
+    // Eski hali: her DOM mutasyonunda (hover stil değişimleri dahil) attach()
+    // koşuyordu — scroll/hover sırasında sürekli querySelectorAll = jank.
+    // Yeni hali: sadece childList mutasyonlarında, debounce'lu çalışır.
+    let moTimer = null;
+    const mo = new MutationObserver((muts) => {
+      if (!muts.some(m => m.addedNodes.length)) return;
+      clearTimeout(moTimer);
+      moTimer = setTimeout(attach, 200);
+    });
     mo.observe(document.body, { childList: true, subtree: true });
 
-    return () => { obs.disconnect(); obs2.disconnect(); mo.disconnect(); };
+    return () => { clearTimeout(moTimer); obs.disconnect(); obs2.disconnect(); mo.disconnect(); };
   }, []);
 }
 
@@ -172,314 +162,13 @@ function LeftBar({ menuOpen, onOpen, onClose, onNav, activePage }) {
   );
 }
 
-/* ─── ProjectCard ───────────────────────────────────────── */
-function ProjectCard({ project, onClick }) {
-  const videoRef = useRef(null);
-  const wrapRef  = useRef(null);
-  const cardRef  = useRef(null);
-  const glareRef = useRef(null);
-  const rafRef   = useRef(null);
-  const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { el.classList.add('visible'); obs.unobserve(el); } },
-      { threshold: 0.08 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const handleMouseMove = (e) => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      const card = cardRef.current;
-      if (!card) return;
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top)  / rect.height;
-      card.style.transform = `perspective(900px) rotateX(${(y-0.5)*-12}deg) rotateY(${(x-0.5)*12}deg) scale3d(1.03,1.03,1.03)`;
-      if (glareRef.current) {
-        glareRef.current.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.1) 0%, transparent 65%)`;
-        glareRef.current.style.opacity = '1';
-      }
-    });
-  };
-
-  const handleMouseEnter = () => {
-    setHovered(true);
-    if (project.type === 'video' && videoRef.current) videoRef.current.play().catch(()=>{});
-  };
-
-  const handleMouseLeave = () => {
-    setHovered(false);
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    if (cardRef.current) cardRef.current.style.transform = 'perspective(900px) rotateX(0) rotateY(0) scale3d(1,1,1)';
-    if (glareRef.current) glareRef.current.style.opacity = '0';
-    if (project.type === 'video' && videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  };
-
-  return (
-    <div ref={wrapRef} className="reveal" style={{ perspective:'900px' }}>
-      <div ref={cardRef} onMouseMove={handleMouseMove} onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave} onClick={() => onClick(project)}
-        style={{
-          position:'relative', overflow:'hidden', cursor:'pointer', background:'#f0efed',
-          transformStyle:'preserve-3d',
-          transition:'transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s cubic-bezier(0.22,1,0.36,1)',
-          boxShadow: hovered ? '0 20px 50px rgba(0,0,0,0.12)' : '0 2px 8px rgba(0,0,0,0.06)',
-        }}>
-        <img src={project.image} alt={project.title}
-          style={{ display:'block', width:'100%', height:'auto',
-            transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)',
-            opacity: hovered && project.type==='video' ? 0 : 1 }}
-        />
-        {project.type === 'video' && (
-          <video ref={videoRef} src={project.video} muted loop playsInline
-            style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover',
-              opacity: hovered ? 1 : 0, transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }} />
-        )}
-        <div style={{ position:'absolute', inset:0,
-          background:'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 55%)',
-          opacity: hovered ? 1 : 0, transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }} />
-        <div ref={glareRef} style={{ position:'absolute', inset:0, opacity:0, pointerEvents:'none', transition:'opacity 0.3s ease' }} />
-        <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'16px 18px',
-          transform: hovered ? 'translateY(0)' : 'translateY(8px)',
-          opacity: hovered ? 1 : 0,
-          transition:'transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.45s cubic-bezier(0.22,1,0.36,1)' }}>
-          <p style={{ fontSize:11, letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:600, color:'#fff' }}>{project.title}</p>
-          {project.type==='video' && <p style={{ fontSize:10, color:'rgba(255,255,255,0.6)', marginTop:2 }}>Animation</p>}
-        </div>
-        {project.type==='video' && (
-          <div style={{ position:'absolute', top:'50%', left:'50%',
-            transform: hovered ? 'translate(-50%,-50%) scale(0)' : 'translate(-50%,-50%) scale(1)',
-            transition:'transform 0.35s cubic-bezier(0.22,1,0.36,1)',
-            width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.15)',
-            backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M5 3l9 5-9 5V3z" fill="white"/></svg>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ─── Lightbox ──────────────────────────────────────────── */
-function Lightbox({ project, onClose, onNext, onPrev }) {
-  const videoRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-    const t = requestAnimationFrame(() => setOpen(true));
-    return () => cancelAnimationFrame(t);
-  }, []);
-
-  useEffect(() => {
-    if (project?.type === 'video' && videoRef.current) videoRef.current.play().catch(()=>{});
-  }, [project]);
-
-  useEffect(() => {
-    const fn = (e) => {
-      if (e.key==='Escape') handleClose();
-      if (e.key==='ArrowRight') onNext();
-      if (e.key==='ArrowLeft') onPrev();
-    };
-    window.addEventListener('keydown', fn);
-    return () => window.removeEventListener('keydown', fn);
-  }, [onNext, onPrev]);
-
-  const handleClose = () => { setOpen(false); setTimeout(onClose, 280); };
-  if (!visible) return null;
-
-  const navBtn = { position:'absolute', top:'50%', transform:'translateY(-50%)',
-    width:44, height:44, background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)',
-    color:'#fff', fontSize:22, display:'flex', alignItems:'center', justifyContent:'center',
-    backdropFilter:'blur(8px)', zIndex:10, transition:'background 0.2s' };
-
-  return (
-    <div className={`lightbox-backdrop${open?' open':''}`} onClick={handleClose}>
-      <button onClick={handleClose} style={{ position:'absolute', top:24, right:28,
-        background:'none', border:'none', color:'rgba(255,255,255,0.5)',
-        fontSize:26, lineHeight:1, zIndex:10, transition:'color 0.2s' }}
-        onMouseEnter={e=>e.currentTarget.style.color='#fff'}
-        onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.5)'}>×</button>
-      <button onClick={e=>{e.stopPropagation();onPrev();}} style={{...navBtn,left:20}}
-        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.18)'}
-        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>‹</button>
-      <button onClick={e=>{e.stopPropagation();onNext();}} style={{...navBtn,right:20}}
-        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.18)'}
-        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>›</button>
-      <div className="lightbox-content" style={{ maxWidth:'88vw', maxHeight:'84vh', position:'relative' }}
-        onClick={e=>e.stopPropagation()}>
-        {project.type==='video'
-          ? <video ref={videoRef} src={project.video} controls autoPlay style={{ maxWidth:'88vw', maxHeight:'84vh', display:'block' }}/>
-          : <img src={project.image} alt={project.title} style={{ maxWidth:'88vw', maxHeight:'84vh', display:'block', objectFit:'contain' }}/>}
-        <p style={{ color:'rgba(255,255,255,0.4)', fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', marginTop:14 }}>
-          {project.title}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Dot Grid (WebGL) ───────────────────────────────────── */
-function DotGrid() {
-  const canvasRef = useRef(null);
-  const mouseRef  = useRef([-9999, -9999]);
-  const rafRef    = useRef(null);
-  const glRef     = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: false });
-    if (!gl) return;
-    glRef.current = gl;
-
-    const vert = `
-      attribute vec2 a_pos;
-      void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
-    `;
-    const frag = `
-      precision mediump float;
-      uniform vec2  u_res;
-      uniform vec2  u_mouse;
-      uniform float u_dpr;
-      void main() {
-        float spacing = 22.0 * u_dpr;
-        float radius  = 280.0 * u_dpr;
-        vec2 px = gl_FragCoord.xy;
-        px.y = u_res.y - px.y;
-        vec2 cell = floor(px / spacing);
-        vec2 dot  = (cell + 0.5) * spacing;
-        vec2 diff = px - dot;
-        vec2 dm   = dot - u_mouse * u_dpr;
-        float dist = length(dm);
-        float inf  = max(0.0, 1.0 - dist / radius);
-        float r    = (1.5 + inf * 3.0) * u_dpr;
-        float dotD = length(diff);
-        if (dotD > r) { discard; return; }
-        float alpha = 0.18 + inf * 0.6;
-        float aa    = 1.0 - smoothstep(r - 0.8, r, dotD);
-        gl_FragColor = vec4(0.12, 0.12, 0.12, alpha * aa);
-      }
-    `;
-
-    const compile = (type, src) => {
-      const s = gl.createShader(type);
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      return s;
-    };
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'a_pos');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes   = gl.getUniformLocation(prog, 'u_res');
-    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-    const uDpr   = gl.getUniformLocation(prog, 'u_dpr');
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-    let W, H, dpr;
-    const resize = () => {
-      dpr = window.devicePixelRatio || 1;
-      W   = canvas.offsetWidth;
-      H   = canvas.offsetHeight;
-      canvas.width  = W * dpr;
-      canvas.height = H * dpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-    resize();
-
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = [e.clientX - rect.left, e.clientY - rect.top];
-    };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('resize', resize);
-
-    let running = true;
-    const draw = () => {
-      if (!running) return;
-      rafRef.current = requestAnimationFrame(draw);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform2f(uRes,   canvas.width, canvas.height);
-      gl.uniform2f(uMouse, mouseRef.current[0], mouseRef.current[1]);
-      gl.uniform1f(uDpr,   dpr);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    };
-
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { running = true; draw(); }
-      else { running = false; cancelAnimationFrame(rafRef.current); }
-    }, { threshold: 0 });
-    obs.observe(canvas);
-    draw();
-
-    return () => {
-      running = false;
-      cancelAnimationFrame(rafRef.current);
-      obs.disconnect();
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:'100vw', height:'calc(100% + 150px)', pointerEvents:'none', zIndex:0 }}
-    />
-  );
-}
-
 /* ─── Work Card ─────────────────────────────────────────── */
 function WorkCard({ item, visible, index }) {
   const [hovered, setHovered] = useState(false);
-  const scaleRef = useRef(1);
-  const rafRef = useRef(null);
-  const imgRef = useRef(null);
 
-  useEffect(() => {
-    if (hovered) {
-      const grow = () => {
-        scaleRef.current = Math.min(scaleRef.current + 0.0001, 1.35);
-        if (imgRef.current) imgRef.current.style.transform = `scale(${scaleRef.current})`;
-        rafRef.current = requestAnimationFrame(grow);
-      };
-      rafRef.current = requestAnimationFrame(grow);
-    } else {
-      cancelAnimationFrame(rafRef.current);
-      scaleRef.current = 1;
-      if (imgRef.current) {
-        imgRef.current.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.55s cubic-bezier(0.22,1,0.36,1)';
-        imgRef.current.style.transform = 'scale(1)';
-        setTimeout(() => { if (imgRef.current) imgRef.current.style.transition = 'filter 0.55s cubic-bezier(0.22,1,0.36,1)'; }, 600);
-      }
-    }
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [hovered]);
-
+  // Eski hali: hover boyunca requestAnimationFrame döngüsü her karede JS'ten
+  // transform yazıyordu (0.0001/frame). Aynı "yavaş zoom" efekti tek bir uzun
+  // CSS transition ile compositor'da bedavaya çalışır — ana thread'e sıfır yük.
   return (
     <div style={{
       opacity: visible ? 1 : 0,
@@ -490,13 +179,17 @@ function WorkCard({ item, visible, index }) {
       onMouseLeave={() => setHovered(false)}
     >
       <div style={{ overflow:'hidden' }}>
-        <img ref={imgRef} src={item.image} alt={item.title} draggable={false}
+        <img src={item.image} alt={item.title} draggable={false}
+          loading="lazy" decoding="async"
           style={{
             display:'block', width:'100%',
             aspectRatio:'9/16', objectFit:'cover',
             filter: hovered ? 'grayscale(0%)' : 'grayscale(60%)',
-            transform: 'scale(1)',
-            transition:'filter 0.55s cubic-bezier(0.22,1,0.36,1)',
+            transform: hovered ? 'scale(1.35)' : 'scale(1)',
+            transition: hovered
+              ? 'transform 58s linear, filter 0.55s cubic-bezier(0.22,1,0.36,1)'
+              : 'transform 0.6s cubic-bezier(0.22,1,0.36,1), filter 0.55s cubic-bezier(0.22,1,0.36,1)',
+            willChange: hovered ? 'transform' : 'auto',
             pointerEvents:'none',
           }}
         />
@@ -533,64 +226,6 @@ function RevealHeading({ children, style }) {
       <h2 className={active ? 'reveal-text' : ''} style={{ opacity: active ? undefined : 0, animationDelay:'0.4s', ...style }}>
         {children}
       </h2>
-    </div>
-  );
-}
-
-/* ─── Hero Title ─────────────────────────────────────────── */
-function HeroTitle() {
-  return (
-    <div style={{ position:'relative', zIndex:1, width:'100%' }}>
-      {/* BANKO ARTS büyük başlık */}
-      <div style={{ display:'inline-block', background:'var(--yellow)', padding:'0.02em 0.08em 0.04em 0', marginBottom:'0.04em' }}>
-        <span style={{ display:'block', fontSize:'clamp(88px, 11vw, 180px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', userSelect:'none' }}>BANKO</span>
-      </div>
-      <br/>
-      <span style={{ display:'inline-block', fontSize:'clamp(88px, 11vw, 180px)', fontFamily:'var(--font-hero), sans-serif', fontWeight:700, letterSpacing:'-0.02em', lineHeight:0.95, color:'#0a0a0a', filter:'drop-shadow(5px 8px 0px rgba(0,0,0,0.13)) drop-shadow(10px 18px 28px rgba(0,0,0,0.09))', position:'relative', zIndex:2, userSelect:'none' }}>ARTS</span>
-    </div>
-  );
-}
-
-/* ─── Our Works Label ───────────────────────────────────── */
-function OurWorksLabel({ imgHeight, visible }) {
-  const textRef = useRef(null);
-  const [fontSize, setFontSize] = useState(80);
-
-  useEffect(() => {
-    if (!imgHeight || !textRef.current) return;
-    let lo = 10, hi = 400, fs = 80;
-    for (let i = 0; i < 20; i++) {
-      fs = (lo + hi) / 2;
-      textRef.current.style.fontSize = fs + 'px';
-      const h = textRef.current.offsetHeight;
-      if (h < imgHeight) lo = fs;
-      else hi = fs;
-    }
-    setFontSize(Math.floor(lo));
-  }, [imgHeight]);
-
-  return (
-    <div style={{
-      width:'clamp(80px, 8vw, 140px)', flexShrink:0,
-      height: imgHeight ? `${imgHeight}px` : '520px',
-      display:'flex', alignItems:'flex-end', justifyContent:'center',
-      opacity: visible ? 1 : 0,
-      transition:'opacity 0.8s cubic-bezier(0.22,1,0.36,1)',
-      position:'relative', zIndex:1,
-    }}>
-      <p ref={textRef} style={{
-        writingMode:'vertical-rl',
-        transform:'rotate(180deg)',
-        fontSize: fontSize + 'px',
-        fontFamily:'var(--font-anton), Impact, sans-serif',
-        fontWeight:400,
-        letterSpacing:'0.04em',
-        textTransform:'uppercase',
-        color:'var(--black)', userSelect:'none',
-        lineHeight:1,
-        whiteSpace:'nowrap',
-        display:'block',
-      }}>OUR WORKS</p>
     </div>
   );
 }
@@ -885,7 +520,7 @@ function HScrollSection() {
     <div ref={sectionRef} style={{ padding:'0 20px 96px' }}>
       <div className="grid-works">
         {GRID_ITEMS.map((item, i) => (
-          <WorkCard key={item.id} item={item} visible={visible} index={i} imgRef={null} />
+          <WorkCard key={item.id} item={item} visible={visible} index={i} />
         ))}
       </div>
     </div>
@@ -894,18 +529,10 @@ function HScrollSection() {
 
 /* ─── Main ──────────────────────────────────────────────── */
 export default function BankoArts() {
-  const [menuOpen, setMenuOpen]               = useState(false);
-  const [activePage, setActivePage]           = useState('works');
-  const [lightboxProject, setLightboxProject] = useState(null);
-  const [inContact, setInContact]             = useState(false);
+  const [menuOpen, setMenuOpen]     = useState(false);
+  const [activePage, setActivePage] = useState('works');
+  const [inContact, setInContact]   = useState(false);
   useSectionWipe();
-
-  const allProjects = projects;
-  const lightboxIndex = lightboxProject ? allProjects.findIndex(p => p.id === lightboxProject.id) : -1;
-  const openLightbox  = (p) => { document.body.style.overflow='hidden'; setLightboxProject(p); };
-  const closeLightbox = () => { document.body.style.overflow=''; setLightboxProject(null); };
-  const nextProject   = () => setLightboxProject(allProjects[(lightboxIndex+1) % allProjects.length]);
-  const prevProject   = () => setLightboxProject(allProjects[(lightboxIndex-1+allProjects.length) % allProjects.length]);
 
   const goPage = (p) => {
     const map = { about:'section-about', works:'section-works', services:'section-services', contact:'section-contact' };
@@ -929,10 +556,11 @@ export default function BankoArts() {
 
   // Lenis smooth scroll
   useEffect(() => {
+    // lerp 0.1 fazla "yüzer" hissettiriyordu — 0.14 daha çevik, hâlâ yumuşak.
     const lenis = new Lenis({
-      duration: 0.9,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      lerp: 0.1,
+      lerp: 0.14,
+      wheelMultiplier: 1,
+      smoothWheel: true,
     });
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -1077,7 +705,7 @@ export default function BankoArts() {
                   3D architectural visualization artist based in Turkey with 10+ years of experience. Specializing in photorealistic exterior and interior renders, animations, and floor plans for architects, developers, and real estate agencies worldwide.
                 </p>
               </div>
-              <img src="/images/D2.jpg" alt="Berk Bankoglu" style={{ width:'clamp(160px, 18vw, 260px)', aspectRatio:'3/4', objectFit:'cover', flexShrink:0 }} />
+              <img src="/images/D2.jpg" alt="Berk Bankoglu" loading="lazy" decoding="async" style={{ width:'clamp(160px, 18vw, 260px)', aspectRatio:'3/4', objectFit:'cover', flexShrink:0 }} />
             </div>
 
             {/* Stats */}
@@ -1170,11 +798,6 @@ export default function BankoArts() {
           <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
         </div>
       </footer>
-
-      {/* Lightbox */}
-      {lightboxProject && (
-        <Lightbox project={lightboxProject} onClose={closeLightbox} onNext={nextProject} onPrev={prevProject}/>
-      )}
     </div>
   );
 }

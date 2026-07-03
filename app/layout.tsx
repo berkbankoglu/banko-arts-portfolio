@@ -4,10 +4,12 @@ import "./globals.css";
 import StructuredData from "./components/StructuredData";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 
+// Variable font: tüm ağırlıklar (100-900) TEK dosyada ve preload edilir.
+// Eski hali 4 ayrı statik woff2 indiriyordu ve sadece biri preload'du —
+// başlığın 800 ağırlığı geç gelip görünür font sıçraması yapıyordu (LCP gecikmesi).
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 

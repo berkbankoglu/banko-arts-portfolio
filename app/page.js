@@ -205,7 +205,8 @@ function RevealHeading({ children, style }) {
     if (!el) return;
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
-        setTimeout(() => { setActive(true); }, 800);
+        // 800ms bekleme "sayfa takıldı" hissi veriyordu — 150ms yeterli.
+        setTimeout(() => { setActive(true); }, 150);
         obs.unobserve(el);
       }
     }, { threshold: 0.3 });

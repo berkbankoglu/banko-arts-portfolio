@@ -80,14 +80,16 @@ button { font-family: var(--font); cursor: pointer; }
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: top    0.55s cubic-bezier(0.22,1,0.36,1),
-              bottom 0.55s cubic-bezier(0.22,1,0.36,1),
-              left   0.55s cubic-bezier(0.22,1,0.36,1),
-              right  0.55s cubic-bezier(0.22,1,0.36,1),
-              width  0.55s cubic-bezier(0.22,1,0.36,1);
+  /* top/left/width layout property'leri — geçiş ne kadar uzun sürerse
+     reflow o kadar uzun sürer; 0.28s yeterince yumuşak, çok daha ucuz. */
+  transition: top    0.28s cubic-bezier(0.22,1,0.36,1),
+              bottom 0.28s cubic-bezier(0.22,1,0.36,1),
+              left   0.28s cubic-bezier(0.22,1,0.36,1),
+              right  0.28s cubic-bezier(0.22,1,0.36,1),
+              width  0.28s cubic-bezier(0.22,1,0.36,1);
 }
-.side-bar--left  { left: 24px; transition: opacity 0.2s ease, top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), left 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
-.side-bar--right { right: 24px; transition: top 0.55s cubic-bezier(0.22,1,0.36,1), bottom 0.55s cubic-bezier(0.22,1,0.36,1), right 0.55s cubic-bezier(0.22,1,0.36,1), width 0.55s cubic-bezier(0.22,1,0.36,1); }
+.side-bar--left  { left: 24px; transition: opacity 0.2s ease, top 0.28s cubic-bezier(0.22,1,0.36,1), bottom 0.28s cubic-bezier(0.22,1,0.36,1), left 0.28s cubic-bezier(0.22,1,0.36,1), width 0.28s cubic-bezier(0.22,1,0.36,1); }
+.side-bar--right { right: 24px; transition: top 0.28s cubic-bezier(0.22,1,0.36,1), bottom 0.28s cubic-bezier(0.22,1,0.36,1), right 0.28s cubic-bezier(0.22,1,0.36,1), width 0.28s cubic-bezier(0.22,1,0.36,1); }
 
 .side-bar--left:hover  { left: 0; top: 0; bottom: 0; width: 80px; }
 .side-bar--right:hover { right: 0; top: 0; bottom: 0; width: 80px; }
@@ -225,11 +227,6 @@ button { font-family: var(--font); cursor: pointer; }
   opacity: 1;
   transform: translateY(0);
   will-change: auto;
-}
-.section-wipe.leaving {
-  opacity: 0;
-  transform: translateY(-30px);
-  transition: opacity 0.5s cubic-bezier(0.4,0,1,1), transform 0.5s cubic-bezier(0.4,0,1,1);
 }
 
 /* ── Lightbox ── */

@@ -7,20 +7,15 @@ import Lenis from 'lenis';
 /* ─── Section wipe hook ─────────────────────────────────── */
 function useSectionWipe() {
   useEffect(() => {
+    // Reveal'lar artık TEK SEFERLİK: eski davranışta her kaydırma geçişinde
+    // koca bölümler visible/leaving arasında gidip geliyordu — scroll boyunca
+    // sürekli tam-genişlik katman animasyonu = takılma hissi. Bir kez görünen
+    // bölüm görünür kalır ve observer bırakılır.
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.remove('leaving');
           e.target.classList.add('visible');
-        } else {
-          const goingUp = e.boundingClientRect.top > 0;
-          if (goingUp) {
-            e.target.classList.remove('visible');
-            e.target.classList.remove('leaving');
-          } else {
-            e.target.classList.remove('visible');
-            e.target.classList.add('leaving');
-          }
+          obs.unobserve(e.target);
         }
       });
     }, { threshold: 0.15 });
@@ -33,9 +28,7 @@ function useSectionWipe() {
           } else {
             e.target.classList.add('visible');
           }
-        } else {
-          // ikisi birlikte kaybolsun
-          document.querySelectorAll('.reveal-left, .reveal-right').forEach(el => el.classList.remove('visible'));
+          obs2.unobserve(e.target);
         }
       });
     }, { threshold: 0.15 });
@@ -308,7 +301,7 @@ function ContactSection() {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setVisible(true); else setVisible(false); },
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.unobserve(el); } },
       { threshold: 0.15 }
     );
     obs.observe(el);
@@ -556,9 +549,9 @@ export default function BankoArts() {
 
   // Lenis smooth scroll
   useEffect(() => {
-    // lerp 0.1 fazla "yüzer" hissettiriyordu — 0.14 daha çevik, hâlâ yumuşak.
+    // lerp yükseldikçe kaydırma girdiye daha hızlı tepki verir (daha az "yüzme").
     const lenis = new Lenis({
-      lerp: 0.14,
+      lerp: 0.2,
       wheelMultiplier: 1,
       smoothWheel: true,
     });

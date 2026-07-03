@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import ContactForm from './components/ContactForm';
+import LeftBar from './components/LeftBar';
 import Lenis from 'lenis';
 
 /* ─── Section wipe hook ─────────────────────────────────── */
@@ -59,100 +60,6 @@ function useSectionWipe() {
 
     return () => { clearTimeout(moTimer); obs.disconnect(); obs2.disconnect(); mo.disconnect(); };
   }, []);
-}
-
-/* ─── Menu overlay ─────────────────────────────────────── */
-/* ─── Sol çubuk + Menü tek element ─────────────────────── */
-function LeftBar({ menuOpen, onOpen, onClose, onNav, activePage }) {
-  const navItems = ['Works', 'Services', 'About', 'Contact'];
-  const [contentVisible, setContentVisible] = useState(false);
-
-  useEffect(() => {
-    if (menuOpen) {
-      const t = setTimeout(() => setContentVisible(true), 320);
-      return () => clearTimeout(t);
-    } else {
-      setContentVisible(false);
-    }
-  }, [menuOpen]);
-
-  const item = (delay) => ({
-    opacity: contentVisible ? 1 : 0,
-    transform: contentVisible ? 'translateY(0)' : 'translateY(16px)',
-    transition: `opacity 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.45s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-  });
-
-  return (
-    <>
-      <div className={`menu-backdrop${menuOpen ? ' open' : ''}`} onClick={onClose} />
-
-      <div className={`side-bar side-bar--left${menuOpen ? ' menu-open' : ''}`}
-        onClick={!menuOpen ? onOpen : undefined}
-        style={{ flexDirection:'column', justifyContent: menuOpen ? 'flex-start' : 'center' }}>
-
-        {!menuOpen && <span>Menu</span>}
-
-        {menuOpen && (
-          <div style={{ display:'flex', flexDirection:'column', height:'100%', width:'100%' }}>
-
-            {/* Logo — büyük, ortada */}
-            <div style={{ display:'flex', justifyContent:'center', alignItems:'center', marginBottom:32, ...item(0) }}>
-              <img src="/images/logo-white.svg" alt="Banko Arts" style={{ display:'block', width:180, height:'auto' }} />
-            </div>
-
-            {/* Kapat butonu */}
-            <div style={{ position:'absolute', top:24, right:24, ...item(0.05) }}>
-              <button onClick={onClose} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.5)', fontSize:26, lineHeight:1, transition:'color 0.2s' }}
-                onMouseEnter={e=>e.currentTarget.style.color='#fff'}
-                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.5)'}>×</button>
-            </div>
-
-            {/* Divider */}
-            <div style={{ borderTop:'1px solid rgba(255,255,255,0.1)', marginBottom:24, ...item(0.1) }} />
-
-            {/* Nav label */}
-            <div style={{ ...item(0.15) }}>
-              <p style={{ fontSize:10, letterSpacing:'0.14em', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', marginBottom:18 }}>Navigation</p>
-            </div>
-
-            {/* Nav links */}
-            {navItems.map((navItem, i) => (
-              <div key={navItem} style={{ ...item(0.2 + i * 0.07) }}>
-                <button onClick={() => { onNav(navItem.toLowerCase()); onClose(); }}
-                  style={{
-                    display:'flex', alignItems:'center', gap:10,
-                    background:'none', border:'none', padding:'10px 0', width:'100%', textAlign:'left',
-                    fontSize:36, fontWeight:700, letterSpacing:'-0.02em',
-                    color: activePage === navItem.toLowerCase() ? 'var(--yellow)' : '#fff',
-                    borderBottom:'1px solid rgba(255,255,255,0.08)', transition:'color 0.2s',
-                  }}
-                  onMouseEnter={e => { if (activePage !== navItem.toLowerCase()) e.currentTarget.style.color='rgba(255,255,255,0.6)'; }}
-                  onMouseLeave={e => { if (activePage !== navItem.toLowerCase()) e.currentTarget.style.color='#fff'; }}>
-                  {activePage === navItem.toLowerCase() && <span style={{ width:7, height:7, borderRadius:'50%', background:'var(--yellow)', flexShrink:0 }} />}
-                  {navItem}
-                </button>
-              </div>
-            ))}
-
-            {/* Alt */}
-            <div style={{ marginTop:'auto', ...item(0.55) }}>
-              <div style={{ borderTop:'1px solid rgba(255,255,255,0.1)', marginBottom:18 }} />
-              <p style={{ fontSize:10, letterSpacing:'0.14em', color:'rgba(255,255,255,0.3)', textTransform:'uppercase', marginBottom:12 }}>Contact</p>
-              <a href="mailto:info@bankoarts.com" style={{ fontSize:13, color:'rgba(255,255,255,0.55)', display:'block', marginBottom:6, transition:'color 0.2s' }}
-                onMouseEnter={e=>e.target.style.color='#fff'} onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.55)'}>
-                info@bankoarts.com
-              </a>
-              <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
-                style={{ fontSize:13, color:'rgba(255,255,255,0.55)', transition:'color 0.2s' }}
-                onMouseEnter={e=>e.target.style.color='#fff'} onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.55)'}>
-                Instagram
-              </a>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
 }
 
 /* ─── Work Card ─────────────────────────────────────────── */
@@ -521,187 +428,6 @@ function HScrollSection() {
   );
 }
 
-/* ─── Full gallery + lightbox ───────────────────────────── */
-const GALLERY_ITEMS = [
-  { id:'ex1',   title:'Exterior — Residential',   category:'exterior',  image:'/images/architecture/Exterior 1.png' },
-  { id:'ex2',   title:'Exterior — Garden View',   category:'exterior',  image:'/images/architecture/Exterior 2.png' },
-  { id:'ex3',   title:'Exterior — Facade',        category:'exterior',  image:'/images/architecture/Exterior 3.png' },
-  { id:'ex31',  title:'Exterior — Detail',        category:'exterior',  image:'/images/architecture/Exterior 3.1.png' },
-  { id:'ex32',  title:'Exterior — Night',         category:'exterior',  image:'/images/architecture/Exterior 3.2.png' },
-  { id:'ex0',   title:'Exterior — Full View',     category:'exterior',  image:'/images/architecture/Exterior.png' },
-  { id:'rt',    title:'Rooftop Terrace',          category:'exterior',  image:'/images/architecture/RoofTop.png' },
-  { id:'lv',    title:'Living Room',              category:'interior',  image:'/images/architecture/Living Room.png' },
-  { id:'bd',    title:'Bedroom',                  category:'interior',  image:'/images/architecture/Bedroom.png' },
-  { id:'kt',    title:'Kitchen',                  category:'interior',  image:'/images/architecture/Kitchen.png' },
-  { id:'kt2',   title:'Kitchen — II',             category:'interior',  image:'/images/architecture/Kitchen2.jpg' },
-  { id:'bt',    title:'Bathroom',                 category:'interior',  image:'/images/architecture/Bathroom.png' },
-  { id:'bt2',   title:'Bathroom — II',            category:'interior',  image:'/images/architecture/Bathroom 2.png' },
-  { id:'v-both',title:'Both Views',               category:'animation', image:'/images/architecture/Both.png',        video:'/videos/both_views_animation.mp4' },
-  { id:'v-bd',  title:'Bedroom Animation',        category:'animation', image:'/images/architecture/Bedroom.png',     video:'/videos/bedroom_animation.mp4' },
-  { id:'v-lv',  title:'Living Room Animation',    category:'animation', image:'/images/architecture/Living Room.png', video:'/videos/livingroom_animation.mp4' },
-  { id:'v-kt',  title:'Kitchen Animation',        category:'animation', image:'/images/architecture/Kitchen.png',     video:'/videos/kitchen_animation.mp4' },
-  { id:'v-ex1', title:'Exterior Animation I',     category:'animation', image:'/images/architecture/Exterior 1.png',  video:'/videos/exterior1_animation.mp4' },
-  { id:'v-ex2', title:'Exterior Animation II',    category:'animation', image:'/images/architecture/Exterior 2.png',  video:'/videos/exterior2_animation.mp4' },
-  { id:'v-ex3', title:'Exterior Animation III',   category:'animation', image:'/images/architecture/Exterior 3.png',  video:'/videos/exterior3_animation.mp4' },
-  { id:'v-ex31',title:'Exterior Animation IV',    category:'animation', image:'/images/architecture/Exterior 3.1.png',video:'/videos/exterior3_1_animation.mp4' },
-  { id:'v-rt',  title:'Rooftop Animation',        category:'animation', image:'/images/architecture/RoofTop.png',     video:'/videos/rooftop_animation.mp4' },
-];
-
-const GALLERY_FILTERS = [
-  ['all', 'All'],
-  ['exterior', 'Exterior'],
-  ['interior', 'Interior'],
-  ['animation', 'Animation'],
-];
-
-function GalleryCard({ item, onClick }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ position:'relative', overflow:'hidden', cursor:'pointer', background:'#f0efed' }}>
-      <img src={item.image} alt={item.title} loading="lazy" decoding="async" draggable={false}
-        style={{
-          display:'block', width:'100%', aspectRatio:'16/9', objectFit:'cover',
-          transform: hovered ? 'scale(1.05)' : 'scale(1)',
-          transition:'transform 0.7s cubic-bezier(0.22,1,0.36,1)',
-        }} />
-      {/* Alt gradient + başlık — hover'da */}
-      <div style={{ position:'absolute', inset:0, pointerEvents:'none',
-        background:'linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 50%)',
-        opacity: hovered ? 1 : 0, transition:'opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }} />
-      <div style={{ position:'absolute', bottom:0, left:0, right:0, padding:'14px 16px', pointerEvents:'none',
-        transform: hovered ? 'translateY(0)' : 'translateY(8px)',
-        opacity: hovered ? 1 : 0,
-        transition:'transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s cubic-bezier(0.22,1,0.36,1)' }}>
-        <p style={{ fontSize:12, letterSpacing:'0.08em', textTransform:'uppercase', fontWeight:600, color:'#fff' }}>{item.title}</p>
-        {item.video && <p style={{ fontSize:11, color:'rgba(255,255,255,0.75)', marginTop:2 }}>Animation — click to play</p>}
-      </div>
-      {/* Video play rozeti */}
-      {item.video && (
-        <div style={{ position:'absolute', top:'50%', left:'50%',
-          transform:'translate(-50%,-50%)',
-          width:44, height:44, borderRadius:'50%', background:'rgba(0,0,0,0.45)',
-          border:'1px solid rgba(255,255,255,0.35)',
-          display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none' }}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 3l9 5-9 5V3z" fill="white"/></svg>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function GalleryLightbox({ items, index, onClose, onNav }) {
-  const [open, setOpen] = useState(false);
-  const item = items[index];
-
-  useEffect(() => {
-    const t = requestAnimationFrame(() => setOpen(true));
-    // Arka planın kaymasını durdur (Lenis + native)
-    window.lenis?.stop();
-    document.body.style.overflow = 'hidden';
-    return () => {
-      cancelAnimationFrame(t);
-      window.lenis?.start();
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  const handleClose = () => { setOpen(false); setTimeout(onClose, 260); };
-
-  useEffect(() => {
-    const fn = (e) => {
-      if (e.key === 'Escape') handleClose();
-      if (e.key === 'ArrowRight') onNav(1);
-      if (e.key === 'ArrowLeft') onNav(-1);
-    };
-    window.addEventListener('keydown', fn);
-    return () => window.removeEventListener('keydown', fn);
-  }, [onNav]);
-
-  const navBtn = { position:'absolute', top:'50%', transform:'translateY(-50%)',
-    width:44, height:44, background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)',
-    color:'#fff', fontSize:22, display:'flex', alignItems:'center', justifyContent:'center',
-    cursor:'pointer', zIndex:10, transition:'background 0.2s' };
-
-  return (
-    <div className={`lightbox-backdrop${open ? ' open' : ''}`} onClick={handleClose}>
-      <button onClick={handleClose} aria-label="Close" style={{ position:'absolute', top:24, right:28,
-        background:'none', border:'none', color:'rgba(255,255,255,0.6)', fontSize:28, lineHeight:1, zIndex:10, cursor:'pointer', transition:'color 0.2s' }}
-        onMouseEnter={e=>e.currentTarget.style.color='#fff'}
-        onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.6)'}>×</button>
-      <button onClick={e=>{ e.stopPropagation(); onNav(-1); }} aria-label="Previous" style={{ ...navBtn, left:20 }}
-        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.2)'}
-        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>‹</button>
-      <button onClick={e=>{ e.stopPropagation(); onNav(1); }} aria-label="Next" style={{ ...navBtn, right:20 }}
-        onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.2)'}
-        onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>›</button>
-      <div className="lightbox-content" onClick={e=>e.stopPropagation()} style={{ maxWidth:'88vw', maxHeight:'84vh' }}>
-        {item.video
-          ? <video key={item.id} src={item.video} poster={item.image} controls autoPlay playsInline
-              style={{ maxWidth:'88vw', maxHeight:'78vh', display:'block' }} />
-          : <img key={item.id} src={item.image} alt={item.title}
-              style={{ maxWidth:'88vw', maxHeight:'78vh', display:'block', objectFit:'contain' }} />}
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:14 }}>
-          <p style={{ color:'rgba(255,255,255,0.6)', fontSize:12, letterSpacing:'0.1em', textTransform:'uppercase' }}>{item.title}</p>
-          <p style={{ color:'rgba(255,255,255,0.35)', fontSize:12, letterSpacing:'0.08em' }}>{index + 1} / {items.length}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function GallerySection() {
-  const [filter, setFilter] = useState('all');
-  const [lbIndex, setLbIndex] = useState(null);
-
-  const filtered = filter === 'all' ? GALLERY_ITEMS : GALLERY_ITEMS.filter(i => i.category === filter);
-  const nav = (dir) => setLbIndex(i => (i + dir + filtered.length) % filtered.length);
-
-  return (
-    <div style={{ padding:'0 20px 96px' }}>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:20, marginBottom:36 }}>
-        <div>
-          <p style={{ fontSize:12, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>Portfolio</p>
-          <RevealHeading style={{ fontSize:'clamp(40px, 4.5vw, 80px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9 }}>All Works</RevealHeading>
-        </div>
-        {/* Filtreler */}
-        <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-          {GALLERY_FILTERS.map(([key, label]) => {
-            const count = key === 'all' ? GALLERY_ITEMS.length : GALLERY_ITEMS.filter(i => i.category === key).length;
-            const active = filter === key;
-            return (
-              <button key={key} onClick={() => setFilter(key)}
-                style={{
-                  padding:'9px 18px', fontSize:12, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase',
-                  background: active ? 'var(--black)' : 'transparent',
-                  color: active ? '#fff' : 'var(--muted)',
-                  border: `1px solid ${active ? 'var(--black)' : 'var(--border)'}`,
-                  cursor:'pointer', transition:'background 0.2s, color 0.2s, border-color 0.2s',
-                }}
-                onMouseEnter={e=>{ if(!active){ e.currentTarget.style.color='var(--black)'; e.currentTarget.style.borderColor='rgba(0,0,0,0.3)'; } }}
-                onMouseLeave={e=>{ if(!active){ e.currentTarget.style.color='var(--muted)'; e.currentTarget.style.borderColor='var(--border)'; } }}>
-                {label} <span style={{ opacity:0.55, marginLeft:4 }}>{count}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="grid-gallery">
-        {filtered.map((item, i) => (
-          <GalleryCard key={item.id} item={item} onClick={() => setLbIndex(i)} />
-        ))}
-      </div>
-
-      {lbIndex !== null && (
-        <GalleryLightbox items={filtered} index={lbIndex} onClose={() => setLbIndex(null)} onNav={nav} />
-      )}
-    </div>
-  );
-}
-
 /* ─── Main ──────────────────────────────────────────────── */
 export default function BankoArts() {
   const [menuOpen, setMenuOpen]     = useState(false);
@@ -710,10 +436,21 @@ export default function BankoArts() {
   useSectionWipe();
 
   const goPage = (p) => {
-    const map = { about:'section-about', works:'section-works', services:'section-services', contact:'section-contact' };
+    // Works artık ayrı sayfa — tam portfolyo galerisi
+    if (p === 'works') { window.location.href = '/works'; return; }
+    const map = { about:'section-services', services:'section-services', contact:'section-contact' };
     const el = document.getElementById(map[p] || 'section-works');
     if (el) window.lenis?.scrollTo(el, { offset: -20, duration: 1.6 });
   };
+
+  // /works sayfasından #services gibi hash ile dönüşlerde ilgili bölüme kay
+  useEffect(() => {
+    const h = window.location.hash.replace('#', '');
+    if (!h) return;
+    const map = { services:'section-services', about:'section-services', contact:'section-contact' };
+    const el = document.getElementById(map[h]);
+    if (el) setTimeout(() => window.lenis?.scrollTo(el, { offset: -20, duration: 1.2 }), 150);
+  }, []);
 
   const toggleContact = () => {
     const contactEl = document.getElementById('section-contact');
@@ -840,9 +577,17 @@ export default function BankoArts() {
         </div>
         <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
         <div className="section-wipe"><HScrollSection /></div>
-        {/* section-wipe YOK: galeri viewport'tan uzun — %15 görünürlük eşiğine
-            hiç ulaşamayıp sonsuza dek gizli kalabilirdi. Başlık kendi reveal'ını yapıyor. */}
-        <GallerySection />
+        {/* Tam portfolyo artık /works sayfasında */}
+        <div style={{ display:'flex', justifyContent:'center', padding:'0 20px 96px' }}>
+          <a href="/works"
+            style={{ display:'inline-flex', alignItems:'center', gap:12, padding:'18px 44px',
+              border:'1px solid var(--black)', fontSize:13, fontWeight:600, letterSpacing:'0.1em',
+              textTransform:'uppercase', color:'var(--black)', transition:'background 0.25s ease, color 0.25s ease' }}
+            onMouseEnter={e=>{ e.currentTarget.style.background='var(--black)'; e.currentTarget.style.color='#fff'; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--black)'; }}>
+            View All Works <span aria-hidden>→</span>
+          </a>
+        </div>
       </section>
 
       <StatsSection />

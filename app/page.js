@@ -840,7 +840,9 @@ export default function BankoArts() {
         </div>
         <div style={{ height:'clamp(80px, 10vw, 160px)' }} />
         <div className="section-wipe"><HScrollSection /></div>
-        <div className="section-wipe"><GallerySection /></div>
+        {/* section-wipe YOK: galeri viewport'tan uzun — %15 görünürlük eşiğine
+            hiç ulaşamayıp sonsuza dek gizli kalabilirdi. Başlık kendi reveal'ını yapıyor. */}
+        <GallerySection />
       </section>
 
       <StatsSection />

@@ -189,7 +189,7 @@ function WorkCard({ item, visible, index }) {
       </div>
       <div style={{ marginTop:14 }}>
         <p style={{ fontSize:14, fontWeight:700, letterSpacing:'-0.01em', marginBottom:4 }}>{item.title}</p>
-        <p style={{ fontSize:11, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
+        <p style={{ fontSize:13, color:'var(--muted)', letterSpacing:'0.04em' }}>{item.sub}</p>
       </div>
     </div>
   );
@@ -325,11 +325,11 @@ function ContactSection() {
           transform: visible ? 'translateX(0)' : 'translateX(-80px)',
           transition:'opacity 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s, transform 1.1s cubic-bezier(0.22,1,0.36,1) 0.1s',
         }}>
-          <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
+          <p style={{ fontSize:12, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:16 }}>Get in touch</p>
           <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>
             Let's Build<br/>Something<br/>Remarkable.
           </RevealHeading>
-          <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:320, marginBottom:48 }}>
+          <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8, maxWidth:340, marginBottom:48 }}>
             Photorealistic architectural visualizations delivered fast. Tell us about your project and we'll get back within 24 hours.
           </p>
           <div>
@@ -343,7 +343,7 @@ function ContactSection() {
                 style={{ display:'flex', gap:16, padding:'16px 0', borderBottom:'1px solid var(--border)', textDecoration:'none', transition:'opacity 0.2s' }}
                 onMouseEnter={e=>e.currentTarget.style.opacity='0.6'}
                 onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
-                <span style={{ fontSize:11, color:'var(--muted)', width:80, flexShrink:0, letterSpacing:'0.08em', textTransform:'uppercase', paddingTop:2 }}>{label}</span>
+                <span style={{ fontSize:12, color:'var(--muted)', width:88, flexShrink:0, letterSpacing:'0.08em', textTransform:'uppercase', paddingTop:2 }}>{label}</span>
                 <span style={{ fontSize:15, fontWeight:700, letterSpacing:'-0.01em' }}>{val}</span>
               </a>
             ))}
@@ -431,7 +431,7 @@ function FlipCard({ card, index, sectionVisible }) {
           background: '#fff', textAlign: 'center', gap: 10,
         }}>
           <p style={{ fontSize: 'clamp(24px, 2vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}>{card.value}</p>
-          <p style={{ fontSize: 12, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
+          <p style={{ fontSize: 13, color: 'var(--muted)', letterSpacing: '0.04em' }}>{card.sub}</p>
           <p style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{card.label}</p>
         </div>
         {/* Back */}
@@ -446,7 +446,7 @@ function FlipCard({ card, index, sectionVisible }) {
           background: 'var(--black)',
         }}>
           <span style={{ fontSize: 22, lineHeight: 1, color: 'var(--yellow)' }}>{card.icon}</span>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.8 }}>{card.back}</p>
+          <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.88)', lineHeight: 1.75 }}>{card.back}</p>
         </div>
       </div>
     </div>
@@ -474,7 +474,7 @@ function StatsSection() {
           <p style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>Verified</p>
           <RevealHeading style={{ fontSize: 'clamp(48px, 5.5vw, 96px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.9 }}>Track Record</RevealHeading>
         </div>
-        <p style={{ fontSize: 13, color: 'var(--muted)', maxWidth: 360, textAlign: 'right', lineHeight: 1.7 }}>
+        <p style={{ fontSize: 15, color: 'var(--muted)', maxWidth: 380, textAlign: 'right', lineHeight: 1.7 }}>
           10+ years of freelance work across Upwork and Freelancer.com — click any card to learn more.
         </p>
       </div>
@@ -607,7 +607,7 @@ export default function BankoArts() {
                 </h1>
               </div>
 
-              <p style={{ fontSize:14, color:'var(--muted)', lineHeight:1.8, maxWidth:420, marginBottom:32 }}>
+              <p style={{ fontSize:16, color:'var(--muted)', lineHeight:1.8, maxWidth:440, marginBottom:32 }}>
                 824+ projects delivered worldwide. Photorealistic exterior, interior renders and animations — fast turnaround, studio quality.
               </p>
 
@@ -669,7 +669,7 @@ export default function BankoArts() {
 
           {/* Sol — Services listesi */}
           <div className="reveal-left">
-            <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
+            <p style={{ fontSize:12, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>N°001</p>
             <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Services</RevealHeading>
             <div>
               {[
@@ -681,9 +681,9 @@ export default function BankoArts() {
                 ['Virtual Staging','Digital furniture placement in empty spaces to accelerate sales and show design potential.'],
               ].map(([t, d], i) => (
                 <div key={t} style={{ padding:'20px 0', borderTop:'1px solid var(--border)' }}>
-                  <p style={{ fontSize:11, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:10 }}>N°{String(i+1).padStart(3,'0')}</p>
+                  <p style={{ fontSize:12, letterSpacing:'0.14em', color:'var(--muted)', textTransform:'uppercase', marginBottom:10 }}>N°{String(i+1).padStart(3,'0')}</p>
                   <p style={{ fontSize:'clamp(16px, 1.4vw, 24px)', fontWeight:700, marginBottom:8, letterSpacing:'-0.01em' }}>{t}</p>
-                  <p style={{ fontSize:13, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
+                  <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.8 }}>{d}</p>
                 </div>
               ))}
             </div>
@@ -693,9 +693,9 @@ export default function BankoArts() {
           <div className="reveal-right">
             <div style={{ display:'flex', alignItems:'flex-start', gap:32, marginBottom:32 }}>
               <div style={{ flex:1 }}>
-                <p style={{ fontSize:11, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
+                <p style={{ fontSize:12, letterSpacing:'0.18em', color:'var(--muted)', textTransform:'uppercase', marginBottom:8 }}>About</p>
                 <RevealHeading style={{ fontSize:'clamp(48px, 5.5vw, 96px)', fontWeight:800, letterSpacing:'-0.04em', lineHeight:0.9, marginBottom:32 }}>Berk Bankoglu</RevealHeading>
-                <p style={{ fontSize:15, color:'var(--muted)', lineHeight:1.9, maxWidth:480 }}>
+                <p style={{ fontSize:16, color:'var(--muted)', lineHeight:1.9, maxWidth:480 }}>
                   3D architectural visualization artist based in Turkey with 10+ years of experience. Specializing in photorealistic exterior and interior renders, animations, and floor plans for architects, developers, and real estate agencies worldwide.
                 </p>
               </div>
@@ -712,7 +712,7 @@ export default function BankoArts() {
               ].map(([val, label]) => (
                 <div key={label} style={{ padding:'20px 0', borderBottom:'1px solid var(--border)', paddingRight:24 }}>
                   <p style={{ fontSize:'clamp(24px, 2.5vw, 40px)', fontWeight:800, letterSpacing:'-0.03em', lineHeight:1, marginBottom:6 }}>{val}</p>
-                  <p style={{ fontSize:11, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{label}</p>
+                  <p style={{ fontSize:12, color:'var(--muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{label}</p>
                 </div>
               ))}
             </div>
@@ -764,11 +764,11 @@ export default function BankoArts() {
       <footer className="section-wipe" style={{ background:'var(--yellow)', marginTop:80, padding:'64px 20px 40px' }}>
         <div className="grid-4col" style={{ marginBottom:64 }}>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Banko Arts</p>
-            <p style={{ fontSize:13, lineHeight:1.7, color:'rgba(255,255,255,0.7)' }}>Professional 3D Architectural Visualization Studio</p>
+            <p style={{ fontSize:12, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.78)', marginBottom:16 }}>Banko Arts</p>
+            <p style={{ fontSize:14, lineHeight:1.7, color:'rgba(255,255,255,0.88)' }}>Professional 3D Architectural Visualization Studio</p>
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Company</p>
+            <p style={{ fontSize:12, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.78)', marginBottom:16 }}>Company</p>
             {['Works','Services','About','Contact'].map(item => (
               <button key={item} onClick={()=>goPage(item.toLowerCase())}
                 style={{ display:'block', background:'none', border:'none', fontSize:14, fontWeight:600, marginBottom:10, cursor:'pointer', color:'#fff' }}>
@@ -777,19 +777,19 @@ export default function BankoArts() {
             ))}
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Follow</p>
+            <p style={{ fontSize:12, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.78)', marginBottom:16 }}>Follow</p>
             <a href="https://instagram.com/bankoarts" target="_blank" rel="noreferrer"
               style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10, color:'#fff' }}>Instagram</a>
           </div>
           <div>
-            <p style={{ fontSize:11, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.55)', marginBottom:16 }}>Contact</p>
+            <p style={{ fontSize:12, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.78)', marginBottom:16 }}>Contact</p>
             <a href="mailto:info@bankoarts.com" style={{ display:'block', fontSize:14, fontWeight:600, marginBottom:10, color:'#fff' }}>info@bankoarts.com</a>
           </div>
         </div>
         <hr style={{ border:'none', borderTop:'1px solid rgba(255,255,255,0.2)', marginBottom:24 }}/>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
           <p style={{ fontSize:13, fontWeight:800, letterSpacing:'0.04em', color:'#fff' }}>BANKO ARTS</p>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
+          <p style={{ fontSize:13, color:'rgba(255,255,255,0.78)' }}>© {new Date().getFullYear()} Banko Arts. All rights reserved.</p>
         </div>
       </footer>
     </div>

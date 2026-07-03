@@ -5,7 +5,7 @@
   --bg-2:     #f5f5f5;
   --black:    #0a0a0a;
   --yellow:   #DE7356;
-  --muted:    rgba(0,0,0,0.42);
+  --muted:    rgba(0,0,0,0.60); /* 0.42 çok soluktu — okunabilirlik için koyulaştırıldı */
   --border:   rgba(0,0,0,0.07);
   --sep:      rgba(0,0,0,0.85);
   --font:     var(--font-inter), 'Inter', 'Helvetica Neue', Arial, sans-serif;
